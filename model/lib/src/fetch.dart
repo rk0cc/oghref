@@ -1,11 +1,15 @@
 import 'dart:collection';
 
 import 'package:html/dom.dart';
-import 'package:oghref_model/src/model/metainfo.dart';
+import 'package:html/parser.dart' as html_parser show parse;
+import 'package:http/http.dart'
+    hide delete, get, head, patch, post, put, read, readBytes, runWithClient;
 
+import 'model/metainfo.dart';
 import 'parser/property_parser.dart';
 
 final class MetaFetch {
+  static const String DEFAULT_USER_AGENT_STRING = "oghref 1";
   static final MetaFetch _instance = MetaFetch._();
   final Set<MetaPropertyParser> _parsers = HashSet(
       equals: (p0, p1) => p0.propertyNamePrefix == p1.propertyNamePrefix,
@@ -14,6 +18,8 @@ final class MetaFetch {
   MetaFetch._();
 
   factory MetaFetch() => _instance;
+
+  static String userAgentString = DEFAULT_USER_AGENT_STRING;
 
   static bool Function(MetaPropertyParser) _prefixEquals(String prefix) =>
       (mpp) => mpp.propertyNamePrefix == prefix;
@@ -71,4 +77,28 @@ final class MetaFetch {
 
     return parsedResult;
   }
+
+  Future<MetaInfo> fetchFromHttp(Uri url) {
+    if (!RegExp(r"^https?$").hasMatch(url.scheme)) {
+      throw NonHttpUrlException._(url);
+    }
+
+    Request req = Request("GET", url)..headers['user-agent'] = userAgentString;
+    
+    return req.send().then(Response.fromStream).then((resp) {
+      String body = resp.body;
+
+      return html_parser.parse(body);
+    }).then(buildMetaInfo);
+  }
+}
+
+final class NonHttpUrlException implements Exception {
+  final Uri url;
+
+  NonHttpUrlException._(this.url);
+
+  @override
+  String toString() =>
+      "NonHttpUrlException: The given URL is not HTTP(S) - $url";
 }

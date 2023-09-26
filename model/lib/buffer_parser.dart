@@ -7,3 +7,4 @@ export 'src/buffer/url.dart';
 export 'src/model/media.dart';
 export 'src/model/url.dart';
 export 'src/parser/property_parser.dart';
+export 'src/fetch.dart';
