@@ -42,22 +42,31 @@ final class OpenGraphPropertyParser extends MetaPropertyParser {
           }
 
           imgParser.url = Uri.tryParse(content);
-
           break;
         case "og:image:secure_url":
-          imgParser.secureUrl = Uri.tryParse(content);
+          if (imgParser.isInitalized) {
+            imgParser.secureUrl = Uri.tryParse(content);
+          }
           break;
         case "og:image:type":
-          imgParser.type = content;
+          if (imgParser.isInitalized) {
+            imgParser.type = content;
+          }
           break;
         case "og:image:width":
-          imgParser.width = double.tryParse(content);
+          if (imgParser.isInitalized) {
+            imgParser.width = double.tryParse(content);
+          }
           break;
         case "og:image:height":
-          imgParser.height = double.tryParse(content);
+          if (imgParser.isInitalized) {
+            imgParser.height = double.tryParse(content);
+          }
           break;
         case "og:image:alt":
-          imgParser.alt = content;
+          if (imgParser.isInitalized) {
+            imgParser.alt = content;
+          }
           break;
         case "og:video":
         case "og:video:url":
@@ -71,16 +80,24 @@ final class OpenGraphPropertyParser extends MetaPropertyParser {
           vidParser.url = Uri.tryParse(content);
           break;
         case "og:video:secure_url":
-          vidParser.secureUrl = Uri.tryParse(content);
+          if (vidParser.isInitalized) {
+            vidParser.secureUrl = Uri.tryParse(content);
+          }
           break;
         case "og:video:type":
-          vidParser.type = content;
+          if (vidParser.isInitalized) {
+            vidParser.type = content;
+          }
           break;
         case "og:video:width":
-          vidParser.width = double.tryParse(content);
+          if (vidParser.isInitalized) {
+            vidParser.width = double.tryParse(content);
+          }
           break;
         case "og:video:height":
-          vidParser.height = double.tryParse(content);
+          if (vidParser.isInitalized) {
+            vidParser.height = double.tryParse(content);
+          }
           break;
         case "og:audio":
         case "og:audio:url":
@@ -94,10 +111,14 @@ final class OpenGraphPropertyParser extends MetaPropertyParser {
           audParser.url = Uri.tryParse(content);
           break;
         case "og:audio:secure_url":
-          audParser.secureUrl = Uri.tryParse(content);
+          if (imgParser.isInitalized) {
+            audParser.secureUrl = Uri.tryParse(content);
+          }
           break;
         case "og:audio:type":
-          audParser.type = content;
+          if (imgParser.isInitalized) {
+            audParser.type = content;
+          }
           break;
       }
     }
