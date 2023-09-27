@@ -55,7 +55,7 @@ final class MetaFetch {
   static bool Function(MetaPropertyParser) _prefixEquals(String prefix) =>
       (mpp) => mpp.propertyNamePrefix == prefix;
 
-    /// Specify which prefix should be resolve at first.
+  /// Specify which prefix should be resolve at first.
   ///
   /// If it applied as [Null], this feature will be disabled.
   set primaryPrefix(String? prefix) {
@@ -187,11 +187,15 @@ final class MetaFetch {
     Response resp = await req.send().then(Response.fromStream);
     String? mimeData = resp.headers["Content-type"];
 
+    final List<String> extTypes = [];
+
+    if (mimeData != null) {
+      extTypes.addAll(
+          Mime.getExtensionsFromType(mimeData.split(';').first) ?? const []);
+    }
+
     if (!_ignoreContentType &&
-        (mimeData == null ||
-            !(Mime.getExtensionsFromType(mimeData.split(';').first)
-                    ?.contains("html") ??
-                true))) {
+        !const <String>["html", "xhtml"].any(extTypes.contains)) {
       return MetaInfo();
     }
 

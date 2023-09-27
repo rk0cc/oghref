@@ -1,3 +1,9 @@
+## 1.1.0
+
+* Allow specify primary prefix which will be resolved rather than following `<meta>` sequences
+* Provide Twitter Card parser
+* Fix XHTML cannot be retrived issue
+
 ## 1.0.0
 
 * Fix last assigned audio, video and image does not added into `MetaInfo`
