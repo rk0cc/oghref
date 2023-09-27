@@ -1,7 +1,7 @@
 # Abstract Flutter widget builder of rich information link.
 
 <p align="center">
-    <a href="https://pub.dev/packages/oghref_builder"><img alt="OGHref model version in pub.dev" src="https://img.shields.io/pub/v/oghref_builder?style=flat-square&logo=dart"></a>
+    <a href="https://pub.dev/packages/oghref_builder"><img alt="OGHref model version in pub.dev" src="https://img.shields.io/pub/v/oghref_builder?style=flat-square&logo=flutter"></a>
 </p>
 
 An abstract library for building rich information link in Flutter widgets.
