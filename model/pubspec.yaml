@@ -1,6 +1,6 @@
 name: oghref_model
 description: Object standarized definition with parser interface for constructing rich information of given URL among various metadata protocols.
-version: 1.0.0
+version: 1.0.0-beta.1
 environment: 
   sdk: '>=3.0.0 <4.0.0'
 dependencies: 
