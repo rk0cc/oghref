@@ -5,6 +5,7 @@ import 'package:html/parser.dart' as html_parser show parse;
 import 'package:http/http.dart'
     hide delete, get, head, patch, post, put, read, readBytes, runWithClient;
 import 'package:meta/meta.dart';
+import 'package:mime_dart/mime_dart.dart';
 
 import 'model/metainfo.dart';
 import 'parser/property_parser.dart';
@@ -35,8 +36,8 @@ final class MetaFetch {
 
   /// A dedicated [MetaFetch] which ignore content type condition that allowing
   /// parse to HTML [Document].
-  /// 
-  /// This only available for testing only. 
+  ///
+  /// This only available for testing only.
   @visibleForTesting
   static MetaFetch forTest() => MetaFetch._(true);
 
@@ -146,12 +147,17 @@ final class MetaFetch {
     Request req = Request("GET", url)..headers['user-agent'] = userAgentString;
 
     Response resp = await req.send().then(Response.fromStream);
+    String? mimeData = resp.headers["Content-type"];
 
-    if (_ignoreContentType || RegExp(r"^text/html").hasMatch(resp.headers["Content-type"]!)) {
-      return buildMetaInfo(html_parser.parse(resp.body));
+    if (!_ignoreContentType &&
+        (mimeData == null ||
+            !(Mime.getExtensionsFromType(mimeData.split(';').first)
+                    ?.contains("html") ??
+                true))) {
+      return MetaInfo();
     }
 
-    return MetaInfo();
+    return buildMetaInfo(html_parser.parse(resp.body));
   }
 }
 

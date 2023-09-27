@@ -121,5 +121,17 @@ final class OpenGraphPropertyParser extends MetaPropertyParser {
           break;
       }
     }
+
+    if (imgParser.url != null) {
+      assigner.images.add(imgParser.compile());
+    }
+
+    if (vidParser.url != null) {
+      assigner.videos.add(vidParser.compile());
+    }
+
+    if (audParser.url != null) {
+      assigner.audios.add(audParser.compile());
+    }
   }
 }
