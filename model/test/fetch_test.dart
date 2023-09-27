@@ -15,4 +15,12 @@ void main() {
     expect(parsed.title, equals("Sample 1"));
     expect(parsed.images.first.width, equals(400.0));
   });
+  test("Ignore subproperties content", () async {
+    final parsed = await GetIt.I<MetaFetch>().fetchFromHttp(Uri.parse(
+        'https://raw.githubusercontent.com/rk0cc/oghref/main/model/test_resources/2.html'));
+
+    expect(parsed.images.first.width, isNull);
+    expect(parsed.images.first.height, isNull);
+    expect(parsed.images.first.url, isNotNull);
+  });
 }
