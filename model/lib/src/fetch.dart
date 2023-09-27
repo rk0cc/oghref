@@ -30,6 +30,8 @@ final class MetaFetch {
 
   final bool _ignoreContentType;
 
+  String? _primaryPrefix;
+
   MetaFetch._(this._ignoreContentType);
 
   /// Get a instance of [MetaFetch].
@@ -52,6 +54,27 @@ final class MetaFetch {
   /// [Iterable.singleWhere].
   static bool Function(MetaPropertyParser) _prefixEquals(String prefix) =>
       (mpp) => mpp.propertyNamePrefix == prefix;
+
+    /// Specify which prefix should be resolve at first.
+  ///
+  /// If it applied as [Null], this feature will be disabled.
+  set primaryPrefix(String? prefix) {
+    if (prefix != null) {
+      try {
+        _findCorrespondedParser(prefix);
+      } on StateError {
+        throw ArgumentError.value(prefix, "primaryPrefix",
+            "No registered parser using the given prefix.");
+      }
+    }
+
+    _primaryPrefix = prefix;
+  }
+
+  /// Get which prefix of property will be overriden when parse.
+  ///
+  /// If it is [Null], the feature will be disabled.
+  String? get primaryPrefix => _primaryPrefix;
 
   /// Get the corresponded parser from [prefix].
   ///
@@ -107,22 +130,33 @@ final class MetaFetch {
   /// Otherwise, it will return [MetaInfo] with all empty field
   /// when it cannot be able to find matched prefix.
   MetaInfo buildMetaInfo(Document htmlDocument) {
-    final offeredPropPrefix = htmlDocument.head
-        ?.querySelectorAll("meta[property][content]")
-        .map((e) => e.attributes["property"]!.split(":").first)
-        .toSet();
+    Iterable<String> prefixSequence() sync* {
+      final offeredPropPrefix = htmlDocument.head
+              ?.querySelectorAll("meta[property][content]")
+              .map((e) => e.attributes["property"]!.split(":").first)
+              .toSet() ??
+          HashSet<String>();
+
+      if (primaryPrefix != null && offeredPropPrefix.contains(primaryPrefix)) {
+        yield primaryPrefix!;
+        offeredPropPrefix.remove(primaryPrefix);
+      }
+
+      for (String remainPrefix in offeredPropPrefix) {
+        yield remainPrefix;
+      }
+    }
 
     MetaInfo parsedResult = MetaInfo();
 
-    if (offeredPropPrefix != null) {
-      for (String prefix in offeredPropPrefix) {
-        try {
-          var parser = _findCorrespondedParser(prefix);
-          parsedResult = parser.parse(htmlDocument.head!);
-          break;
-        } on StateError {
-          continue;
-        }
+    for (String prefix in prefixSequence()) {
+      try {
+        var parser = _findCorrespondedParser(prefix);
+        parsedResult = parser.parse(htmlDocument.head!);
+        break;
+      } on StateError {
+        // If the prefix does not supported.
+        continue;
       }
     }
 
