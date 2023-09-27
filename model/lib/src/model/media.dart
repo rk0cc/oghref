@@ -8,6 +8,7 @@ abstract interface class MediaInfo {
 abstract interface class ScalableInfo {
   /// Width of visual.
   double? get width;
+
   /// Height of visual.
   double? get height;
 }

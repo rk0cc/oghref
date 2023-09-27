@@ -10,8 +10,8 @@ export 'image.dart';
 export 'video.dart';
 
 /// Completed structure of rich information link preview metadata.
-/// 
-/// Although some fields are compulsory (for example, 
+///
+/// Although some fields are compulsory (for example,
 /// [basic metadata in Open Graph Protocol](compulsory)), to ensure
 /// compatibility on various metadata structures, all fields are
 /// defined as optional which denote `null` if absent.

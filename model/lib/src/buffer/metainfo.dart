@@ -9,7 +9,7 @@ export 'image.dart';
 export 'video.dart';
 
 /// Manage all values of [MetaInfo] during data apply state.
-/// 
+///
 /// It is only available in [MetaPropertyParser.resolveMetaTags]
 /// which appeared as a parameter.
 abstract final class MetaInfoAssigner {
@@ -24,21 +24,21 @@ abstract final class MetaInfoAssigner {
 
   /// Site name of [MetaInfo]
   String? siteName;
-  
-  /// Provided [ImageInfo] for this [MetaInfo]. 
+
+  /// Provided [ImageInfo] for this [MetaInfo].
   final List<ImageInfo> images = [];
 
-  /// Provided [VideoInfo] for this [MetaInfo]. 
+  /// Provided [VideoInfo] for this [MetaInfo].
   final List<VideoInfo> videos = [];
 
-  /// Provided [AudioInfo] for this [MetaInfo]. 
+  /// Provided [AudioInfo] for this [MetaInfo].
   final List<AudioInfo> audios = [];
 
   MetaInfoAssigner._();
 }
 
 /// Actual parser of [MetaInfo].
-/// 
+///
 /// This object should be marked as [internal] that
 /// it should be offered as [MetaInfoAssigner]
 /// already in [MetaPropertyParser.resolveMetaTags].

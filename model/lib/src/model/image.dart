@@ -3,7 +3,7 @@ import 'url.dart';
 import 'media.dart';
 
 /// Display thumbnail of website with given image.
-/// 
+///
 /// This object does not verify the format of image is supported or not.
 @immutable
 final class ImageInfo implements MediaInfo, ScalableInfo, UrlInfo {

@@ -10,7 +10,7 @@ import 'parser/property_parser.dart';
 
 /// Read [Document] and find all metadata tags to generate corresponded
 /// [MetaInfo].
-/// 
+///
 /// At the same time, it manages all [MetaPropertyParser] according to
 /// [MetaPropertyParser.propertyNamePrefix] and will be refer them
 /// for finding matched [MetaPropertyParser].
@@ -39,7 +39,7 @@ final class MetaFetch {
       (mpp) => mpp.propertyNamePrefix == prefix;
 
   /// Get the corresponded parser from [prefix].
-  /// 
+  ///
   /// If no related [prefix] is assigned, [StateError] will
   /// be thrown.
   MetaPropertyParser _findCorrespondedParser(String prefix) {
@@ -47,16 +47,16 @@ final class MetaFetch {
   }
 
   /// Register [parser] into [MetaFetch].
-  /// 
+  ///
   /// It returns `true` if registered sucessfully.
   bool register(MetaPropertyParser parser) {
     return _parsers.add(parser);
   }
 
   /// Determine the [identifier] is registered or not.
-  /// 
+  ///
   /// The [identifier] can be a [String] of prefix or [MetaPropertyParser].
-  /// 
+  ///
   /// Return `true` if existed.
   bool hasBeenRegistered(Object identifier) {
     try {
@@ -75,7 +75,7 @@ final class MetaFetch {
   }
 
   /// Remove [MetaPropertyParser] with corresponded [prefix].
-  /// 
+  ///
   /// It returns `true` if the given [prefix] has been removed.
   bool deregister(String prefix) {
     final int originLength = _parsers.length;
@@ -85,7 +85,7 @@ final class MetaFetch {
   }
 
   /// Construct [MetaInfo] with given [Document].
-  /// 
+  ///
   /// If `<meta>` [Element]'s property prefix [hasBeenRegistered],
   /// it refers to the first matched prefix given from an order
   /// of [Document] and apply all available fields in [MetaInfo].
@@ -115,17 +115,17 @@ final class MetaFetch {
   }
 
   /// Retrive [MetaInfo] from HTTP request from [url].
-  /// 
+  ///
   /// If [url] is not `HTTP` or `HTTPS`, [NonHttpUrlException]
   /// will be thrown.
-  /// 
+  ///
   /// Optionally, [userAgentString] can be modified before making request
   /// that allowing to identify as another user agent rather than
   /// [DEFAULT_USER_AGENT_STRING].
-  /// 
+  ///
   /// Once the request got response, it's body content will be [html_parser.parse]
   /// to [Document] directly and perform [buildMetaInfo].
-  /// 
+  ///
   /// HTTP response code does not matter in this method that it only
   /// required to retrive HTML content from [url].
   Future<MetaInfo> fetchFromHttp(Uri url) {
@@ -134,7 +134,7 @@ final class MetaFetch {
     }
 
     Request req = Request("GET", url)..headers['user-agent'] = userAgentString;
-    
+
     return req.send().then(Response.fromStream).then((resp) {
       String body = resp.body;
 

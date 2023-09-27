@@ -6,7 +6,7 @@ import 'property_parser.dart';
 
 final class OpenGraphPropertyParser extends MetaPropertyParser {
   const OpenGraphPropertyParser();
-  
+
   @override
   String get propertyNamePrefix => "og";
 

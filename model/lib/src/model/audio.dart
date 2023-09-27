@@ -4,7 +4,7 @@ import 'media.dart';
 import 'url.dart';
 
 /// Specify audio metadata in rich informations.
-/// 
+///
 /// This object only represent metadata of resources only but
 /// not verify support of audio format.
 @immutable

@@ -15,7 +15,7 @@ abstract base mixin class MetaPropertyParser {
 
   /// Prefix of property's name which identify which rich information
   /// provider is used.
-  /// 
+  ///
   /// Reference of values:
   /// |     Providers     |Prefix of property name|    Example   |
   /// |:-----------------:|:---------------------:|:------------:|
@@ -25,11 +25,11 @@ abstract base mixin class MetaPropertyParser {
 
   /// Actual implementation of assigning [MetaInfo] given all `<meta>`
   /// [Element] with corresponded [propertyNamePrefix].
-  /// 
+  ///
   /// By resolving content from [metaPropertyTags] which is unmodifiable
   /// [List] into [assigner] and uses for generating [MetaInfo] in
   /// [parse].
-  /// 
+  ///
   /// If necessary, [AudioInfoParser], [ImageInfoParser] and [VideoInfoParser]
   /// can be created under this method for resolving multimedia
   /// metadata content.
@@ -39,7 +39,7 @@ abstract base mixin class MetaPropertyParser {
 
   /// Resolve rich information metadata from given [htmlHead] which
   /// is `<head>` [Element] in HTML.
-  /// 
+  ///
   /// This method should not be [override]. Instead, all data apply
   /// must be done under [resolveMetaTags].
   @nonVirtual
