@@ -33,6 +33,10 @@ final class MetaFetch {
 
   factory MetaFetch() => _instance;
 
+  /// A dedicated [MetaFetch] which ignore content type condition that allowing
+  /// parse to HTML [Document].
+  /// 
+  /// This only available for testing only. 
   @visibleForTesting
   static MetaFetch forTest() => MetaFetch._(true);
 
