@@ -6,6 +6,10 @@ import 'package:meta/meta.dart';
 import '../model/metainfo.dart';
 import '../buffer/metainfo.dart';
 
+/// A [String] pair [Record] represents `property` and `content` attribute
+/// in `<meta>` tag.
+typedef PropertyPair = (String name, String content);
+
 /// A parser for constructing [MetaInfo] given [Document]
 /// in HTML.
 abstract base mixin class MetaPropertyParser {
@@ -26,7 +30,7 @@ abstract base mixin class MetaPropertyParser {
   /// Actual implementation of assigning [MetaInfo] given all `<meta>`
   /// [Element] with corresponded [propertyNamePrefix].
   ///
-  /// By resolving content from [metaPropertyTags] which is unmodifiable
+  /// By resolving [propertyPair] which is unmodifiable
   /// [List] into [assigner] and uses for generating [MetaInfo] in
   /// [parse].
   ///
@@ -35,7 +39,7 @@ abstract base mixin class MetaPropertyParser {
   /// metadata content.
   @protected
   void resolveMetaTags(
-      MetaInfoAssigner assigner, List<Element> metaPropertyTags);
+      MetaInfoAssigner assigner, Iterable<PropertyPair> propertyPair);
 
   /// Resolve rich information metadata from given [htmlHead] which
   /// is `<head>` [Element] in HTML.
@@ -45,10 +49,14 @@ abstract base mixin class MetaPropertyParser {
   @nonVirtual
   MetaInfo parse(Element htmlHead) {
     final MetaInfoParser metaParser = MetaInfoParser()..markInitalized();
-    final metaTags = htmlHead.querySelectorAll(
-        r'meta[property^="' + propertyNamePrefix + r':"][content]');
+    final Iterable<PropertyPair> metaTagsProp = htmlHead.querySelectorAll(
+        r'meta[property^="' + propertyNamePrefix + r':"][content]').map((e) {
+          final attr = e.attributes;
 
-    resolveMetaTags(metaParser, UnmodifiableListView(metaTags));
+          return (attr['property']!, attr['content']!);
+        });
+
+    resolveMetaTags(metaParser, UnmodifiableListView(metaTagsProp));
 
     return metaParser.compile();
   }

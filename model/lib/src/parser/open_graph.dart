@@ -1,5 +1,3 @@
-import 'package:html/dom.dart';
-
 import '../buffer/metainfo.dart';
 
 import 'property_parser.dart';
@@ -12,14 +10,13 @@ final class OpenGraphPropertyParser extends MetaPropertyParser {
 
   @override
   void resolveMetaTags(
-      MetaInfoAssigner assigner, List<Element> metaPropertyTags) {
+      MetaInfoAssigner assigner, Iterable<PropertyPair> propertyPair) {
     final ImageInfoParser imgParser = ImageInfoParser();
     final VideoInfoParser vidParser = VideoInfoParser();
     final AudioInfoParser audParser = AudioInfoParser();
 
-    for (Element metaTag in metaPropertyTags) {
-      String property = metaTag.attributes['property']!,
-          content = metaTag.attributes['content']!;
+    for (PropertyPair metaTag in propertyPair) {
+      var (property, content) = metaTag;
 
       switch (property) {
         case "og:title":
@@ -113,12 +110,12 @@ final class OpenGraphPropertyParser extends MetaPropertyParser {
           audParser.url = Uri.tryParse(content);
           break;
         case "og:audio:secure_url":
-          if (imgParser.isInitalized) {
+          if (audParser.isInitalized) {
             audParser.secureUrl = Uri.tryParse(content);
           }
           break;
         case "og:audio:type":
-          if (imgParser.isInitalized) {
+          if (audParser.isInitalized) {
             audParser.type = content;
           }
           break;
