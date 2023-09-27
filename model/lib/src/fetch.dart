@@ -4,6 +4,7 @@ import 'package:html/dom.dart';
 import 'package:html/parser.dart' as html_parser show parse;
 import 'package:http/http.dart'
     hide delete, get, head, patch, post, put, read, readBytes, runWithClient;
+import 'package:meta/meta.dart';
 
 import 'model/metainfo.dart';
 import 'parser/property_parser.dart';
@@ -19,16 +20,21 @@ final class MetaFetch {
   static const String DEFAULT_USER_AGENT_STRING = "oghref 1";
 
   /// Instance of [MetaFetch].
-  static final MetaFetch _instance = MetaFetch._();
+  static final MetaFetch _instance = MetaFetch._(false);
 
   /// A collection of [MetaPropertyParser] which identified with their prefix.
   final Set<MetaPropertyParser> _parsers = HashSet(
       equals: (p0, p1) => p0.propertyNamePrefix == p1.propertyNamePrefix,
       hashCode: (p0) => p0.propertyNamePrefix.hashCode);
 
-  MetaFetch._();
+  final bool _ignoreContentType;
+
+  MetaFetch._(this._ignoreContentType);
 
   factory MetaFetch() => _instance;
+
+  @visibleForTesting
+  static MetaFetch forTest() => MetaFetch._(true);
 
   /// Define a value of user agent when making request in [fetchFromHttp].
   static String userAgentString = DEFAULT_USER_AGENT_STRING;
@@ -128,18 +134,20 @@ final class MetaFetch {
   ///
   /// HTTP response code does not matter in this method that it only
   /// required to retrive HTML content from [url].
-  Future<MetaInfo> fetchFromHttp(Uri url) {
+  Future<MetaInfo> fetchFromHttp(Uri url) async {
     if (!RegExp(r"^https?$").hasMatch(url.scheme)) {
       throw NonHttpUrlException._(url);
     }
 
     Request req = Request("GET", url)..headers['user-agent'] = userAgentString;
 
-    return req.send().then(Response.fromStream).then((resp) {
-      String body = resp.body;
+    Response resp = await req.send().then(Response.fromStream);
 
-      return html_parser.parse(body);
-    }).then(buildMetaInfo);
+    if (_ignoreContentType || RegExp(r"^text/html").hasMatch(resp.headers["Content-type"]!)) {
+      return buildMetaInfo(html_parser.parse(resp.body));
+    }
+
+    return MetaInfo();
   }
 }
 
