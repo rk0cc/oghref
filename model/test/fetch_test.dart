@@ -5,7 +5,8 @@ import 'package:test/test.dart';
 
 void main() {
   setUpAll(() {
-    GetIt.I.registerSingleton<MetaFetch>(MetaFetch.forTest()..register(const OpenGraphPropertyParser()));
+    GetIt.I.registerSingleton<MetaFetch>(
+        MetaFetch.forTest()..register(const OpenGraphPropertyParser()));
   });
 
   test("Test parse under HTTPS", () async {

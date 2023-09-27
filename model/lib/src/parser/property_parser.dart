@@ -49,12 +49,14 @@ abstract base mixin class MetaPropertyParser {
   @nonVirtual
   MetaInfo parse(Element htmlHead) {
     final MetaInfoParser metaParser = MetaInfoParser()..markInitalized();
-    final Iterable<PropertyPair> metaTagsProp = htmlHead.querySelectorAll(
-        r'meta[property^="' + propertyNamePrefix + r':"][content]').map((e) {
-          final attr = e.attributes;
+    final Iterable<PropertyPair> metaTagsProp = htmlHead
+        .querySelectorAll(
+            r'meta[property^="' + propertyNamePrefix + r':"][content]')
+        .map((e) {
+      final attr = e.attributes;
 
-          return (attr['property']!, attr['content']!);
-        });
+      return (attr['property']!, attr['content']!);
+    });
 
     resolveMetaTags(metaParser, UnmodifiableListView(metaTagsProp));
 
