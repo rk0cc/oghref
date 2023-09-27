@@ -1,8 +1,17 @@
 import '../buffer/metainfo.dart';
+import '../fetch.dart';
 
 import 'property_parser.dart';
 
+/// Open Graph Protocol implementations of [MetaPropertyParser].
+/// 
+/// This parser will handle `<meta>` property which starting with
+/// `og:`
 final class OpenGraphPropertyParser extends MetaPropertyParser {
+  /// Create parser for Open Graph Protocol.
+  /// 
+  /// Usually it should be attached into [MetaFetch.register]
+  /// directly.
   const OpenGraphPropertyParser();
 
   @override

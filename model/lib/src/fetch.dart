@@ -32,6 +32,10 @@ final class MetaFetch {
 
   MetaFetch._(this._ignoreContentType);
 
+  /// Get a instance of [MetaFetch].
+  /// 
+  /// [MetaFetch] is a singleton object that it allows to uses same [register]
+  /// preference whatever been made.
   factory MetaFetch() => _instance;
 
   /// A dedicated [MetaFetch] which ignore content type condition that allowing

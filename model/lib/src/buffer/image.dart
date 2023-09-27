@@ -10,6 +10,7 @@ final class ImageInfoParser
         MediaInfoAssigner,
         ScalableInfoAssigner,
         UrlInfoAssigner {
+  /// Specify text for accessible tools to recognize the content of [ImageInfo].
   String? alt;
 
   @override
