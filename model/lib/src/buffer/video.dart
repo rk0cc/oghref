@@ -3,6 +3,7 @@ import 'immutable_buffer.dart';
 import 'media.dart';
 import 'url.dart';
 
+/// A parser for handling construction of [VideoInfo].
 final class VideoInfoParser
     with
         ImmutableBuffer<VideoInfo>,

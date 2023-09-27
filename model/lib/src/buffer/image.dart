@@ -3,6 +3,7 @@ import 'immutable_buffer.dart';
 import 'media.dart';
 import 'url.dart';
 
+/// A parser for constructin [ImageInfo].
 final class ImageInfoParser
     with
         ImmutableBuffer<ImageInfo>,

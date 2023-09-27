@@ -3,6 +3,7 @@ import 'immutable_buffer.dart';
 import 'media.dart';
 import 'url.dart';
 
+/// A parser for handling construction of [AudioInfo].
 final class AudioInfoParser
     with ImmutableBuffer<AudioInfo>, MediaInfoAssigner, UrlInfoAssigner {
   @override

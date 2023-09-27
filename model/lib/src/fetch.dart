@@ -8,9 +8,20 @@ import 'package:http/http.dart'
 import 'model/metainfo.dart';
 import 'parser/property_parser.dart';
 
+/// Read [Document] and find all metadata tags to generate corresponded
+/// [MetaInfo].
+/// 
+/// At the same time, it manages all [MetaPropertyParser] according to
+/// [MetaPropertyParser.propertyNamePrefix] and will be refer them
+/// for finding matched [MetaPropertyParser].
 final class MetaFetch {
+  /// Default request user agent value.
   static const String DEFAULT_USER_AGENT_STRING = "oghref 1";
+
+  /// Instance of [MetaFetch].
   static final MetaFetch _instance = MetaFetch._();
+
+  /// A collection of [MetaPropertyParser] which identified with their prefix.
   final Set<MetaPropertyParser> _parsers = HashSet(
       equals: (p0, p1) => p0.propertyNamePrefix == p1.propertyNamePrefix,
       hashCode: (p0) => p0.propertyNamePrefix.hashCode);
@@ -19,19 +30,34 @@ final class MetaFetch {
 
   factory MetaFetch() => _instance;
 
+  /// Define a value of user agent when making request in [fetchFromHttp].
   static String userAgentString = DEFAULT_USER_AGENT_STRING;
 
+  /// Standardize [Function] for finding matched prefix in
+  /// [Iterable.singleWhere].
   static bool Function(MetaPropertyParser) _prefixEquals(String prefix) =>
       (mpp) => mpp.propertyNamePrefix == prefix;
 
+  /// Get the corresponded parser from [prefix].
+  /// 
+  /// If no related [prefix] is assigned, [StateError] will
+  /// be thrown.
   MetaPropertyParser _findCorrespondedParser(String prefix) {
     return _parsers.singleWhere(_prefixEquals(prefix));
   }
 
+  /// Register [parser] into [MetaFetch].
+  /// 
+  /// It returns `true` if registered sucessfully.
   bool register(MetaPropertyParser parser) {
     return _parsers.add(parser);
   }
 
+  /// Determine the [identifier] is registered or not.
+  /// 
+  /// The [identifier] can be a [String] of prefix or [MetaPropertyParser].
+  /// 
+  /// Return `true` if existed.
   bool hasBeenRegistered(Object identifier) {
     try {
       if (identifier is String) {
@@ -48,6 +74,9 @@ final class MetaFetch {
     return false;
   }
 
+  /// Remove [MetaPropertyParser] with corresponded [prefix].
+  /// 
+  /// It returns `true` if the given [prefix] has been removed.
   bool deregister(String prefix) {
     final int originLength = _parsers.length;
     _parsers.removeWhere(_prefixEquals(prefix));
@@ -55,6 +84,13 @@ final class MetaFetch {
     return _parsers.length < originLength;
   }
 
+  /// Construct [MetaInfo] with given [Document].
+  /// 
+  /// If `<meta>` [Element]'s property prefix [hasBeenRegistered],
+  /// it refers to the first matched prefix given from an order
+  /// of [Document] and apply all available fields in [MetaInfo].
+  /// Otherwise, it will return [MetaInfo] with all empty field
+  /// when it cannot be able to find matched prefix.
   MetaInfo buildMetaInfo(Document htmlDocument) {
     final offeredPropPrefix = htmlDocument.head
         ?.querySelectorAll("meta[property][content]")
@@ -78,6 +114,20 @@ final class MetaFetch {
     return parsedResult;
   }
 
+  /// Retrive [MetaInfo] from HTTP request from [url].
+  /// 
+  /// If [url] is not `HTTP` or `HTTPS`, [NonHttpUrlException]
+  /// will be thrown.
+  /// 
+  /// Optionally, [userAgentString] can be modified before making request
+  /// that allowing to identify as another user agent rather than
+  /// [DEFAULT_USER_AGENT_STRING].
+  /// 
+  /// Once the request got response, it's body content will be [html_parser.parse]
+  /// to [Document] directly and perform [buildMetaInfo].
+  /// 
+  /// HTTP response code does not matter in this method that it only
+  /// required to retrive HTML content from [url].
   Future<MetaInfo> fetchFromHttp(Uri url) {
     if (!RegExp(r"^https?$").hasMatch(url.scheme)) {
       throw NonHttpUrlException._(url);
@@ -93,7 +143,9 @@ final class MetaFetch {
   }
 }
 
+/// Indicate the given [Uri] is not using HTTP(S) protocol.
 final class NonHttpUrlException implements Exception {
+  /// Non-HTTP(S) [Uri].
   final Uri url;
 
   NonHttpUrlException._(this.url);
