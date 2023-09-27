@@ -1,3 +1,5 @@
+/// A basic library shipped with model, defined parser and fetch
+/// only for implementation.
 library model;
 
 export 'src/model/metainfo.dart';

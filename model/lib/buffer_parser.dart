@@ -1,3 +1,5 @@
+/// Offering the classes for constructing custom parser
+/// on another protocol.
 library buffer_parser;
 
 export 'src/buffer/immutable_buffer.dart';
