@@ -16,6 +16,8 @@ import 'package:url_launcher/url_launcher.dart'
         canLaunch,
         closeWebView;
 
+export 'package:oghref_model/model.dart';
+
 /// A builder when rich information link metadata has been retrived.
 /// 
 /// It retrived [metaInfo] of corresponded metadata and [openLink]
@@ -36,6 +38,8 @@ typedef MetaInfoFetchFailedBuilder = Widget Function(
 /// correctly without retry.
 class OgHrefBuilder extends StatefulWidget {
   /// URL of website.
+  /// 
+  /// It must be HTTP or HTTPS.
   final Uri url;
   
   /// A [Widget] builder for handling [MetaInfo] retrived.
