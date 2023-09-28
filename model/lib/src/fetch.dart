@@ -115,7 +115,7 @@ final class MetaFetch {
   /// Remove [MetaPropertyParser] with corresponded [prefix].
   ///
   /// It returns `true` if the given [prefix] has been removed.
-  /// 
+  ///
   /// In additions, if [prefix] is the same value of [primaryPrefix],
   /// it will reset to [Null].
   bool deregister(String prefix) {

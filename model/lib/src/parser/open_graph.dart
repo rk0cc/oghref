@@ -8,7 +8,7 @@ import 'property_parser.dart';
 ///
 /// This parser will handle `<meta>` property which starting with
 /// `og:`
-/// 
+///
 /// Open Graph Protocol is created by Facebook and become
 /// the major rich information metadata protocol for various
 /// social platform.
