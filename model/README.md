@@ -29,6 +29,33 @@ documentations.
 
 See [example](./example/main.dart);
 
+#### Limitations and restrictions
+
+* `MetaFetch` only recognize the first property name prefix in a sequence of `<meta>` tag in `<head>`.
+For example, given a HTML file:
+
+    ```html
+    <head>
+        <meta property="og:title" content="Title"/>
+        <meta property="twitter:card" content="summary"/>
+    </head>
+    ```
+
+  In this case, `MetaFetch` only recognize `og` prefix and remaining metadata will be ignored. If preferred to override the first property prefix recognization, please apply this setting in `MetaFetch` (in this case, Twitter Card):
+
+  ```dart
+  MetaFetch()..primaryPrefix = "twitter";
+  ```
+
+* Unless for testing, URL response's content type must be satisified below:
+
+  <ul>
+    <li><code>text/html</code></li>
+    <li><code>application/xhtml+xml</code></li>
+  </ul>
+
+  Otherwise, `MetaFetch` refuses to parse properties to `MetaInfo`.
+
 ## License
 
 AGPL 3.0 or later (For import dedicatedly)

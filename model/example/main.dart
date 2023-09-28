@@ -3,6 +3,7 @@ import 'package:oghref_model/model.dart';
 void main() async {
   // Get instance of MetaFetch then register parser
   final MetaFetch metaFetch = MetaFetch()
+    // Remark: Please register manually.
     ..register(const OpenGraphPropertyParser());
 
   /* 
