@@ -1,0 +1,23 @@
+name: oghref_media_control
+description: Additional package for providing mixin to build widget for playing multimedia resources
+version: 1.0.0
+repository: https://github.com/rk0cc/oghref/tree/main/media_control
+issue_tracker: https://github.com/rk0cc/oghref/issues
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.10.0'
+dependencies: 
+  flutter:
+    sdk: flutter
+  oghref_builder: ^1.0.1
+  audioplayers: ^5.1.0
+  media_kit: ^1.1.8+2
+  media_kit_video: ^1.2.1
+  media_kit_libs_video: ^1.0.3
+  mime_dart: ^3.0.0
+  path: ^1.8.3
+  meta: ^1.9.1
+  http: ^1.1.0
+dev_dependencies: 
+  flutter_lints: ^2.0.3
+flutter: 
