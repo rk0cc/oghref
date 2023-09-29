@@ -1,3 +1,7 @@
+## 1.1.1
+
+* Annotate `MetaFetch.buildMetaInfo` for testing only
+
 ## 1.1.0
 
 * Allow specify primary prefix which will be resolved rather than following `<meta>` sequences

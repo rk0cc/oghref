@@ -136,6 +136,10 @@ final class MetaFetch {
   /// of [Document] and apply all available fields in [MetaInfo].
   /// Otherwise, it will return [MetaInfo] with all empty field
   /// when it cannot be able to find matched prefix.
+  ///
+  /// **Update in `1.1.1`: This method no longer available
+  /// for non testing purpose.**
+  @visibleForTesting
   MetaInfo buildMetaInfo(Document htmlDocument) {
     Iterable<String> prefixSequence() sync* {
       final offeredPropPrefix = htmlDocument.head
