@@ -1,3 +1,7 @@
+## 1.1.2
+
+* Make `MetaFetch` follow redirection.
+
 ## 1.1.1
 
 * Annotate `MetaFetch.buildMetaInfo` for testing only

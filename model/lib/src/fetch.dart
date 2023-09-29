@@ -193,7 +193,9 @@ final class MetaFetch {
       throw NonHttpUrlException._(url);
     }
 
-    Request req = Request("GET", url)..headers['user-agent'] = userAgentString;
+    Request req = Request("GET", url)
+      ..headers['user-agent'] = userAgentString
+      ..followRedirects = true;
 
     Response resp = await req.send().then(Response.fromStream);
     String? mimeData = resp.headers["Content-type"];
