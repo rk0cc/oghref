@@ -63,7 +63,8 @@ class OgHrefBuilder extends StatefulWidget {
       {required this.onRetrived,
       required this.onFetchFailed,
       this.onLoading,
-      this.onOpenLinkFailed});
+      this.onOpenLinkFailed,
+      super.key});
 
   @override
   State<OgHrefBuilder> createState() => _OgHrefBuilderState();
