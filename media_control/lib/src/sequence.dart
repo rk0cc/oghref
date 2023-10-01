@@ -122,14 +122,20 @@ final class MediaTypeMismatchedException implements Exception {
   final String providedType;
   final String requriedType;
 
-  MediaTypeMismatchedException._(this.uri, this.providedType, this.requriedType);
+  MediaTypeMismatchedException._(
+      this.uri, this.providedType, this.requriedType);
 
   @override
   String toString() {
-    StringBuffer buf = StringBuffer()..writeln("MeidaTypeMismatchedException: The given URI resources is not responsed the corresponded type")
-        ..write("\tURI: ")..writeln(uri)
-        ..write("\tProvided type: ")..writeln(providedType)
-        ..write("\tRequired type: ")..writeln(requriedType);
+    StringBuffer buf = StringBuffer()
+      ..writeln(
+          "MeidaTypeMismatchedException: The given URI resources is not responsed the corresponded type")
+      ..write("\tURI: ")
+      ..writeln(uri)
+      ..write("\tProvided type: ")
+      ..writeln(providedType)
+      ..write("\tRequired type: ")
+      ..writeln(requriedType);
 
     return buf.toString();
   }
