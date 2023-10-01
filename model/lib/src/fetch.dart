@@ -30,7 +30,32 @@ final class MetaFetch {
 
   final bool _ignoreContentType;
 
+  /// Allow [MetaFetch] fetch redirected [Uri]'s metadata instead of
+  /// provided one. 
+  bool allowRedirect = false;
+
   String? _primaryPrefix;
+
+  /// Specify which prefix should be resolve at first.
+  ///
+  /// If it applied as [Null], this feature will be disabled.
+  set primaryPrefix(String? prefix) {
+    if (prefix != null) {
+      try {
+        _findCorrespondedParser(prefix);
+      } on StateError {
+        throw ArgumentError.value(prefix, "primaryPrefix",
+            "No registered parser using the given prefix.");
+      }
+    }
+
+    _primaryPrefix = prefix;
+  }
+
+  /// Get which prefix of property will be overriden when parse.
+  ///
+  /// If it is [Null], the feature will be disabled.
+  String? get primaryPrefix => _primaryPrefix;
 
   MetaFetch._(this._ignoreContentType);
 
@@ -54,27 +79,6 @@ final class MetaFetch {
   /// [Iterable.singleWhere].
   static bool Function(MetaPropertyParser) _prefixEquals(String prefix) =>
       (mpp) => mpp.propertyNamePrefix == prefix;
-
-  /// Specify which prefix should be resolve at first.
-  ///
-  /// If it applied as [Null], this feature will be disabled.
-  set primaryPrefix(String? prefix) {
-    if (prefix != null) {
-      try {
-        _findCorrespondedParser(prefix);
-      } on StateError {
-        throw ArgumentError.value(prefix, "primaryPrefix",
-            "No registered parser using the given prefix.");
-      }
-    }
-
-    _primaryPrefix = prefix;
-  }
-
-  /// Get which prefix of property will be overriden when parse.
-  ///
-  /// If it is [Null], the feature will be disabled.
-  String? get primaryPrefix => _primaryPrefix;
 
   /// Get the corresponded parser from [prefix].
   ///
@@ -195,10 +199,10 @@ final class MetaFetch {
 
     Request req = Request("GET", url)
       ..headers['user-agent'] = userAgentString
-      ..followRedirects = true;
+      ..followRedirects = allowRedirect;
 
     Response resp = await req.send().then(Response.fromStream);
-    String? mimeData = resp.headers["Content-type"];
+    String? mimeData = resp.headers["content-type"];
 
     final List<String> extTypes = [];
 

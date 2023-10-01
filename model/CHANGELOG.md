@@ -1,6 +1,7 @@
 ## 1.1.2
 
-* Make `MetaFetch` follow redirection.
+* Allow `MetaFetch` follow redirection (disabled by default).
+* Uses all lower case for getting response header.
 
 ## 1.1.1
 
