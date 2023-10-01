@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!-- This file suppose read absolutely noting -->
+<html>
+    <head>
+        <title>Sample 3</title>
+        <meta charset="utf-8"/>
+        <!-- Uses JS to create meta tags -->
+    </head>
+    <body>
+        <p>HTML Sample 3</p>
+        <script src="alert.js"></script>
+        <script>
+            /*
+                These method does not work.
+            */
+            /**
+             * @type {{title:string, url: URL, description: string?, image: URL}}
+             */
+            var ogObj = {
+                title: "Sample 3",
+                url: new URL("https://example.com"),
+                description: "This sample created by JavaScript",
+                image: new URL("https://example.com/image3.jpg")
+            };
+
+            for (var ogObjKey in ogObj) {
+                var metaElement = document.createElement("meta");
+                metaElement.setAttribute("property", `og:${ogObjKey}`);
+
+                var contentVal = ogObj[ogObjKey];
+                if (contentVal != null) {
+                    metaElement.setAttribute("content", contentVal);
+                }
+
+                document.head.appendChild(metaElement);
+            }
+        </script>
+    </body>
+</html>
