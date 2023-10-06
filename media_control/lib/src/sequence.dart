@@ -1,29 +1,42 @@
+import 'package:flutter/widgets.dart' show ChangeNotifier;
 import 'package:http/http.dart'
     hide delete, get, head, patch, post, put, read, readBytes, runWithClient;
+import 'package:meta/meta.dart';
 import 'package:oghref_builder/oghref_builder.dart' show MetaFetch;
 
 enum ResponseErrorAction { ignore, error }
 
 enum Replay { none, current, allPlaylist }
 
-final class MediaPlaybackIterator implements Iterator<Uri> {
+enum MediaType { audio, video }
+
+@internal
+final class MediaPlaybackIterator extends ChangeNotifier implements Iterator<Uri> {
   static const int IDLE_CURSOR = -1;
 
   final List<Uri> _sequence = [];
-  Replay replay = Replay.none;
+  Replay _replay = Replay.none;
+
+  set replay(Replay newReplay) {
+    _replay = newReplay;
+    notifyListeners();
+  }
+
+  Replay get replay => _replay;
+
   int _cursor = -1;
   bool _inited = false;
 
   MediaPlaybackIterator(Iterable<Uri> sequence,
       {int retry = 3,
-      ResponseErrorAction onResponseError = ResponseErrorAction.error}) {
-    _assignSequence(sequence, retry, onResponseError).then((_) {
+      ResponseErrorAction onResponseError = ResponseErrorAction.error, MediaType? mediaType}) {
+    _assignSequence(sequence, retry, onResponseError, mediaType).then((_) {
       _inited = true;
     });
   }
 
   Future<void> _assignSequence(Iterable<Uri> sequence, int retry,
-      ResponseErrorAction onResponseError) async {
+      ResponseErrorAction onResponseError, MediaType? mediaType) async {
     String? contentPrefix;
 
     for (Uri seq in sequence) {
@@ -54,6 +67,12 @@ final class MediaPlaybackIterator implements Iterator<Uri> {
 
       if (contentPrefix == null) {
         contentPrefix = seqCtxPrefix;
+        if (mediaType != null) {
+          final enforcedMediaType = mediaType.name;
+          if (enforcedMediaType != seqCtxPrefix) {
+            throw MediaTypeMismatchedException._(seq, seqCtxPrefix, enforcedMediaType);
+          }
+        }
       } else if (contentPrefix != seqCtxPrefix) {
         throw MediaTypeMismatchedException._(seq, seqCtxPrefix, contentPrefix);
       }
@@ -70,13 +89,27 @@ final class MediaPlaybackIterator implements Iterator<Uri> {
     return _cursor;
   }
 
+  bool get isActive => cursor != IDLE_CURSOR;
+
+  bool get isIdle => cursor == IDLE_CURSOR;
+
+  bool get inited => _inited;
+
   @override
-  Uri get current => _sequence[cursor];
+  Uri get current {
+    if (!_inited) {
+      throw StateError("Media playback not initalized yet.");
+    }
+
+    return _sequence[cursor];
+  }
 
   @override
   bool moveNext() {
     if (_inited) {
-      _cursor++;
+      if (_cursor < _sequence.length) {
+        _cursor++;
+      }
 
       switch (replay) {
         case Replay.current:
@@ -90,14 +123,18 @@ final class MediaPlaybackIterator implements Iterator<Uri> {
         case Replay.none:
           break;
       }
+
+      notifyListeners();
     }
 
-    return cursor != IDLE_CURSOR;
+    return isActive;
   }
 
   bool movePrevious() {
     if (_inited) {
-      _cursor--;
+      if (cursor > -1) {
+        _cursor--;
+      }
 
       switch (replay) {
         case Replay.current:
@@ -111,9 +148,11 @@ final class MediaPlaybackIterator implements Iterator<Uri> {
         case Replay.none:
           break;
       }
+
+      notifyListeners();
     }
 
-    return cursor != IDLE_CURSOR;
+    return isActive;
   }
 }
 
