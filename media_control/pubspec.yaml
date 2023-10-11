@@ -10,7 +10,6 @@ dependencies:
   flutter:
     sdk: flutter
   oghref_builder: ^1.0.1
-  audioplayers: ^5.2.0
   media_kit: ^1.1.8+2
   media_kit_video: ^1.2.1
   media_kit_libs_video: ^1.0.3
