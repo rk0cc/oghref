@@ -6,12 +6,12 @@ import 'package:oghref_builder/oghref_builder.dart' show MetaFetch;
 import 'aspect_ratio.dart';
 
 /// A [Widget] for handling media playback.
-/// 
+///
 /// This widget has unbounded constraint that it causes build error
 /// if parent [Widget] cannot provide either width or height.
 final class MediaPlayback extends StatefulWidget {
   /// Video, audio or both resources in URL.
-  /// 
+  ///
   /// If the given resources is audio type, it retains
   /// an empty [Widget] but still functional when hovering
   /// this area for changing media position.
@@ -62,9 +62,13 @@ final class _MediaPlaybackState extends State<MediaPlayback> {
   }
 
   void _openMedia() {
-    final Map<String, String> httpHeaders = {"user-agent": MetaFetch.userAgentString};
+    final Map<String, String> httpHeaders = {
+      "user-agent": MetaFetch.userAgentString
+    };
 
-    List<Media> medias = widget.resources.map((e) => Media("$e", httpHeaders: httpHeaders)).toList(growable: false);
+    List<Media> medias = widget.resources
+        .map((e) => Media("$e", httpHeaders: httpHeaders))
+        .toList(growable: false);
 
     player.open(Playlist(medias), play: false);
   }
@@ -77,7 +81,7 @@ final class _MediaPlaybackState extends State<MediaPlayback> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.aspectRatio.applyToWidget(
-        child: Video(controller: videoCtrl));
+    return widget.aspectRatio
+        .applyToWidget(child: Video(controller: videoCtrl));
   }
 }

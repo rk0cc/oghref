@@ -23,7 +23,7 @@ final class AspectRatioValue {
   const AspectRatioValue._(this.width, this.height);
 
   /// Create custom value of [AspectRatioValue].
-  /// 
+  ///
   /// The applied [width] and [height] must be [double.isFinite].
   /// Applying non-finite value will lead to throw [ArgumentError].
   factory AspectRatioValue(double width, double height) {
