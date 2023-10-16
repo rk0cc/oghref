@@ -1,5 +1,5 @@
-name: oghref_material
-description: Material themed widget for generating rich information link from URL.
+name: oghref_fluent
+description: Fluent themed widget for generating rich information link from URL.
 version: 1.0.0
 repository: https://github.com/rk0cc/oghref/tree/main/widgets/material
 issue_tracker: https://github.com/rk0cc/oghref/issues
@@ -11,6 +11,7 @@ dependencies:
     sdk: flutter
   oghref_builder: ^1.1.0
   oghref_media_control: ^1.0.0
+  fluent_ui: ^4.7.6
 dev_dependencies: 
   flutter_lints: ^2.0.3
 flutter: 
