@@ -1,3 +1,7 @@
+## 1.1.0
+
+* Upgrade model to `1.2.0`
+
 ## 1.0.1
 
 * Pump `oghref_model` to at least `1.1.1`
