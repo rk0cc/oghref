@@ -1,15 +1,16 @@
 import '../model/media.dart';
 
 /// A mixin for assigning [MediaInfo] implemented parser.
-abstract mixin class MediaInfoAssigner implements MediaInfo {
-  @override
+abstract mixin class MediaInfoAssigner {
+  /// Define MIME type.
   String? type;
 }
 
 /// A mixin for assigning [ScalableInfo] implemented parser.
-abstract mixin class ScalableInfoAssigner implements ScalableInfo {
-  @override
+abstract mixin class ScalableInfoAssigner {
+  /// Define width.
   double? width;
-  @override
+
+  /// Define height.
   double? height;
 }

@@ -3,7 +3,8 @@ import 'package:oghref_model/buffer_parser.dart';
 import 'package:oghref_model/src/parser/open_graph.dart';
 import 'package:test/test.dart';
 
-final Uri resourseUri = Uri.parse("https://raw.githubusercontent.com/rk0cc/oghref/main/model/test_resources");
+final Uri resourseUri = Uri.parse(
+    "https://raw.githubusercontent.com/rk0cc/oghref/main/model/test_resources");
 
 void main() {
   setUpAll(() {
@@ -12,13 +13,15 @@ void main() {
   });
 
   test("Test parse under HTTPS", () async {
-    final parsed = await GetIt.I<MetaFetch>().fetchFromHttp(resourseUri.resolve("1.html"));
+    final parsed =
+        await GetIt.I<MetaFetch>().fetchFromHttp(resourseUri.resolve("1.html"));
 
     expect(parsed.title, equals("Sample 1"));
     expect(parsed.images.first.width, equals(400.0));
   });
   test("Ignore subproperties content", () async {
-    final parsed = await GetIt.I<MetaFetch>().fetchFromHttp(resourseUri.resolve("2.html"));
+    final parsed =
+        await GetIt.I<MetaFetch>().fetchFromHttp(resourseUri.resolve("2.html"));
 
     expect(parsed.images.first.width, isNull);
     expect(parsed.images.first.height, isNull);
@@ -26,7 +29,8 @@ void main() {
   });
 
   test("Unaccept JavaScript generated HTML element", () async {
-    final parsed = await GetIt.I<MetaFetch>().fetchFromHttp(resourseUri.resolve("3.html"));
+    final parsed =
+        await GetIt.I<MetaFetch>().fetchFromHttp(resourseUri.resolve("3.html"));
 
     expect(parsed.title, isNull);
     expect(parsed.url, isNull);

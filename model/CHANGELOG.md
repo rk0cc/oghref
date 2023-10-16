@@ -1,3 +1,7 @@
+## 1.2.0
+
+* Remove all assigners implementing with one of the model.
+
 ## 1.1.2
 
 * Allow `MetaFetch` follow redirection (disabled by default).
