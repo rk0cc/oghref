@@ -1,3 +1,5 @@
+/// A media control unit for display multimedia context
+/// in rich information link.
 library media_control;
 
 import 'package:flutter/cupertino.dart' show DefaultCupertinoLocalizations;

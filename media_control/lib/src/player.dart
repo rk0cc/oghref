@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:oghref_builder/oghref_builder.dart' show MetaFetch;
 
 import 'aspect_ratio.dart';
 
@@ -56,6 +57,16 @@ final class _MediaPlaybackState extends State<MediaPlayback> {
     videoCtrl = VideoController(player,
         configuration: widget.videoCtrlConfiguration ??
             const VideoControllerConfiguration());
+
+    _openMedia();
+  }
+
+  void _openMedia() {
+    final Map<String, String> httpHeaders = {"user-agent": MetaFetch.userAgentString};
+
+    List<Media> medias = widget.resources.map((e) => Media("$e", httpHeaders: httpHeaders)).toList(growable: false);
+
+    player.open(Playlist(medias), play: false);
   }
 
   @override

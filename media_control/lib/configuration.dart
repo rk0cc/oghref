@@ -1,3 +1,5 @@
+/// Offer configuration preference from external libraries
+/// and apply to corresponded widget.
 library configuration;
 
 export 'package:media_kit/media_kit.dart' show PlayerConfiguration;
