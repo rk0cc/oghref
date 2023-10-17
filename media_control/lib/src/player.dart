@@ -26,9 +26,14 @@ final class MediaPlayback extends StatefulWidget {
   /// Aspect ratio for wrapping playback widgets.
   final AspectRatioValue aspectRatio;
 
+  /// Specify video control [Widget] will be rendered in video
+  /// frame.
+  final VideoControlsBuilder controlsBuilder;
+
   /// Construct a playback widgets with given resources.
   MediaPlayback(Iterable<Uri> resources,
-      {this.configuration,
+      {required this.controlsBuilder,
+      this.configuration,
       this.videoCtrlConfiguration,
       this.aspectRatio = AspectRatioValue.standardHD,
       super.key})
@@ -81,7 +86,7 @@ final class _MediaPlaybackState extends State<MediaPlayback> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.aspectRatio
-        .applyToWidget(child: Video(controller: videoCtrl));
+    return widget.aspectRatio.applyToWidget(
+        child: Video(controller: videoCtrl, controls: widget.controlsBuilder));
   }
 }

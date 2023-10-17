@@ -14,7 +14,7 @@ import 'package:media_kit/media_kit.dart';
 export 'src/aspect_ratio.dart' hide AspectRatioWidgetExtension;
 export 'src/player.dart';
 
-///
+/// A bundle classes for initalizing media features in OgHref.
 final class OgHrefMediaControlUnit {
   const OgHrefMediaControlUnit._();
 
