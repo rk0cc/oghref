@@ -10,7 +10,11 @@ dependencies:
   flutter:
     sdk: flutter
   oghref_builder: ^1.1.0
-  oghref_media_control: ^1.0.0
+  oghref_media_control: ^2.0.0
+  oghref_model: ^1.2.0
+  cached_network_image: ^3.3.0
+  meta: ^1.9.1
+  media_kit: ^1.1.9
 dev_dependencies: 
   flutter_lints: ^2.0.3
 flutter: 
