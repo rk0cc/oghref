@@ -66,19 +66,32 @@ class OgHrefBuilder extends StatefulWidget {
       this.onOpenLinkFailed,
       super.key});
 
+  /// Create a builder for retiving the first received [url]
+  /// and remain unchanged once it constructed.
+  factory OgHrefBuilder.runOnce(Uri url,
+      {required MetaInfoRetrivedBuilder onRetrived,
+      required MetaInfoFetchFailedBuilder onFetchFailed,
+      WidgetBuilder? onLoading,
+      VoidCallback? onOpenLinkFailed,
+      Key? key}) = _RunOnceOgHrefBuilder;
+
   @override
   State<OgHrefBuilder> createState() => _OgHrefBuilderState();
 }
 
-final class _OgHrefBuilderState extends State<OgHrefBuilder> {
-  late final AsyncMemoizer<MetaInfo> metaInfoMemorizer;
+final class _RunOnceOgHrefBuilder extends OgHrefBuilder {
+  _RunOnceOgHrefBuilder(super.url,
+      {required super.onRetrived,
+      required super.onFetchFailed,
+      super.onLoading,
+      super.onOpenLinkFailed,
+      super.key});
 
   @override
-  void initState() {
-    metaInfoMemorizer = AsyncMemoizer();
-    super.initState();
-  }
+  State<_RunOnceOgHrefBuilder> createState() => _RunOnceOgHrefBuilderState();
+}
 
+base mixin _OgHrefBuilderStateMixin<T extends OgHrefBuilder> on State<T> {
   void _launchUrl() async {
     if (await url_launcher.canLaunchUrl(widget.url)) {
       url_launcher.launchUrl(widget.url, mode: LaunchMode.externalApplication);
@@ -104,6 +117,26 @@ final class _OgHrefBuilderState extends State<OgHrefBuilder> {
     }
 
     return (widget.onLoading ?? (_) => const SizedBox())(context);
+  }
+}
+
+final class _OgHrefBuilderState extends State<OgHrefBuilder>
+    with _OgHrefBuilderStateMixin {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<MetaInfo>(
+        future: MetaFetch().fetchFromHttp(widget.url), builder: _buildHref);
+  }
+}
+
+final class _RunOnceOgHrefBuilderState extends State<_RunOnceOgHrefBuilder>
+    with _OgHrefBuilderStateMixin {
+  late final AsyncMemoizer<MetaInfo> metaInfoMemorizer;
+
+  @override
+  void initState() {
+    metaInfoMemorizer = AsyncMemoizer();
+    super.initState();
   }
 
   @override

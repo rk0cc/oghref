@@ -1,3 +1,8 @@
+## 1.2.0
+
+* Fix content unchanged when given `Uri` updated.
+* Offer `OgHrefBuilder.runOnce` that prevent content changes when widget rebuild.
+
 ## 1.1.0
 
 * Upgrade model to `1.2.0`
