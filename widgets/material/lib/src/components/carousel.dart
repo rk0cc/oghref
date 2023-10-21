@@ -61,9 +61,10 @@ final class _ImageCarouselState extends State<ImageCarousel> {
         imageUrl: destination!.toString(),
         fit: BoxFit.contain,
         httpHeaders: {"user-agent": MetaFetch.userAgentString},
-        placeholder: (context, url) => const CircularProgressIndicator(),
-        errorListener: (err) =>
-            const Center(child: Icon(Icons.image_not_supported_outlined)));
+        errorWidget: (context, url, error) => const Center(child: Icon(Icons.broken_image_outlined)),
+        placeholder: (context, url) => const Center(
+            child: SizedBox.square(
+                dimension: 16, child: CircularProgressIndicator())));
   }
 
   @override

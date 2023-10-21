@@ -15,26 +15,28 @@ import '../components/carousel.dart';
 base class OgHrefMaterialCard extends StatelessWidget
     with LaunchFailedSnackBarHandler, ResponsiveWidthSizeCalculator {
   final Uri url;
-  final double? width;
-  final double? height;
+  final double? mediaWidth;
+  final double? mediaHeight;
   final bool multimedia;
   final TextStyle? tileTitleTextStyle;
   final TextStyle? tileDescriptionTextStyle;
   final AspectRatioValue mediaAspectRatio;
   final bool preferHTTPS;
+  final WidgetBuilder? onLoading;
 
   @override
   final String launchFailedMessage;
 
   const OgHrefMaterialCard(this.url,
-      {this.width,
-      this.height,
+      {this.mediaWidth,
+      this.mediaHeight,
       this.multimedia = true,
       this.tileTitleTextStyle,
       this.tileDescriptionTextStyle,
       this.launchFailedMessage = "Unable to open URL.",
       this.mediaAspectRatio = AspectRatioValue.standardHD,
       this.preferHTTPS = true,
+      this.onLoading,
       super.key});
 
   Widget _buildMediaFrame(BuildContext context, List<oghref.ImageInfo> images,
@@ -62,7 +64,7 @@ base class OgHrefMaterialCard extends StatelessWidget
           preferHTTPS: preferHTTPS);
     }
 
-    double disableIconSize = MediaQuery.sizeOf(context).width / 10;
+    double disableIconSize = (mediaWidth ?? calculateResponsiveWidth(context)) / 10;
     if (disableIconSize < 18) {
       disableIconSize = 18;
     }
@@ -89,44 +91,62 @@ base class OgHrefMaterialCard extends StatelessWidget
         onTap: openLink);
   }
 
-  Column _buildOgHerfContext(BuildContext context,
-      {required String title,
+  Column _buildInteraction(BuildContext context,
+      {required double preferredWidth,
+      required String title,
       String? description,
+      required VoidCallback openLink,
       List<oghref.ImageInfo> images = const [],
       List<oghref.VideoInfo> videos = const [],
-      List<oghref.AudioInfo> audios = const [],
-      required VoidCallback openLink}) {
-    return Column(children: [
-      Expanded(child: _buildMediaFrame(context, images, videos, audios)),
-      _buildTile(context, title, openLink: openLink)
-    ]);
+      List<oghref.AudioInfo> audios = const []}) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+            width: preferredWidth,
+            height: mediaHeight ??
+                mediaAspectRatio.calcHeightFromWidth(preferredWidth),
+            child: _buildMediaFrame(context, images, videos, audios)),
+        SizedBox(
+            width: preferredWidth,
+            child: _buildTile(context, title,
+                openLink: openLink, description: description))
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      double usesWidth = width ?? calculateResponsiveWidth(context);
-      double usesHeight =
-          height ?? mediaAspectRatio.calcHeightFromWidth(usesWidth);
+      double preferredWidth = mediaWidth ?? calculateResponsiveWidth(context);
 
       return SizedBox(
-          width: usesWidth,
-          height: usesHeight,
-          child: Card(
+        width: preferredWidth,
+        child: Card(
             child: OgHrefBuilder(url,
-              onRetrived: (context, metaInfo, openLink) => _buildOgHerfContext(
-                  context,
-                  title: metaInfo.title ?? metaInfo.siteName ?? "$url",
-                  openLink: openLink,
-                  description: metaInfo.description,
-                  audios: metaInfo.audios,
-                  images: metaInfo.images,
-                  videos: metaInfo.videos),
-              onFetchFailed: (context, exception, openLink) =>
-                  _buildOgHerfContext(context,
-                      title: "$url", openLink: openLink),
-              onOpenLinkFailed: () => showLaunchFailedSnackbar(context))
-          ));
+                onLoading: onLoading == null
+                    ? null
+                    : (context) => Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: onLoading!(context)),
+                onRetrived: (context, metaInfo, openLink) => _buildInteraction(
+                    context,
+                    preferredWidth: preferredWidth,
+                    title: metaInfo.title ??
+                        metaInfo.siteName ??
+                        metaInfo.url?.toString() ??
+                        url.toString(),
+                    openLink: openLink,
+                    images: metaInfo.images,
+                    videos: metaInfo.videos,
+                    audios: metaInfo.audios),
+                onFetchFailed: (context, exception, openLink) =>
+                    _buildInteraction(context,
+                        preferredWidth: preferredWidth,
+                        title: url.toString(),
+                        openLink: openLink),
+                onOpenLinkFailed: () => showLaunchFailedSnackbar(context))),
+      );
     });
   }
 }
