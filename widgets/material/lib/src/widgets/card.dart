@@ -13,17 +13,69 @@ import '../width_size_calculator.dart';
 import '../components/carousel.dart';
 import '../typedefs.dart';
 
+/// Rich information link preview under [Card] implementation.
+/// 
+/// If the given [url] marked metadata with recognizable from [MetaFetch],
+/// it will shows informations that provided in markup language including
+/// but not limited to images, audios and videos.
+/// 
+/// When the [url] does not provides any supported rich link metadata, it
+/// will display placeholder icon with entire [url] to ensure functional
+/// whatever the metadata is provide or not.
 base class OgHrefMaterialCard extends StatelessWidget
     with LaunchFailedSnackBarHandler, ResponsiveWidthSizeCalculator {
+  /// URL of the link which may be show rich link information if provided.
   final Uri url;
+
+  /// Specified witdth of media frame.
+  /// 
+  /// This also be applied to entire [Card].
+  /// 
+  /// If it is null, it will calculate the suitable width according
+  /// to [MediaQuery.sizeOf].
   final double? mediaWidth;
+
+  /// Specified height of media frame.
+  /// 
+  /// If it is null, it will calculate corresponded height based
+  /// on calculated width with current [mediaAspectRatio]
+  /// preference.
   final double? mediaHeight;
+  
+  /// Enable playing video and audio support if applied.
+  /// 
+  /// ### Issues for previewing YouTube or other non-video / non-audio file URL property in `og:video` / `og:audio`
+  /// 
+  /// Since playback feature is based on [media_kit](https://github.com/media-kit/media-kit) which only supported
+  /// playing "actual media file" only, it no longer be functional for providing URL is not linked to video or
+  /// audio files. As a result, it is strongly suggest to disable [multimedia] if failed to play due to
+  /// unsatified file format of URL.
   final bool multimedia;
+  
+  /// [TextStyle] for displaying link title.
   final TextStyle? tileTitleTextStyle;
+
+  /// [TextStyle] for displaying description.
   final TextStyle? tileDescriptionTextStyle;
+
+  /// Specify [AspectRatioValue] of media frame.
   final AspectRatioValue mediaAspectRatio;
+
+  /// Uses `HTTPS` [Uri] resources instead of the default value
+  /// (if applied).
+  /// 
+  /// It is strongly suggest to enable and disable for those website
+  /// is using HTTPS and HTTP accordingly to prevent malfunction
+  /// owing to cross origin security.
+  /// 
+  /// Although it take no affects for VM environments, it is prefer
+  /// to retain enable.
   final bool preferHTTPS;
+
+  /// Display [Widget] when loading context.
   final WidgetBuilder? onLoading;
+
+  /// Confirm user for opening link before proceed.
   final BeforeOpenLinkConfirmation? confirmation;
 
   @override
@@ -32,14 +84,14 @@ base class OgHrefMaterialCard extends StatelessWidget
   const OgHrefMaterialCard(this.url,
       {this.mediaWidth,
       this.mediaHeight,
-      this.multimedia = true,
+      this.multimedia = false,
       this.tileTitleTextStyle,
       this.tileDescriptionTextStyle,
       this.launchFailedMessage = "Unable to open URL.",
       this.mediaAspectRatio = AspectRatioValue.standardHD,
       this.preferHTTPS = true,
       this.onLoading,
-      this.confirmation,
+      required this.confirmation,
       super.key});
 
   Widget _buildMediaFrame(BuildContext context, List<oghref.ImageInfo> images,

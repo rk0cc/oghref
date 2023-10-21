@@ -28,7 +28,7 @@ base class OgHrefMaterialTile extends StatelessWidget
       this.onLoading,
       this.launchFailedMessage = "Unable to open URL.",
       this.imagePreviewDimension,
-      this.confirmation,
+      required this.confirmation,
       super.key});
 
   Widget _buildImagePreview(
