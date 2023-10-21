@@ -53,6 +53,28 @@ class _OgHrefMaterialExampleHomeState extends State<OgHrefMaterialExampleHome> {
     });
   }
 
+  Future<bool> _confirmIsOpen(BuildContext context, Uri targetUrl) async {
+    String decodedUrl = "$targetUrl";
+    if (decodedUrl.contains("%")) {
+      decodedUrl = Uri.decodeFull(decodedUrl);
+    }
+
+    bool? allowOpen = await showDialog(context: context, builder: (context) => AlertDialog(
+      title: const Text("Open link"),
+      content: Text("You are trying to open '$decodedUrl', proceed?"),
+      actions: <TextButton>[
+        TextButton(onPressed: () {
+          Navigator.pop<bool>(context, true);
+        }, child: const Text("Continue")),
+        TextButton(onPressed: () {
+          Navigator.pop<bool>(context, false);
+        }, child: const Text("Abort"))
+      ]
+    ));
+
+    return allowOpen ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final pref = Provider.of<ThemePreference>(context);
@@ -117,10 +139,14 @@ class _OgHrefMaterialExampleHomeState extends State<OgHrefMaterialExampleHome> {
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         children: <Widget>[
                           OgHrefMaterialCard(uri!,
+                          confirmation: _confirmIsOpen,
                               onLoading: (context) => const Center(
                                   child: CircularProgressIndicator()),
                               multimedia: multimedia),
-                              OgHrefMaterialTile(uri!)
+                              OgHrefMaterialTile(uri!, 
+                              confirmation: _confirmIsOpen,
+                              onLoading: (context) => const Center(
+                                  child: CircularProgressIndicator()))
                         ]
                             .map((e) =>
                                 Align(alignment: Alignment.center, child: e))

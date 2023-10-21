@@ -11,6 +11,7 @@ import 'package:oghref_model/buffer_parser.dart';
 import '../launch_failed_snackbar.dart';
 import '../width_size_calculator.dart';
 import '../components/carousel.dart';
+import '../typedefs.dart';
 
 base class OgHrefMaterialCard extends StatelessWidget
     with LaunchFailedSnackBarHandler, ResponsiveWidthSizeCalculator {
@@ -23,6 +24,7 @@ base class OgHrefMaterialCard extends StatelessWidget
   final AspectRatioValue mediaAspectRatio;
   final bool preferHTTPS;
   final WidgetBuilder? onLoading;
+  final BeforeOpenLinkConfirmation? confirmation;
 
   @override
   final String launchFailedMessage;
@@ -37,6 +39,7 @@ base class OgHrefMaterialCard extends StatelessWidget
       this.mediaAspectRatio = AspectRatioValue.standardHD,
       this.preferHTTPS = true,
       this.onLoading,
+      this.confirmation,
       super.key});
 
   Widget _buildMediaFrame(BuildContext context, List<oghref.ImageInfo> images,
@@ -88,7 +91,17 @@ base class OgHrefMaterialCard extends StatelessWidget
         title: Text(title,
             style: tileTitleTextStyle, overflow: TextOverflow.ellipsis),
         subtitle: descTxt,
-        onTap: openLink);
+        onTap: () async {
+          if (confirmation != null) {
+            bool allowOpen = await confirmation!(context, url);
+
+            if (!allowOpen) {
+              return;
+            }
+          }
+
+          openLink();
+        });
   }
 
   Column _buildInteraction(BuildContext context,
@@ -136,6 +149,7 @@ base class OgHrefMaterialCard extends StatelessWidget
                         metaInfo.siteName ??
                         metaInfo.url?.toString() ??
                         url.toString(),
+                    description: metaInfo.description,
                     openLink: openLink,
                     images: metaInfo.images,
                     videos: metaInfo.videos,

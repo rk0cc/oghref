@@ -6,6 +6,7 @@ import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
 
 import '../launch_failed_snackbar.dart';
 import '../width_size_calculator.dart';
+import '../typedefs.dart';
 
 base class OgHrefMaterialTile extends StatelessWidget
     with LaunchFailedSnackBarHandler, ResponsiveWidthSizeCalculator {
@@ -15,6 +16,7 @@ base class OgHrefMaterialTile extends StatelessWidget
   final bool preferHTTPS;
   final WidgetBuilder? onLoading;
   final double? imagePreviewDimension;
+  final BeforeOpenLinkConfirmation? confirmation;
 
   @override
   final String launchFailedMessage;
@@ -26,6 +28,7 @@ base class OgHrefMaterialTile extends StatelessWidget
       this.onLoading,
       this.launchFailedMessage = "Unable to open URL.",
       this.imagePreviewDimension,
+      this.confirmation,
       super.key});
 
   Widget _buildImagePreview(
@@ -74,6 +77,18 @@ base class OgHrefMaterialTile extends StatelessWidget
         ));
   }
 
+  void _openLinkConfirm(BuildContext context, VoidCallback openLink) async {
+    if (confirmation != null) {
+      bool allowOpen = await confirmation!(context, url);
+
+      if (!allowOpen) {
+        return;
+      }
+    }
+
+    openLink();
+  }
+
   @override
   Widget build(BuildContext context) {
     return OgHrefBuilder(url,
@@ -92,12 +107,12 @@ base class OgHrefMaterialTile extends StatelessWidget
                   : Text(metaInfo.description!,
                       style: tileDescriptionTextStyle,
                       overflow: TextOverflow.ellipsis),
-              onTap: openLink);
+              onTap: () => _openLinkConfirm(context, openLink));
         },
         onFetchFailed: (context, exception, openLink) => ListTile(
             title: Text("$url",
                 style: tileTitleTextStyle, overflow: TextOverflow.ellipsis),
-            onTap: openLink),
+            onTap: () => _openLinkConfirm(context, openLink)),
         onLoading: onLoading == null
             ? null
             : (context) => Padding(
