@@ -1,3 +1,7 @@
+## 2.0.2
+
+* Update builder dependency.
+
 ## 2.0.1
 
 * Dependencies update
