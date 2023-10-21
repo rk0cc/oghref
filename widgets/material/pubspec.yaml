@@ -3,6 +3,9 @@ description: Material themed widget for generating rich information link from UR
 version: 1.0.0
 repository: https://github.com/rk0cc/oghref/tree/main/widgets/material
 issue_tracker: https://github.com/rk0cc/oghref/issues
+screenshots:
+  - description: Screenshot of OgHref Material example
+    path: screenshots/oghref_material.png
 environment:
   sdk: '>=3.0.0 <4.0.0'
   flutter: '>=3.10.0'
