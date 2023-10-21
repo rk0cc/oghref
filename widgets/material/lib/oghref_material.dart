@@ -7,6 +7,7 @@ export 'package:oghref_builder/oghref_builder.dart';
 export 'package:oghref_media_control/media_control.dart' show AspectRatioValue;
 export 'src/components/carousel.dart';
 export 'src/widgets/card.dart';
+export 'src/widgets/tile.dart';
 
 final class OgHrefMaterialBinding {
   const OgHrefMaterialBinding._();
