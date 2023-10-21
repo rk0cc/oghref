@@ -361,7 +361,7 @@ packages:
     source: hosted
     version: "1.1.4"
   media_kit_libs_video:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: media_kit_libs_video
       sha256: "3688e0c31482074578652bf038ce6301a5d21e1eda6b54fc3117ffeb4bdba067"
@@ -408,6 +408,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   octo_image:
     dependency: transitive
     description:
@@ -420,10 +428,10 @@ packages:
     dependency: transitive
     description:
       name: oghref_builder
-      sha256: "264a8acf98fa33a6f34dd5f1741f0105b90759732755791597736b70d0625513"
+      sha256: ff68b3074711aa418ac219488220c303e556f6a4555e8d8aea0818fa2eb7703d
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   oghref_material:
     dependency: "direct main"
     description:
@@ -435,10 +443,10 @@ packages:
     dependency: transitive
     description:
       name: oghref_media_control
-      sha256: "1d5cae49d9ce0c38ba5fbbc8df9ec230683093b87a53c9796cd7ee106724818d"
+      sha256: "3ac394d082d9fc1cadb0e1d634185ea549b6a18cb6555f69d33d1390910b101b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   oghref_model:
     dependency: transitive
     description:
@@ -559,6 +567,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.7.3"
+  provider:
+    dependency: "direct main"
+    description:
+      name: provider
+      sha256: cdbe7530b12ecd9eb455bdaa2fcb8d4dad22e80b8afb4798b41479d5ce26847f
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.5"
   pub_semver:
     dependency: transitive
     description:
