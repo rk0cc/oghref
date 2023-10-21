@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:oghref_builder/oghref_builder.dart'
     hide ImageInfo, VideoInfo, AudioInfo;
 import 'package:oghref_builder/oghref_builder.dart' as oghref
@@ -8,8 +10,7 @@ import 'package:oghref_model/buffer_parser.dart';
 
 import '../launch_failed_snackbar.dart';
 import '../width_size_calculator.dart';
-import 'carousel.dart';
-import 'media_ctrl.dart';
+import '../components/carousel.dart';
 
 base class OgHrefMaterialCard extends StatelessWidget
     with LaunchFailedSnackBarHandler, ResponsiveWidthSizeCalculator {
@@ -19,7 +20,7 @@ base class OgHrefMaterialCard extends StatelessWidget
   final bool multimedia;
   final TextStyle? tileTitleTextStyle;
   final TextStyle? tileDescriptionTextStyle;
-  final AspectRatioValue videoAspectRatio;
+  final AspectRatioValue mediaAspectRatio;
   final bool preferHTTPS;
 
   @override
@@ -32,7 +33,7 @@ base class OgHrefMaterialCard extends StatelessWidget
       this.tileTitleTextStyle,
       this.tileDescriptionTextStyle,
       this.launchFailedMessage = "Unable to open URL.",
-      this.videoAspectRatio = AspectRatioValue.standardHD,
+      this.mediaAspectRatio = AspectRatioValue.standardHD,
       this.preferHTTPS = true,
       super.key});
 
@@ -51,15 +52,17 @@ base class OgHrefMaterialCard extends StatelessWidget
 
     if (multimedia && multimediaResources.isNotEmpty) {
       return MediaPlayback(multimediaResources,
-          controlsBuilder: (state) =>
-              MaterialMediaController(state.widget.controller.player));
+          aspectRatio: mediaAspectRatio,
+          configuration: const PlayerConfiguration(
+              muted: true, protocolWhitelist: ["http", "https"]),
+          controlsBuilder: AdaptiveVideoControls);
     } else if (images.isNotEmpty) {
       return ImageCarousel(
           List.unmodifiable(images.where((element) => element.url != null)),
           preferHTTPS: preferHTTPS);
     }
 
-    double disableIconSize = MediaQuery.sizeOf(context).width / 8;
+    double disableIconSize = MediaQuery.sizeOf(context).width / 10;
     if (disableIconSize < 18) {
       disableIconSize = 18;
     }
@@ -86,9 +89,44 @@ base class OgHrefMaterialCard extends StatelessWidget
         onTap: openLink);
   }
 
+  Column _buildOgHerfContext(BuildContext context,
+      {required String title,
+      String? description,
+      List<oghref.ImageInfo> images = const [],
+      List<oghref.VideoInfo> videos = const [],
+      List<oghref.AudioInfo> audios = const [],
+      required VoidCallback openLink}) {
+    return Column(children: [
+      Expanded(child: _buildMediaFrame(context, images, videos, audios)),
+      _buildTile(context, title, openLink: openLink)
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return LayoutBuilder(builder: (context, constraints) {
+      double usesWidth = width ?? calculateResponsiveWidth(context);
+      double usesHeight =
+          height ?? mediaAspectRatio.calcHeightFromWidth(usesWidth);
+
+      return SizedBox(
+          width: usesWidth,
+          height: usesHeight,
+          child: Card(
+            child: OgHrefBuilder(url,
+              onRetrived: (context, metaInfo, openLink) => _buildOgHerfContext(
+                  context,
+                  title: metaInfo.title ?? metaInfo.siteName ?? "$url",
+                  openLink: openLink,
+                  description: metaInfo.description,
+                  audios: metaInfo.audios,
+                  images: metaInfo.images,
+                  videos: metaInfo.videos),
+              onFetchFailed: (context, exception, openLink) =>
+                  _buildOgHerfContext(context,
+                      title: "$url", openLink: openLink),
+              onOpenLinkFailed: () => showLaunchFailedSnackbar(context))
+          ));
+    });
   }
 }
