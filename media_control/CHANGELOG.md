@@ -1,3 +1,7 @@
+## 2.0.1
+
+* Dependencies update
+
 ## 2.0.0
 
 * Video control must be specified.
