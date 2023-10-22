@@ -1,3 +1,7 @@
+## 1.2.1
+
+* Fix keep fetching issue when resizing widget.
+
 ## 1.2.0
 
 * Fix content unchanged when given `Uri` updated.

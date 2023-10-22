@@ -67,7 +67,8 @@ class OgHrefBuilder extends StatefulWidget {
       super.key});
 
   /// Create a builder for retiving the first received [url]
-  /// and remain unchanged once it constructed.
+  /// and remain unchanged once it constructed until it removes
+  /// from widget trees.
   factory OgHrefBuilder.runOnce(Uri url,
       {required MetaInfoRetrivedBuilder onRetrived,
       required MetaInfoFetchFailedBuilder onFetchFailed,
@@ -122,10 +123,29 @@ base mixin _OgHrefBuilderStateMixin<T extends OgHrefBuilder> on State<T> {
 
 final class _OgHrefBuilderState extends State<OgHrefBuilder>
     with _OgHrefBuilderStateMixin {
+  late Future<MetaInfo> metaInfoFetch;
+
+  @override
+  void initState() {
+    super.initState();
+    _bindMemorizer();
+  }
+
+  @override
+  void didUpdateWidget(OgHrefBuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.url != widget.url) {
+      _bindMemorizer();
+    }
+  }
+
+  void _bindMemorizer() {
+    metaInfoFetch = MetaFetch().fetchFromHttp(widget.url);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<MetaInfo>(
-        future: MetaFetch().fetchFromHttp(widget.url), builder: _buildHref);
+    return FutureBuilder<MetaInfo>(future: metaInfoFetch, builder: _buildHref);
   }
 }
 
