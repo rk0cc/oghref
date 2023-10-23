@@ -8,8 +8,9 @@ final Uri resourseUri = Uri.parse(
 
 void main() {
   setUpAll(() {
-    GetIt.I.registerSingleton<MetaFetch>(
-        MetaFetch.forTest()..register(const OpenGraphPropertyParser()));
+    GetIt.I.registerSingleton<MetaFetch>(MetaFetch.forTest()
+      ..register(const OpenGraphPropertyParser())
+      ..primaryPrefix = "og");
   });
 
   test("Test parse under HTTPS", () async {

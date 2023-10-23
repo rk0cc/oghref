@@ -5,10 +5,13 @@ import 'package:html/parser.dart' as html_parser show parse;
 import 'package:http/http.dart'
     hide delete, get, head, patch, post, put, read, readBytes, runWithClient;
 import 'package:meta/meta.dart';
-import 'package:mime_dart/mime_dart.dart';
 
+import 'exception/content_type_mismatched.dart';
+import 'exception/non_http_url.dart';
 import 'model/metainfo.dart';
 import 'parser/property_parser.dart';
+
+import 'content_type_verifier.dart';
 
 /// Read [Document] and find all metadata tags to generate corresponded
 /// [MetaInfo].
@@ -18,7 +21,7 @@ import 'parser/property_parser.dart';
 /// for finding matched [MetaPropertyParser].
 final class MetaFetch {
   /// Default request user agent value.
-  static const String DEFAULT_USER_AGENT_STRING = "oghref 1";
+  static const String DEFAULT_USER_AGENT_STRING = "oghref 2";
 
   /// Instance of [MetaFetch].
   static final MetaFetch _instance = MetaFetch._(false);
@@ -133,6 +136,27 @@ final class MetaFetch {
     return _parsers.length < originLength;
   }
 
+  static Set<String> _offeredPropPrefix(Element? htmlHead) {
+    return htmlHead
+            ?.querySelectorAll("meta[property][content]")
+            .map((e) => e.attributes["property"]!.split(":").first)
+            .toSet() ??
+        HashSet<String>();
+  }
+
+  Iterable<String> _prefixSequence(Document htmlDocument) sync* {
+    final offeredPropPrefix = _offeredPropPrefix(htmlDocument.head);
+
+    if (primaryPrefix != null && offeredPropPrefix.contains(primaryPrefix)) {
+      yield primaryPrefix!;
+      offeredPropPrefix.remove(primaryPrefix);
+    }
+
+    for (String remainPrefix in offeredPropPrefix) {
+      yield remainPrefix;
+    }
+  }
+
   /// Construct [MetaInfo] with given [Document].
   ///
   /// If `<meta>` [Element]'s property prefix [hasBeenRegistered],
@@ -145,26 +169,9 @@ final class MetaFetch {
   /// for non testing purpose.**
   @visibleForTesting
   MetaInfo buildMetaInfo(Document htmlDocument) {
-    Iterable<String> prefixSequence() sync* {
-      final offeredPropPrefix = htmlDocument.head
-              ?.querySelectorAll("meta[property][content]")
-              .map((e) => e.attributes["property"]!.split(":").first)
-              .toSet() ??
-          HashSet<String>();
-
-      if (primaryPrefix != null && offeredPropPrefix.contains(primaryPrefix)) {
-        yield primaryPrefix!;
-        offeredPropPrefix.remove(primaryPrefix);
-      }
-
-      for (String remainPrefix in offeredPropPrefix) {
-        yield remainPrefix;
-      }
-    }
-
     MetaInfo parsedResult = MetaInfo();
 
-    for (String prefix in prefixSequence()) {
+    for (String prefix in _prefixSequence(htmlDocument)) {
       try {
         var parser = _findCorrespondedParser(prefix);
         parsedResult = parser.parse(htmlDocument.head!);
@@ -176,6 +183,50 @@ final class MetaFetch {
     }
 
     return parsedResult;
+  }
+
+  /// Construct all [MetaInfo] with given [Document].
+  ///
+  /// It returns an unmodifiable [Map] which contains all [register]ed
+  /// [MetaPropertyParser]'s results with
+  /// [MetaPropertyParser.propertyNamePrefix] as a key of the [Map].
+  @visibleForTesting
+  Map<String, MetaInfo> buildAllMetaInfo(Document htmlDocument) {
+    Map<String, MetaInfo> metaInfoMap = HashMap<String, MetaInfo>();
+
+    for (String prefix in _prefixSequence(htmlDocument)) {
+      try {
+        var parser = _findCorrespondedParser(prefix);
+        metaInfoMap[prefix] = parser.parse(htmlDocument.head!);
+      } on StateError {
+        // If the prefix does not supported.
+        continue;
+      }
+    }
+
+    return Map.unmodifiable(metaInfoMap);
+  }
+
+  Future<Document> _fetchHtmlDocument(Uri url) async {
+    const Set<String> eligableType = <String>{"html", "xhtml"};
+
+    if (!RegExp(r"^https?$").hasMatch(url.scheme)) {
+      throw NonHttpUrlException(url);
+    }
+
+    Request req = Request("GET", url)
+      ..headers['user-agent'] = userAgentString
+      ..followRedirects = allowRedirect;
+
+    Response resp = await req.send().then(Response.fromStream);
+
+    if (!_ignoreContentType &&
+        !resp.isSatisfiedExtension(fileExtensions: eligableType)) {
+      throw ContentTypeMismatchedException(
+          url, resp.contentType, const {"text/html", "application/xhtml+xml"});
+    }
+
+    return html_parser.parse(resp.body);
   }
 
   /// Retrive [MetaInfo] from HTTP request from [url].
@@ -192,42 +243,33 @@ final class MetaFetch {
   ///
   /// HTTP response code does not matter in this method that it only
   /// required to retrive HTML content from [url].
-  Future<MetaInfo> fetchFromHttp(Uri url) async {
-    if (!RegExp(r"^https?$").hasMatch(url.scheme)) {
-      throw NonHttpUrlException._(url);
-    }
-
-    Request req = Request("GET", url)
-      ..headers['user-agent'] = userAgentString
-      ..followRedirects = allowRedirect;
-
-    Response resp = await req.send().then(Response.fromStream);
-    String? mimeData = resp.headers["content-type"];
-
-    final List<String> extTypes = [];
-
-    if (mimeData != null) {
-      extTypes.addAll(
-          Mime.getExtensionsFromType(mimeData.split(';').first) ?? const []);
-    }
-
-    if (!_ignoreContentType &&
-        !const <String>["html", "xhtml"].any(extTypes.contains)) {
-      return MetaInfo();
-    }
-
-    return buildMetaInfo(html_parser.parse(resp.body));
+  ///
+  /// For fetch all metadata protocols in a single [url], please uses
+  /// [fetchAllFromHttp] instead.
+  Future<MetaInfo> fetchFromHttp(Uri url) {
+    return _fetchHtmlDocument(url)
+        .then(buildMetaInfo)
+        .onError((error, stackTrace) => MetaInfo());
   }
-}
 
-/// Indicate the given [Uri] is not using HTTP(S) protocol.
-final class NonHttpUrlException implements Exception {
-  /// Non-HTTP(S) [Uri].
-  final Uri url;
-
-  NonHttpUrlException._(this.url);
-
-  @override
-  String toString() =>
-      "NonHttpUrlException: The given URL is not HTTP(S) - $url";
+  /// Fetch all [MetaInfo] from various protocols into a single
+  /// [Map].
+  ///
+  /// If [url] is not `HTTP` or `HTTPS`, [NonHttpUrlException]
+  /// will be thrown.
+  ///
+  /// Optionally, [userAgentString] can be modified before making request
+  /// that allowing to identify as another user agent rather than
+  /// [DEFAULT_USER_AGENT_STRING].
+  ///
+  /// Once the request got response, it's body content will be [html_parser.parse]
+  /// to [Document] directly and perform [buildAllMetaInfo].
+  ///
+  /// HTTP response code does not matter in this method that it only
+  /// required to retrive HTML content from [url].
+  Future<Map<String, MetaInfo>> fetchAllFromHttp(Uri url) {
+    return _fetchHtmlDocument(url)
+        .then(buildAllMetaInfo)
+        .onError((error, stackTrace) => const {});
+  }
 }
