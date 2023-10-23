@@ -1,3 +1,10 @@
+## 2.0.0
+
+* Added `MetaFetch.fetchAllFromHttp` for fetching all existed protocol in HTML document.
+* Image, video and audio URL resources no longer included if their content type is not matched.
+* Twitter Card property parser supported
+* Dependencies updates
+
 ## 1.2.0
 
 * Remove all assigners implementing with one of the model.

@@ -62,7 +62,7 @@ final class TwitterCardParser extends MetaPropertyParser {
           break;
         case "twitter:player:stream":
           Uri? resolvedStream = Uri.tryParse(value);
-          if (resolvedStream != null) {
+          if (resolvedStream != null && vidParser.url != null) {
             // Uses raw file if provided instead of relying iframe.
             vidParser.url = resolvedStream;
           }

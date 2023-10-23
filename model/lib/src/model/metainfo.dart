@@ -9,6 +9,8 @@ export 'audio.dart';
 export 'image.dart';
 export 'video.dart';
 
+enum MetaMergePreference { fillTheBlank, appendMediaOnly }
+
 /// Completed structure of rich information link preview metadata.
 ///
 /// Although some fields are compulsory (for example,
@@ -54,4 +56,68 @@ final class MetaInfo implements UrlInfo {
       : this.images = List.unmodifiable(images),
         this.videos = List.unmodifiable(videos),
         this.audios = List.unmodifiable(audios);
+
+  static MetaInfo merge(MetaInfo primary,
+      {List<MetaInfo> fallbacks = const [],
+      required MetaMergePreference preference}) {
+    final Iterable<MetaInfo> validFallbacks =
+        fallbacks.where((element) => !identical(element, primary));
+
+    if (validFallbacks.isEmpty) {
+      throw ArgumentError(
+          "Empty fallbacks or fill with primary MetaInfo itself into fallbacks are forbidden.");
+    }
+
+    T? findFirstNonBlankFallback<T extends Object>(
+        T? Function(MetaInfo m) filter) {
+      Iterable<T> selectedFields = validFallbacks
+          .map(filter)
+          .where((element) => element != null)
+          .cast<T>();
+
+      return selectedFields.isEmpty ? null : selectedFields.first;
+    }
+
+    switch (preference) {
+      case MetaMergePreference.fillTheBlank:
+        return MetaInfo(
+            url: primary.url ?? findFirstNonBlankFallback<Uri>((m) => m.url),
+            secureUrl: primary.secureUrl ??
+                findFirstNonBlankFallback<Uri>((m) => m.secureUrl),
+            description: primary.description ??
+                findFirstNonBlankFallback<String>((m) => m.description),
+            siteName: primary.siteName ??
+                findFirstNonBlankFallback<String>((m) => m.siteName),
+            title: primary.title ??
+                findFirstNonBlankFallback<String>((m) => m.title),
+            images: primary.images,
+            videos: primary.videos,
+            audios: primary.audios);
+      case MetaMergePreference.appendMediaOnly:
+        return MetaInfo(
+            url: primary.url,
+            secureUrl: primary.secureUrl,
+            description: primary.description,
+            siteName: primary.siteName,
+            title: primary.title,
+            images: <ImageInfo>[
+              ...primary.images,
+              ...validFallbacks
+                  .map((e) => e.images)
+                  .expand((element) => element)
+            ],
+            videos: <VideoInfo>[
+              ...primary.videos,
+              ...validFallbacks
+                  .map((e) => e.videos)
+                  .expand((element) => element)
+            ],
+            audios: <AudioInfo>[
+              ...primary.audios,
+              ...validFallbacks
+                  .map((e) => e.audios)
+                  .expand((element) => element)
+            ]);
+    }
+  }
 }

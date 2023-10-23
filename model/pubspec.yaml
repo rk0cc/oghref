@@ -3,15 +3,17 @@ description: Object standarized definition with parser interface for constructin
 version: 2.0.0
 repository: https://github.com/rk0cc/oghref/tree/main/model
 issue_tracker: https://github.com/rk0cc/oghref/issues
+funding:
+  - https://github.com/sponsors/rk0cc
 environment: 
   sdk: '>=3.0.0 <4.0.0'
 dependencies: 
-  meta: ^1.9.1
+  meta: ^1.10.0
   http: ^1.1.0
   html: '>=0.15.4 <1.0.0'
   mime_dart: ^3.0.0
 dev_dependencies: 
-  lints: ^2.1.1
-  test: ^1.24.6
+  lints: ^3.0.0
+  test: ^1.24.8
   get_it: ^7.6.4
   
