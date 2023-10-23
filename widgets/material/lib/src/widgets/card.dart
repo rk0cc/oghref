@@ -14,11 +14,11 @@ import '../components/carousel.dart';
 import '../typedefs.dart';
 
 /// Rich information link preview under [Card] implementation.
-/// 
+///
 /// If the given [url] marked metadata with recognizable from [MetaFetch],
 /// it will shows informations that provided in markup language including
 /// but not limited to images, audios and videos.
-/// 
+///
 /// When the [url] does not provides any supported rich link metadata, it
 /// will display placeholder icon with entire [url] to ensure functional
 /// whatever the metadata is provide or not.
@@ -28,30 +28,30 @@ base class OgHrefMaterialCard extends StatelessWidget
   final Uri url;
 
   /// Specified witdth of media frame.
-  /// 
+  ///
   /// This also be applied to entire [Card].
-  /// 
+  ///
   /// If it is null, it will calculate the suitable width according
   /// to [MediaQuery.sizeOf].
   final double? mediaWidth;
 
   /// Specified height of media frame.
-  /// 
+  ///
   /// If it is null, it will calculate corresponded height based
   /// on calculated width with current [mediaAspectRatio]
   /// preference.
   final double? mediaHeight;
-  
+
   /// Enable playing video and audio support if applied.
-  /// 
+  ///
   /// ### Issues for previewing YouTube or other non-video / non-audio file URL property in `og:video` / `og:audio`
-  /// 
+  ///
   /// Since playback feature is based on [media_kit](https://github.com/media-kit/media-kit) which only supported
   /// playing "actual media file" only, it no longer be functional for providing URL is not linked to video or
   /// audio files. As a result, it is strongly suggest to disable [multimedia] if failed to play due to
   /// unsatified file format of URL.
   final bool multimedia;
-  
+
   /// [TextStyle] for displaying link title.
   final TextStyle? tileTitleTextStyle;
 
@@ -63,11 +63,11 @@ base class OgHrefMaterialCard extends StatelessWidget
 
   /// Uses `HTTPS` [Uri] resources instead of the default value
   /// (if applied).
-  /// 
+  ///
   /// It is strongly suggest to enable and disable for those website
   /// is using HTTPS and HTTP accordingly to prevent malfunction
   /// owing to cross origin security.
-  /// 
+  ///
   /// Although it take no affects for VM environments, it is prefer
   /// to retain enable.
   final bool preferHTTPS;
@@ -76,11 +76,18 @@ base class OgHrefMaterialCard extends StatelessWidget
   final WidgetBuilder? onLoading;
 
   /// Confirm user for opening link before proceed.
+  ///
+  /// Although it is nullable, it still marked as required property for
+  /// security reason.
   final BeforeOpenLinkConfirmation? confirmation;
 
   @override
   final String launchFailedMessage;
 
+  /// Create rich information link [Card] by given [url].
+  ///
+  /// If either [mediaWidth] or [mediaHeight] omitted, it will
+  /// calculate reasonable value in responsive view.
   const OgHrefMaterialCard(this.url,
       {this.mediaWidth,
       this.mediaHeight,
@@ -96,6 +103,7 @@ base class OgHrefMaterialCard extends StatelessWidget
 
   Widget _buildMediaFrame(BuildContext context, List<oghref.ImageInfo> images,
       List<oghref.VideoInfo> videos, List<oghref.AudioInfo> audios) {
+    // Get multimedia resources which provided.
     List<Uri> multimediaResources = List.unmodifiable(<UrlInfo>[
       ...videos,
       ...audios
@@ -108,22 +116,27 @@ base class OgHrefMaterialCard extends StatelessWidget
     }));
 
     if (multimedia && multimediaResources.isNotEmpty) {
+      // Get media playback if enabled multimedia features with provided resources.
       return MediaPlayback(multimediaResources,
           aspectRatio: mediaAspectRatio,
           configuration: const PlayerConfiguration(
               muted: true, protocolWhitelist: ["http", "https"]),
           controlsBuilder: AdaptiveVideoControls);
     } else if (images.isNotEmpty) {
+      // Get images either no multimedia resources provided or disabled multimedia features.
       return ImageCarousel(
           List.unmodifiable(images.where((element) => element.url != null)),
           preferHTTPS: preferHTTPS);
     }
 
-    double disableIconSize = (mediaWidth ?? calculateResponsiveWidth(context)) / 10;
+    // Get Icon for placeholder
+    double disableIconSize =
+        (mediaWidth ?? calculateResponsiveWidth(context)) / 10;
     if (disableIconSize < 18) {
       disableIconSize = 18;
     }
 
+    // Last resort widget. Display broken image icon.
     return Container(
         color: Theme.of(context).disabledColor.withAlpha(16),
         child: Center(
@@ -167,11 +180,13 @@ base class OgHrefMaterialCard extends StatelessWidget
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        // Media frame
         SizedBox(
             width: preferredWidth,
             height: mediaHeight ??
                 mediaAspectRatio.calcHeightFromWidth(preferredWidth),
             child: _buildMediaFrame(context, images, videos, audios)),
+        // Tile link
         SizedBox(
             width: preferredWidth,
             child: _buildTile(context, title,
@@ -186,33 +201,32 @@ base class OgHrefMaterialCard extends StatelessWidget
       double preferredWidth = mediaWidth ?? calculateResponsiveWidth(context);
 
       return SizedBox(
-        width: preferredWidth,
-        child: Card(
-            child: OgHrefBuilder(url,
-                onLoading: onLoading == null
-                    ? null
-                    : (context) => Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: onLoading!(context)),
-                onRetrived: (context, metaInfo, openLink) => _buildInteraction(
-                    context,
-                    preferredWidth: preferredWidth,
-                    title: metaInfo.title ??
-                        metaInfo.siteName ??
-                        metaInfo.url?.toString() ??
-                        url.toString(),
-                    description: metaInfo.description,
-                    openLink: openLink,
-                    images: metaInfo.images,
-                    videos: metaInfo.videos,
-                    audios: metaInfo.audios),
-                onFetchFailed: (context, exception, openLink) =>
-                    _buildInteraction(context,
-                        preferredWidth: preferredWidth,
-                        title: url.toString(),
-                        openLink: openLink),
-                onOpenLinkFailed: () => showLaunchFailedSnackbar(context))),
-      );
+          width: preferredWidth,
+          child: Card(
+              child: OgHrefBuilder(url,
+                  onLoading: onLoading == null
+                      ? null
+                      : (context) => Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: onLoading!(context)),
+                  onRetrived: (context, metaInfo, openLink) =>
+                      _buildInteraction(context,
+                          preferredWidth: preferredWidth,
+                          title: metaInfo.title ??
+                              metaInfo.siteName ??
+                              metaInfo.url?.toString() ??
+                              url.toString(),
+                          description: metaInfo.description,
+                          openLink: openLink,
+                          images: metaInfo.images,
+                          videos: metaInfo.videos,
+                          audios: metaInfo.audios),
+                  onFetchFailed: (context, exception, openLink) =>
+                      _buildInteraction(context,
+                          preferredWidth: preferredWidth,
+                          title: url.toString(),
+                          openLink: openLink),
+                  onOpenLinkFailed: () => showLaunchFailedSnackbar(context))));
     });
   }
 }

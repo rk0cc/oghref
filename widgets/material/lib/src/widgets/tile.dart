@@ -8,19 +8,52 @@ import '../launch_failed_snackbar.dart';
 import '../width_size_calculator.dart';
 import '../typedefs.dart';
 
+/// Create [ListTile] based widget for displaying rich information link.
+///
+/// It only shows image preview only no matter the given [url]
+/// offered multimedia resources. At the same times, the image preview
+/// widget only offered as square frame only.
 base class OgHrefMaterialTile extends StatelessWidget
     with LaunchFailedSnackBarHandler, ResponsiveWidthSizeCalculator {
+  /// URL of the link.
   final Uri url;
+
+  /// [TextStyle] for displaying link title.
   final TextStyle? tileTitleTextStyle;
+
+  /// [TextStyle] for displaying description.
   final TextStyle? tileDescriptionTextStyle;
+
+  /// Uses `HTTPS` [Uri] resources instead of the default value
+  /// (if applied).
+  ///
+  /// It is strongly suggest to enable and disable for those website
+  /// is using HTTPS and HTTP accordingly to prevent malfunction
+  /// owing to cross origin security.
+  ///
+  /// Although it take no affects for VM environments, it is prefer
+  /// to retain enable.
   final bool preferHTTPS;
+
+  /// Display [Widget] when loading context.
   final WidgetBuilder? onLoading;
+
+  /// Dimension of image preview widget.
   final double? imagePreviewDimension;
+
+  /// Confirm user for opening link before proceed.
+  ///
+  /// Although it is nullable, it still marked as required property for
+  /// security reason.
   final BeforeOpenLinkConfirmation? confirmation;
 
   @override
   final String launchFailedMessage;
 
+  /// Create rich information link [ListTile] by given [url].
+  ///
+  /// If [imagePreviewDimension] is omitted, it will uses calculated
+  /// dimension based on calculated value in responsive view.
   const OgHrefMaterialTile(this.url,
       {this.preferHTTPS = true,
       this.tileTitleTextStyle,

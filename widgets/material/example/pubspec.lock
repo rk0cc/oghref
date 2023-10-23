@@ -361,7 +361,7 @@ packages:
     source: hosted
     version: "1.1.4"
   media_kit_libs_video:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: media_kit_libs_video
       sha256: "3688e0c31482074578652bf038ce6301a5d21e1eda6b54fc3117ffeb4bdba067"
@@ -428,10 +428,10 @@ packages:
     dependency: transitive
     description:
       name: oghref_builder
-      sha256: ff68b3074711aa418ac219488220c303e556f6a4555e8d8aea0818fa2eb7703d
+      sha256: "4e7a0f094c9c6f7e4f382c88284382ce026109dd124f5826d58c34e6b6d2705a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   oghref_material:
     dependency: "direct main"
     description:

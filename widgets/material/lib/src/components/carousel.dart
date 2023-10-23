@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:oghref_builder/oghref_builder.dart' show MetaFetch;
 import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
 
+/// 
 base class ImageCarousel extends StatefulWidget {
   final List<oghref.ImageInfo> images;
   final bool preferHTTPS;
@@ -61,7 +62,8 @@ final class _ImageCarouselState extends State<ImageCarousel> {
         imageUrl: destination!.toString(),
         fit: BoxFit.contain,
         httpHeaders: {"user-agent": MetaFetch.userAgentString},
-        errorWidget: (context, url, error) => const Center(child: Icon(Icons.broken_image_outlined)),
+        errorWidget: (context, url, error) =>
+            const Center(child: Icon(Icons.broken_image_outlined)),
         placeholder: (context, url) => const Center(
             child: SizedBox.square(
                 dimension: 16, child: CircularProgressIndicator())));
@@ -81,14 +83,18 @@ final class _ImageCarouselState extends State<ImageCarousel> {
         Positioned(
             left: 0,
             child: IconButton(
-                onPressed: movePrevious,
+                onPressed:
+                    (controller.page ?? 0).floor() == 0 ? null : movePrevious,
                 color: widget.iconColour,
                 icon: Icon(Icons.arrow_back_outlined,
                     size: widget.controlIconSize))),
         Positioned(
             right: 0,
             child: IconButton(
-                onPressed: moveNext,
+                onPressed: (controller.page ?? widget.images.length).ceil() ==
+                        widget.images.length
+                    ? null
+                    : moveNext,
                 color: widget.iconColour,
                 icon: Icon(Icons.arrow_forward_outlined,
                     size: widget.controlIconSize)))
