@@ -5,13 +5,13 @@ import 'package:oghref_model/src/parser/twitter_card.dart';
 import 'package:test/test.dart';
 
 final Uri resourseUri = Uri.parse(
-    "https://raw.githubusercontent.com/rk0cc/oghref/main/model/test_resources");
+    "https://raw.githubusercontent.com/rk0cc/oghref/main/model/test_resources/");
 
 void main() {
   setUpAll(() {
     GetIt.I.registerSingleton<MetaFetch>(MetaFetch.forTest()
       ..register(const OpenGraphPropertyParser())
-      ..register(const TwitterCardParser())
+      ..register(const TwitterCardPropertyParser())
       ..primaryPrefix = "og");
   });
 
@@ -37,5 +37,12 @@ void main() {
 
     expect(parsed.title, isNull);
     expect(parsed.url, isNull);
+  });
+
+  test("Remove unexisted content", () async {
+    final parsed =
+        await GetIt.I<MetaFetch>().fetchFromHttp(resourseUri.resolve("4.html"));
+
+    expect(parsed.images, isEmpty);
   });
 }

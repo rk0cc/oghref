@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 
 import '../fetch.dart' show MetaFetch;
 import '../content_type_verifier.dart';
-import '../concurrent.dart';
 import 'audio.dart';
 import 'image.dart';
 import 'video.dart';
@@ -70,15 +69,14 @@ final class MetaInfo implements UrlInfo {
 
     // Purge any ineligible content type into infos.
     () async {
+      _MetaInfoClient c = _MetaInfoClient();
+
       Iterable<Uri> getUrlsFromUrlInfo(List<UrlInfo> urlInfos) =>
           urlInfos.where((element) => element.url != null).map((e) => e.url!);
 
       Stream<(Uri, Response)> buildRespStream(Iterable<Uri> uris) =>
           Stream.fromFutures(uris.map((e) async {
-            Request req = Request("HEAD", e)
-              ..headers['user-agent'] = MetaFetch.userAgentString;
-
-            Response resp = await req.send().then(Response.fromStream);
+            Response resp = await c.head(e);
 
             return (e, resp);
           }));
@@ -91,33 +89,29 @@ final class MetaInfo implements UrlInfo {
           vidResps = buildRespStream(vidUris),
           audResps = buildRespStream(audUris);
 
-      Future<bool> imgComputed = createIsolateStreamOperation(imgResps, (data) {
-            var (url, resp) = data;
+      await for((Uri, Response) ur in imgResps) {
+        var (url, resp) = ur;
 
-            if (!resp
-                .isSatisfiedContentTypeCategory(ContentTypeCategory.image)) {
-              filteredImages.removeWhere((element) => element.url == url);
-            }
-          }),
-          vidComputed = createIsolateStreamOperation(vidResps, (data) {
-            var (url, resp) = data;
+        if (!resp.isSatisfiedContentTypeCategory(ContentTypeCategory.image)) {
+          filteredImages.removeWhere((element) => element.url == url);
+        }
+      }
 
-            if (!resp
-                .isSatisfiedContentTypeCategory(ContentTypeCategory.video)) {
-              filteredVideos.removeWhere((element) => element.url == url);
-            }
-          }),
-          audComputed = createIsolateStreamOperation(audResps, (data) {
-            var (url, resp) = data;
+      await for((Uri, Response) ur in vidResps) {
+        var (url, resp) = ur;
 
-            if (!resp
-                .isSatisfiedContentTypeCategory(ContentTypeCategory.audio)) {
-              filteredAudios.removeWhere((element) => element.url == url);
-            }
-          });
+        if (!resp.isSatisfiedContentTypeCategory(ContentTypeCategory.video)) {
+          filteredVideos.removeWhere((element) => element.url == url);
+        }
+      }
 
-      await Stream.fromFutures([imgComputed, audComputed, vidComputed])
-          .every((element) => element == true);
+      await for((Uri, Response) ur in audResps) {
+        var (url, resp) = ur;
+
+        if (!resp.isSatisfiedContentTypeCategory(ContentTypeCategory.audio)) {
+          filteredAudios.removeWhere((element) => element.url == url);
+        }
+      }
     }();
 
     return MetaInfo._(
@@ -195,5 +189,15 @@ final class MetaInfo implements UrlInfo {
                   .expand((element) => element)
             ]);
     }
+  }
+}
+
+final class _MetaInfoClient extends BaseClient {
+  final Client _nested = Client();
+
+  @override
+  Future<StreamedResponse> send(BaseRequest request) {
+    request.headers["user-agent"] = MetaFetch.userAgentString;
+    return _nested.send(request);
   }
 }

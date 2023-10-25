@@ -19,7 +19,7 @@ import 'property_parser.dart';
 /// unless `twitter:player:stream` is offered with raw video
 /// content URL, it will apply iframe player URL first and removed
 /// when constructing [MetaInfo].
-final class TwitterCardParser extends MetaPropertyParser {
+final class TwitterCardPropertyParser extends MetaPropertyParser {
   /// Uses `twitter.com` instead of `x.com` when constructing
   /// link to X's profile.
   /// 
@@ -28,7 +28,7 @@ final class TwitterCardParser extends MetaPropertyParser {
 
   /// Construct a parser of Twitter Card with decision of
   /// using [legacyDomain].
-  const TwitterCardParser({this.legacyDomain = true});
+  const TwitterCardPropertyParser({this.legacyDomain = true});
 
   @override
   String get propertyNamePrefix => "twitter";
