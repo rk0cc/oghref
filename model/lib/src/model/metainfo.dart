@@ -1,5 +1,12 @@
+import 'dart:async';
+
+import 'package:http/http.dart'
+    hide delete, get, head, patch, post, put, read, readBytes, runWithClient;
 import 'package:meta/meta.dart';
 
+import '../fetch.dart' show MetaFetch;
+import '../content_type_verifier.dart';
+import '../concurrent.dart';
 import 'audio.dart';
 import 'image.dart';
 import 'video.dart';
@@ -9,6 +16,7 @@ export 'audio.dart';
 export 'image.dart';
 export 'video.dart';
 
+/// A preference for operationg [MetaInfo.merge].
 enum MetaMergePreference { fillTheBlank, appendMediaOnly }
 
 /// Completed structure of rich information link preview metadata.
@@ -43,25 +51,94 @@ final class MetaInfo implements UrlInfo {
   /// An unmodifiabled collection of [AudioInfo].
   final List<AudioInfo> audios;
 
-  /// Create rich information link metadata.
-  MetaInfo(
-      {this.title,
-      this.url,
-      this.secureUrl,
-      this.description,
-      this.siteName,
-      List<ImageInfo> images = const [],
-      List<VideoInfo> videos = const [],
-      List<AudioInfo> audios = const []})
-      : this.images = List.unmodifiable(images),
-        this.videos = List.unmodifiable(videos),
-        this.audios = List.unmodifiable(audios);
+  MetaInfo._(this.title, this.url, this.secureUrl, this.description,
+      this.siteName, this.audios, this.images, this.videos);
 
-  static MetaInfo merge(MetaInfo primary,
-      {List<MetaInfo> fallbacks = const [],
-      required MetaMergePreference preference}) {
+  /// Create rich information link metadata.
+  factory MetaInfo(
+      {String? title,
+      Uri? url,
+      Uri? secureUrl,
+      String? description,
+      String? siteName,
+      List<AudioInfo> audios = const [],
+      List<ImageInfo> images = const [],
+      List<VideoInfo> videos = const []}) {
+    final List<AudioInfo> filteredAudios = List.of(audios);
+    final List<ImageInfo> filteredImages = List.of(images);
+    final List<VideoInfo> filteredVideos = List.of(videos);
+
+    // Purge any ineligible content type into infos.
+    () async {
+      Iterable<Uri> getUrlsFromUrlInfo(List<UrlInfo> urlInfos) =>
+          urlInfos.where((element) => element.url != null).map((e) => e.url!);
+
+      Stream<(Uri, Response)> buildRespStream(Iterable<Uri> uris) =>
+          Stream.fromFutures(uris.map((e) async {
+            Request req = Request("HEAD", e)
+              ..headers['user-agent'] = MetaFetch.userAgentString;
+
+            Response resp = await req.send().then(Response.fromStream);
+
+            return (e, resp);
+          }));
+
+      Iterable<Uri> imgUris = getUrlsFromUrlInfo(images),
+          vidUris = getUrlsFromUrlInfo(videos),
+          audUris = getUrlsFromUrlInfo(audios);
+
+      Stream<(Uri, Response)> imgResps = buildRespStream(imgUris),
+          vidResps = buildRespStream(vidUris),
+          audResps = buildRespStream(audUris);
+
+      Future<bool> imgComputed = createIsolateStreamOperation(imgResps, (data) {
+            var (url, resp) = data;
+
+            if (!resp
+                .isSatisfiedContentTypeCategory(ContentTypeCategory.image)) {
+              filteredImages.removeWhere((element) => element.url == url);
+            }
+          }),
+          vidComputed = createIsolateStreamOperation(vidResps, (data) {
+            var (url, resp) = data;
+
+            if (!resp
+                .isSatisfiedContentTypeCategory(ContentTypeCategory.video)) {
+              filteredVideos.removeWhere((element) => element.url == url);
+            }
+          }),
+          audComputed = createIsolateStreamOperation(audResps, (data) {
+            var (url, resp) = data;
+
+            if (!resp
+                .isSatisfiedContentTypeCategory(ContentTypeCategory.audio)) {
+              filteredAudios.removeWhere((element) => element.url == url);
+            }
+          });
+
+      await Stream.fromFutures([imgComputed, audComputed, vidComputed])
+          .every((element) => element == true);
+    }();
+
+    return MetaInfo._(
+        title,
+        url,
+        secureUrl,
+        description,
+        siteName,
+        List.unmodifiable(filteredAudios),
+        List.unmodifiable(filteredImages),
+        List.unmodifiable(filteredVideos));
+  }
+
+  /// Merge [primary] metadata with [fallbacks] with difference [preference]
+  /// applied.
+  ///
+  /// Please see [MetaMergePreference] for merging options.
+  static MetaInfo merge(MetaInfo primary, List<MetaInfo> fallbacks,
+      {required MetaMergePreference preference}) {
     final Iterable<MetaInfo> validFallbacks =
-        fallbacks.where((element) => !identical(element, primary));
+        fallbacks.where((element) => !identical(element, primary)).toSet();
 
     if (validFallbacks.isEmpty) {
       throw ArgumentError(
@@ -80,19 +157,18 @@ final class MetaInfo implements UrlInfo {
 
     switch (preference) {
       case MetaMergePreference.fillTheBlank:
-        return MetaInfo(
-            url: primary.url ?? findFirstNonBlankFallback<Uri>((m) => m.url),
-            secureUrl: primary.secureUrl ??
+        return MetaInfo._(
+            primary.title ?? findFirstNonBlankFallback<String>((m) => m.title),
+            primary.url ?? findFirstNonBlankFallback<Uri>((m) => m.url),
+            primary.secureUrl ??
                 findFirstNonBlankFallback<Uri>((m) => m.secureUrl),
-            description: primary.description ??
+            primary.description ??
                 findFirstNonBlankFallback<String>((m) => m.description),
-            siteName: primary.siteName ??
+            primary.siteName ??
                 findFirstNonBlankFallback<String>((m) => m.siteName),
-            title: primary.title ??
-                findFirstNonBlankFallback<String>((m) => m.title),
-            images: primary.images,
-            videos: primary.videos,
-            audios: primary.audios);
+            primary.audios,
+            primary.images,
+            primary.videos);
       case MetaMergePreference.appendMediaOnly:
         return MetaInfo(
             url: primary.url,

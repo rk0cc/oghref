@@ -1,9 +1,33 @@
+import '../model/metainfo.dart';
 import '../buffer/metainfo.dart';
 import 'property_parser.dart';
 
+/// Twitter card implementations of [MetaPropertyParser].
+/// 
+/// This parser will handle `<meta>` property which starting with
+/// `twitter:`.
+/// 
+/// Twitter card is created by Twitter (now known as X) which
+/// uses for display rich information link in Twitter.
+/// 
+/// The [MetaInfo.url] will be linked to corresponded user name or it's ID
+/// in X and it does not offered any [AudioInfo] in [MetaInfo.audios].
+/// 
+/// ### Note for embedded player property
+/// 
+/// Since OgHref media player only recognizes raw video files,
+/// unless `twitter:player:stream` is offered with raw video
+/// content URL, it will apply iframe player URL first and removed
+/// when constructing [MetaInfo].
 final class TwitterCardParser extends MetaPropertyParser {
+  /// Uses `twitter.com` instead of `x.com` when constructing
+  /// link to X's profile.
+  /// 
+  /// By default, it is enabled.
   final bool legacyDomain;
 
+  /// Construct a parser of Twitter Card with decision of
+  /// using [legacyDomain].
   const TwitterCardParser({this.legacyDomain = true});
 
   @override

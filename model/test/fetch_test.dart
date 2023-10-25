@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:oghref_model/buffer_parser.dart';
 import 'package:oghref_model/src/parser/open_graph.dart';
+import 'package:oghref_model/src/parser/twitter_card.dart';
 import 'package:test/test.dart';
 
 final Uri resourseUri = Uri.parse(
@@ -10,6 +11,7 @@ void main() {
   setUpAll(() {
     GetIt.I.registerSingleton<MetaFetch>(MetaFetch.forTest()
       ..register(const OpenGraphPropertyParser())
+      ..register(const TwitterCardParser())
       ..primaryPrefix = "og");
   });
 

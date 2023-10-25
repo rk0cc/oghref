@@ -1,15 +1,11 @@
 import 'dart:collection';
 
 import 'package:html/dom.dart';
-import 'package:http/http.dart'
-    hide delete, get, head, patch, post, put, read, readBytes, runWithClient;
 import 'package:meta/meta.dart';
 
 import '../model/metainfo.dart';
-import '../model/url.dart';
 import '../buffer/metainfo.dart';
-import '../content_type_verifier.dart';
-import '../fetch.dart' show MetaFetch;
+
 
 /// A [String] pair [Record] represents `property` and `content` attribute
 /// in `<meta>` tag.
@@ -64,51 +60,6 @@ abstract base mixin class MetaPropertyParser {
     });
 
     resolveMetaTags(metaParser, UnmodifiableListView(metaTagsProp));
-
-    // Purge any ineligible content type into infos.
-    () async {
-      Iterable<Uri> getUrlsFromUrlInfo(List<UrlInfo> urlInfos) =>
-          urlInfos.where((element) => element.url != null).map((e) => e.url!);
-
-      Stream<(Uri, Response)> buildRespStream(Iterable<Uri> uris) =>
-          Stream.fromFutures(uris.map((e) async {
-            Request req = Request("HEAD", e)
-              ..headers['user-agent'] = MetaFetch.userAgentString;
-
-            Response resp = await req.send().then(Response.fromStream);
-
-            return (e, resp);
-          }));
-
-      Iterable<Uri> imgUris = getUrlsFromUrlInfo(metaParser.images),
-          vidUris = getUrlsFromUrlInfo(metaParser.videos),
-          audUris = getUrlsFromUrlInfo(metaParser.audios);
-
-      Stream<(Uri, Response)> imgResps = buildRespStream(imgUris),
-          vidResps = buildRespStream(vidUris),
-          audResps = buildRespStream(audUris);
-
-      imgResps.listen((respWithUri) {
-        var (url, resp) = respWithUri;
-        if (!resp.isSatisfiedContentTypeCategory(ContentTypeCategory.image)) {
-          metaParser.images.removeWhere((element) => element.url == url);
-        }
-      });
-
-      vidResps.listen((respWithUri) {
-        var (url, resp) = respWithUri;
-        if (!resp.isSatisfiedContentTypeCategory(ContentTypeCategory.video)) {
-          metaParser.videos.removeWhere((element) => element.url == url);
-        }
-      });
-
-      audResps.listen((respWithUri) {
-        var (url, resp) = respWithUri;
-        if (!resp.isSatisfiedContentTypeCategory(ContentTypeCategory.audio)) {
-          metaParser.audios.removeWhere((element) => element.url == url);
-        }
-      });
-    }();
 
     return metaParser.compile();
   }
