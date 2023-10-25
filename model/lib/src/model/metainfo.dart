@@ -16,7 +16,13 @@ export 'image.dart';
 export 'video.dart';
 
 /// A preference for operationg [MetaInfo.merge].
-enum MetaMergePreference { fillTheBlank, appendMediaOnly }
+enum MetaMergePreference {
+  /// Fill null property in [MetaInfo] as much as possible.
+  fillTheBlank,
+
+  /// Merge two [MetaInfo]s media resources into a single object.
+  appendMediaOnly
+}
 
 /// Completed structure of rich information link preview metadata.
 ///
@@ -54,6 +60,9 @@ final class MetaInfo implements UrlInfo {
       this.siteName, this.audios, this.images, this.videos);
 
   /// Create rich information link metadata.
+  ///
+  /// If [audios], [videos] and [images] contains invalid content type
+  /// in [UrlInfo.url], the returned result will not be included.
   factory MetaInfo(
       {String? title,
       Uri? url,
@@ -89,7 +98,7 @@ final class MetaInfo implements UrlInfo {
           vidResps = buildRespStream(vidUris),
           audResps = buildRespStream(audUris);
 
-      await for((Uri, Response) ur in imgResps) {
+      await for ((Uri, Response) ur in imgResps) {
         var (url, resp) = ur;
 
         if (!resp.isSatisfiedContentTypeCategory(ContentTypeCategory.image)) {
@@ -97,7 +106,7 @@ final class MetaInfo implements UrlInfo {
         }
       }
 
-      await for((Uri, Response) ur in vidResps) {
+      await for ((Uri, Response) ur in vidResps) {
         var (url, resp) = ur;
 
         if (!resp.isSatisfiedContentTypeCategory(ContentTypeCategory.video)) {
@@ -105,7 +114,7 @@ final class MetaInfo implements UrlInfo {
         }
       }
 
-      await for((Uri, Response) ur in audResps) {
+      await for ((Uri, Response) ur in audResps) {
         var (url, resp) = ur;
 
         if (!resp.isSatisfiedContentTypeCategory(ContentTypeCategory.audio)) {
@@ -164,30 +173,24 @@ final class MetaInfo implements UrlInfo {
             primary.images,
             primary.videos);
       case MetaMergePreference.appendMediaOnly:
-        return MetaInfo(
-            url: primary.url,
-            secureUrl: primary.secureUrl,
-            description: primary.description,
-            siteName: primary.siteName,
-            title: primary.title,
-            images: <ImageInfo>[
-              ...primary.images,
-              ...validFallbacks
-                  .map((e) => e.images)
-                  .expand((element) => element)
-            ],
-            videos: <VideoInfo>[
-              ...primary.videos,
-              ...validFallbacks
-                  .map((e) => e.videos)
-                  .expand((element) => element)
-            ],
-            audios: <AudioInfo>[
+        return MetaInfo._(
+            primary.title,
+            primary.url,
+            primary.secureUrl,
+            primary.description,
+            primary.siteName,
+            List.unmodifiable(<AudioInfo>[
               ...primary.audios,
-              ...validFallbacks
-                  .map((e) => e.audios)
-                  .expand((element) => element)
-            ]);
+              ...fallbacks.map((e) => e.audios).expand((element) => element)
+            ]),
+            List.unmodifiable(<ImageInfo>[
+              ...primary.images,
+              ...fallbacks.map((e) => e.images).expand((element) => element)
+            ]),
+            List.unmodifiable(<VideoInfo>[
+              ...primary.videos,
+              ...fallbacks.map((e) => e.videos).expand((element) => element)
+            ]));
     }
   }
 }
