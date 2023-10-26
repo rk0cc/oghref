@@ -1,11 +1,6 @@
-import 'dart:async';
-
-import 'package:http/http.dart'
-    hide delete, get, head, patch, post, put, read, readBytes, runWithClient;
 import 'package:meta/meta.dart';
 
 import '../content_type_verifier.dart' hide ContentTypeVerifier;
-import '../fetch.dart' show MetaFetch;
 import 'audio.dart';
 import 'image.dart';
 import 'video.dart';
@@ -144,15 +139,5 @@ final class MetaInfo implements UrlInfo {
               ...fallbacks.map((e) => e.videos).expand((element) => element)
             ]));
     }
-  }
-}
-
-final class _MetaInfoClient extends BaseClient {
-  final Client _nested = Client();
-
-  @override
-  Future<StreamedResponse> send(BaseRequest request) {
-    request.headers["user-agent"] = MetaFetch.userAgentString;
-    return _nested.send(request);
   }
 }
