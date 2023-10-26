@@ -6,13 +6,32 @@ import 'package:meta/meta.dart';
 import 'package:mime_dart/mime_dart.dart';
 import 'package:path/path.dart' as p;
 
+/// Determine the content type category from MIME.
 @internal
-enum ContentTypeCategory { audio, video, image, text, application }
+enum ContentTypeCategory {
+  /// Audio files
+  audio,
 
+  /// Video files
+  video,
+
+  /// Image files
+  image,
+
+  /// Text files
+  text,
+
+  /// Files uses for applications
+  application
+}
+
+/// Perform verification from retriving `Content-Type` in [Response.headers].
 @internal
 extension ContentTypeVerifier on Response {
+  /// Get the `Content-Type` value directly from [headers].
   String? get contentType => headers["content-type"];
 
+  /// Determine the [contentType] is one of the expected [fileExtensions].
   bool isSatisfiedExtension({Set<String> fileExtensions = const {}}) {
     final Set<String> acceptedExtension = {...fileExtensions};
     if (acceptedExtension.isEmpty) {
@@ -31,6 +50,7 @@ extension ContentTypeVerifier on Response {
     return acceptedExtension.any((element) => extTypes.contains(element));
   }
 
+  /// Determine this response's [ContentTypeCategory] is the same.
   bool isSatisfiedContentTypeCategory(ContentTypeCategory category) {
     if (contentType != null) {
       return contentType!.split("/").first == category.name;
@@ -40,12 +60,17 @@ extension ContentTypeVerifier on Response {
   }
 }
 
+/// Perform prediction of content type by given file extension in [Uri.path].
 @internal
 extension UriFileExtensionVeifier on Uri {
+  /// Guess this [category] is matched one of the possible file extensions.
+  /// 
+  /// If the given [path] does not offered extension, it always return `false`.
   bool isMatchedContentTypeExtension(ContentTypeCategory category) {
     Set<String> mimeFromExt =
         Mime.getTypesFromExtension(p.extension(path))?.toSet() ?? HashSet();
 
-    return mimeFromExt.any((element) => element.split("/").first == category.name);
+    return mimeFromExt
+        .any((element) => element.split("/").first == category.name);
   }
 }
