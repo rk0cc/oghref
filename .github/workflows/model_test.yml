@@ -1,0 +1,30 @@
+name: Model testing
+on: 
+  push: 
+    branches: 
+      - main
+    paths: 
+      - 'model/**/*.dart'
+      - 'model/test_resources/**/*.html'
+      - .github/workflows/model_test.yml
+  pull_request:
+    branches: 
+      - main
+jobs:
+  test:
+    name: Unit test
+    env:
+      working-directory: './model'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup dart
+        uses: dart-lang/setup-dart@v1
+      - name: Get dependencies
+        working-directory: ${{ env.working-directory }}
+        run: dart pub get
+      - name: Perform test
+        working-directory: ${{ env.working-directory }}
+        run: dart test
+  
