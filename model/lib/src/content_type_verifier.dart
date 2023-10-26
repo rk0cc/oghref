@@ -64,11 +64,12 @@ extension ContentTypeVerifier on Response {
 @internal
 extension UriFileExtensionVeifier on Uri {
   /// Guess this [category] is matched one of the possible file extensions.
-  /// 
+  ///
   /// If the given [path] does not offered extension, it always return `false`.
   bool isMatchedContentTypeExtension(ContentTypeCategory category) {
     Set<String> mimeFromExt =
-        Mime.getTypesFromExtension(p.extension(path))?.toSet() ?? HashSet();
+        Mime.getTypesFromExtension(p.extension(path).substring(1))?.toSet() ??
+            HashSet();
 
     return mimeFromExt
         .any((element) => element.split("/").first == category.name);

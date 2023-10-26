@@ -77,7 +77,7 @@ final class MetaInfo implements UrlInfo {
             .isMatchedContentTypeExtension(ContentTypeCategory.audio))),
         List.unmodifiable(images.where((element) => element.url!
             .isMatchedContentTypeExtension(ContentTypeCategory.image))),
-        List.unmodifiable(images.where((element) => element.url!
+        List.unmodifiable(videos.where((element) => element.url!
             .isMatchedContentTypeExtension(ContentTypeCategory.video))));
   }
 

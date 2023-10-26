@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 import '../model/metainfo.dart';
 import '../buffer/metainfo.dart';
 
-
 /// A [String] pair [Record] represents `property` and `content` attribute
 /// in `<meta>` tag.
 typedef PropertyPair = (String name, String content);
