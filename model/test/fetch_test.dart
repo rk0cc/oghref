@@ -38,11 +38,4 @@ void main() {
     expect(parsed.title, isNull);
     expect(parsed.url, isNull);
   });
-
-  test("Remove mismatched content", () async {
-    final parsed =
-        await GetIt.I<MetaFetch>().fetchFromHttp(resourseUri.resolve("4.html"));
-
-    expect(parsed.images, isEmpty);
-  });
 }

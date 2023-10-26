@@ -2,12 +2,10 @@ import 'dart:collection';
 
 import 'package:http/http.dart'
     hide delete, get, head, patch, post, put, read, readBytes, runWithClient;
-import 'package:meta/meta.dart';
 import 'package:mime_dart/mime_dart.dart';
 import 'package:path/path.dart' as p;
 
 /// Determine the content type category from MIME.
-@internal
 enum ContentTypeCategory {
   /// Audio files
   audio,
@@ -26,7 +24,6 @@ enum ContentTypeCategory {
 }
 
 /// Perform verification from retriving `Content-Type` in [Response.headers].
-@internal
 extension ContentTypeVerifier on Response {
   /// Get the `Content-Type` value directly from [headers].
   String? get contentType => headers["content-type"];
@@ -60,15 +57,20 @@ extension ContentTypeVerifier on Response {
   }
 }
 
-/// Perform prediction of content type by given file extension in [Uri.path].
-@internal
-extension UriFileExtensionVeifier on Uri {
+/// Perform prediction of content type by [Uri.path].
+extension UriContentTypeVeifier on Uri {
   /// Guess this [category] is matched one of the possible file extensions.
   ///
   /// If the given [path] does not offered extension, it always return `false`.
   bool isMatchedContentTypeExtension(ContentTypeCategory category) {
+    String ext = p.extension(path);
+
+    if (ext[0] == ".") {
+      ext = ext.substring(1);
+    }
+
     Set<String> mimeFromExt =
-        Mime.getTypesFromExtension(p.extension(path).substring(1))?.toSet() ??
+        Mime.getTypesFromExtension(ext.substring(1))?.toSet() ??
             HashSet();
 
     return mimeFromExt

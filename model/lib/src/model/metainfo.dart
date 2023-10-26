@@ -1,6 +1,5 @@
 import 'package:meta/meta.dart';
 
-import '../content_type_verifier.dart' hide ContentTypeVerifier;
 import 'audio.dart';
 import 'image.dart';
 import 'video.dart';
@@ -73,12 +72,9 @@ final class MetaInfo implements UrlInfo {
         secureUrl,
         description,
         siteName,
-        List.unmodifiable(audios.where((element) => element.url!
-            .isMatchedContentTypeExtension(ContentTypeCategory.audio))),
-        List.unmodifiable(images.where((element) => element.url!
-            .isMatchedContentTypeExtension(ContentTypeCategory.image))),
-        List.unmodifiable(videos.where((element) => element.url!
-            .isMatchedContentTypeExtension(ContentTypeCategory.video))));
+        List.unmodifiable(audios),
+        List.unmodifiable(images),
+        List.unmodifiable(videos));
   }
 
   /// Merge [primary] metadata with [fallbacks] with difference [preference]
