@@ -1,7 +1,10 @@
+import 'dart:collection';
+
 import 'package:http/http.dart'
     hide delete, get, head, patch, post, put, read, readBytes, runWithClient;
 import 'package:meta/meta.dart';
 import 'package:mime_dart/mime_dart.dart';
+import 'package:path/path.dart' as p;
 
 @internal
 enum ContentTypeCategory { audio, video, image, text, application }
@@ -34,5 +37,15 @@ extension ContentTypeVerifier on Response {
     }
 
     return false;
+  }
+}
+
+@internal
+extension UriFileExtensionVeifier on Uri {
+  bool isMatchedContentTypeExtension(ContentTypeCategory category) {
+    Set<String> mimeFromExt =
+        Mime.getTypesFromExtension(p.extension(path))?.toSet() ?? HashSet();
+
+    return mimeFromExt.any((element) => element.split("/").first == category.name);
   }
 }

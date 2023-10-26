@@ -39,7 +39,7 @@ void main() {
     expect(parsed.url, isNull);
   });
 
-  test("Remove unexisted content", () async {
+  test("Remove mismatched content", () async {
     final parsed =
         await GetIt.I<MetaFetch>().fetchFromHttp(resourseUri.resolve("4.html"));
 

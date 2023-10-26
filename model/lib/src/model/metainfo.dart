@@ -4,8 +4,8 @@ import 'package:http/http.dart'
     hide delete, get, head, patch, post, put, read, readBytes, runWithClient;
 import 'package:meta/meta.dart';
 
+import '../content_type_verifier.dart' hide ContentTypeVerifier;
 import '../fetch.dart' show MetaFetch;
-import '../content_type_verifier.dart';
 import 'audio.dart';
 import 'image.dart';
 import 'video.dart';
@@ -72,66 +72,18 @@ final class MetaInfo implements UrlInfo {
       List<AudioInfo> audios = const [],
       List<ImageInfo> images = const [],
       List<VideoInfo> videos = const []}) {
-    final List<AudioInfo> filteredAudios = List.of(audios);
-    final List<ImageInfo> filteredImages = List.of(images);
-    final List<VideoInfo> filteredVideos = List.of(videos);
-
-    // Purge any ineligible content type into infos.
-    () async {
-      _MetaInfoClient c = _MetaInfoClient();
-
-      Iterable<Uri> getUrlsFromUrlInfo(List<UrlInfo> urlInfos) =>
-          urlInfos.where((element) => element.url != null).map((e) => e.url!);
-
-      Stream<(Uri, Response)> buildRespStream(Iterable<Uri> uris) =>
-          Stream.fromFutures(uris.map((e) async {
-            Response resp = await c.head(e);
-
-            return (e, resp);
-          }));
-
-      Iterable<Uri> imgUris = getUrlsFromUrlInfo(images),
-          vidUris = getUrlsFromUrlInfo(videos),
-          audUris = getUrlsFromUrlInfo(audios);
-
-      Stream<(Uri, Response)> imgResps = buildRespStream(imgUris),
-          vidResps = buildRespStream(vidUris),
-          audResps = buildRespStream(audUris);
-
-      await for ((Uri, Response) ur in imgResps) {
-        var (url, resp) = ur;
-
-        if (!resp.isSatisfiedContentTypeCategory(ContentTypeCategory.image)) {
-          filteredImages.removeWhere((element) => element.url == url);
-        }
-      }
-
-      await for ((Uri, Response) ur in vidResps) {
-        var (url, resp) = ur;
-
-        if (!resp.isSatisfiedContentTypeCategory(ContentTypeCategory.video)) {
-          filteredVideos.removeWhere((element) => element.url == url);
-        }
-      }
-
-      await for ((Uri, Response) ur in audResps) {
-        var (url, resp) = ur;
-
-        if (!resp.isSatisfiedContentTypeCategory(ContentTypeCategory.audio)) {
-          filteredAudios.removeWhere((element) => element.url == url);
-        }
-      }
-    }();
-
     return MetaInfo._(
         title,
         url,
         secureUrl,
         description,
         siteName,
-        List.unmodifiable(filteredAudios),
-        List.unmodifiable(filteredImages),
-        List.unmodifiable(filteredVideos));
+        List.unmodifiable(audios.where((element) => element.url!
+            .isMatchedContentTypeExtension(ContentTypeCategory.audio))),
+        List.unmodifiable(images.where((element) => element.url!
+            .isMatchedContentTypeExtension(ContentTypeCategory.image))),
+        List.unmodifiable(images.where((element) => element.url!
+            .isMatchedContentTypeExtension(ContentTypeCategory.video))));
   }
 
   /// Merge [primary] metadata with [fallbacks] with difference [preference]

@@ -11,7 +11,7 @@ import 'exception/non_http_url.dart';
 import 'model/metainfo.dart';
 import 'parser/property_parser.dart';
 
-import 'content_type_verifier.dart';
+import 'content_type_verifier.dart' hide UriFileExtensionVeifier;
 
 /// Read [Document] and find all metadata tags to generate corresponded
 /// [MetaInfo].
