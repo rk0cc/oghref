@@ -10,7 +10,7 @@ import 'exception/content_type_mismatched.dart';
 import 'exception/non_http_url.dart';
 import 'model/metainfo.dart';
 import 'parser/property_parser.dart';
-
+import 'client.dart';
 import 'content_type_verifier.dart';
 
 /// Read [Document] and find all metadata tags to generate corresponded
@@ -20,9 +20,6 @@ import 'content_type_verifier.dart';
 /// [MetaPropertyParser.propertyNamePrefix] and will be refer them
 /// for finding matched [MetaPropertyParser].
 final class MetaFetch {
-  /// Default request user agent value.
-  static const String DEFAULT_USER_AGENT_STRING = "oghref 2";
-
   /// Instance of [MetaFetch].
   static final MetaFetch _instance = MetaFetch._(false);
 
@@ -32,6 +29,8 @@ final class MetaFetch {
       hashCode: (p0) => p0.propertyNamePrefix.hashCode);
 
   final bool _ignoreContentType;
+
+  final OgHrefClient _client = OgHrefClient(true);
 
   /// Allow [MetaFetch] fetch redirected [Uri]'s metadata instead of
   /// provided one.
@@ -76,7 +75,12 @@ final class MetaFetch {
   static MetaFetch forTest() => MetaFetch._(true);
 
   /// Define a value of user agent when making request in [fetchFromHttp].
-  static String userAgentString = DEFAULT_USER_AGENT_STRING;
+  static changeUserAgent(String? userAgent) {
+    OgHrefClient.userAgent = userAgent ?? OgHrefClient.DEFAULT_USER_AGENT_STRING;
+  }
+
+  /// Retrive current preference of user agent [String].
+  static String get userAgentString => OgHrefClient.userAgent;
 
   /// Standardize [Function] for finding matched prefix in
   /// [Iterable.singleWhere].
@@ -214,11 +218,7 @@ final class MetaFetch {
       throw NonHttpUrlException(url);
     }
 
-    Request req = Request("GET", url)
-      ..headers['user-agent'] = userAgentString
-      ..followRedirects = allowRedirect;
-
-    Response resp = await req.send().then(Response.fromStream);
+    Response resp = await _client.get(url);
 
     if (!_ignoreContentType &&
         !resp.isSatisfiedExtension(fileExtensions: eligableType)) {
