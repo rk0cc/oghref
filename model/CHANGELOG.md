@@ -1,3 +1,7 @@
+## 2.0.1
+
+* Downgrade `meta` version constraint that ensure it can be implemented with Flutter.
+
 ## 2.0.0
 
 * Added `MetaFetch.fetchAllFromHttp` for fetching all existed protocol in HTML document.
