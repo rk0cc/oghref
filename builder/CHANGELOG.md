@@ -1,3 +1,9 @@
+## 2.0.0
+
+* Support for handling multiple `MetaInfo`
+* Added confirmation procedure before opening url.
+* Bundled with responsive calculator.
+
 ## 1.2.1
 
 * Fix keep fetching issue when resizing widget.
