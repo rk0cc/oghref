@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:media_kit/media_kit.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 import 'package:oghref_builder/oghref_builder.dart'
     hide ImageInfo, VideoInfo, AudioInfo;
 import 'package:oghref_builder/oghref_builder.dart' as oghref
     show ImageInfo, VideoInfo, AudioInfo;
-import 'package:oghref_media_control/media_control.dart';
+import 'package:oghref_media_control/oghref_media_control.dart';
 import 'package:oghref_model/buffer_parser.dart';
 
 import '../launch_failed_snackbar.dart';
@@ -38,8 +36,7 @@ base class OgHrefMaterialCard extends StatelessWidget
   /// Specified height of media frame.
   ///
   /// If it is null, it will calculate corresponded height based
-  /// on calculated width with current [mediaAspectRatio]
-  /// preference.
+  /// on calculated width in 16:9 ratio.
   final double? mediaHeight;
 
   /// Enable playing video and audio support if applied.
@@ -57,9 +54,6 @@ base class OgHrefMaterialCard extends StatelessWidget
 
   /// [TextStyle] for displaying description.
   final TextStyle? tileDescriptionTextStyle;
-
-  /// Specify [AspectRatioValue] of media frame.
-  final AspectRatioValue mediaAspectRatio;
 
   /// Uses `HTTPS` [Uri] resources instead of the default value
   /// (if applied).
@@ -95,7 +89,6 @@ base class OgHrefMaterialCard extends StatelessWidget
       this.tileTitleTextStyle,
       this.tileDescriptionTextStyle,
       this.launchFailedMessage = "Unable to open URL.",
-      this.mediaAspectRatio = AspectRatioValue.standardHD,
       this.preferHTTPS = true,
       this.onLoading,
       required this.confirmation,
@@ -115,13 +108,14 @@ base class OgHrefMaterialCard extends StatelessWidget
       return e.url!;
     }));
 
+
     if (multimedia && multimediaResources.isNotEmpty) {
       // Get media playback if enabled multimedia features with provided resources.
-      return MediaPlayback(multimediaResources,
-          aspectRatio: mediaAspectRatio,
-          configuration: const PlayerConfiguration(
-              muted: true, protocolWhitelist: ["http", "https"]),
-          controlsBuilder: AdaptiveVideoControls);
+      return MediaPlayback(multimediaResources, 
+      onLoading: (context) => const Center(child: CircularProgressIndicator()),
+      onLoadFailed: (context) => ImageCarousel(
+          List.unmodifiable(images.where((element) => element.url != null)),
+          preferHTTPS: preferHTTPS));
     } else if (images.isNotEmpty) {
       // Get images either no multimedia resources provided or disabled multimedia features.
       return ImageCarousel(
@@ -184,7 +178,7 @@ base class OgHrefMaterialCard extends StatelessWidget
         SizedBox(
             width: preferredWidth,
             height: mediaHeight ??
-                mediaAspectRatio.calcHeightFromWidth(preferredWidth),
+                preferredWidth * 9 / 16,
             child: _buildMediaFrame(context, images, videos, audios)),
         // Tile link
         SizedBox(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:oghref_builder/oghref_builder.dart' show MetaFetch;
 import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
 
-/// 
+///
 base class ImageCarousel extends StatefulWidget {
   final List<oghref.ImageInfo> images;
   final bool preferHTTPS;
@@ -83,20 +83,16 @@ final class _ImageCarouselState extends State<ImageCarousel> {
         Positioned(
             left: 0,
             child: IconButton(
-                onPressed:
-                    (controller.page ?? 0).floor() == 0 ? null : movePrevious,
+                onPressed: movePrevious,
                 color: widget.iconColour,
-                icon: Icon(Icons.arrow_back_outlined,
+                icon: Icon(Icons.arrow_back_ios_outlined,
                     size: widget.controlIconSize))),
         Positioned(
             right: 0,
             child: IconButton(
-                onPressed: (controller.page ?? widget.images.length).ceil() ==
-                        widget.images.length
-                    ? null
-                    : moveNext,
+                onPressed: moveNext,
                 color: widget.iconColour,
-                icon: Icon(Icons.arrow_forward_outlined,
+                icon: Icon(Icons.arrow_forward_ios_outlined,
                     size: widget.controlIconSize)))
       ],
     );

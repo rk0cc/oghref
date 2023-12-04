@@ -202,10 +202,10 @@ packages:
     dependency: "direct dev"
     description:
       name: flutter_lints
-      sha256: a25a15ebbdfc33ab1cd26c63a6ee519df92338a9c10f122adda92938253bef04
+      sha256: e2a421b7e59244faef694ba7b30562e489c2b489866e505074eb005cd7060db7
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.3"
+    version: "3.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -292,10 +292,10 @@ packages:
     dependency: transitive
     description:
       name: lints
-      sha256: "0a217c6c989d21039f1498c3ed9f3ed71b354e69873f13a8dfc3c9fe76f1b452"
+      sha256: cbf8d4b858bb0134ef3ef87841abdf8d63bfc255c266b7bf6b39daa1085c4290
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "3.0.0"
   logging:
     dependency: transitive
     description:
@@ -428,10 +428,10 @@ packages:
     dependency: transitive
     description:
       name: oghref_builder
-      sha256: "4e7a0f094c9c6f7e4f382c88284382ce026109dd124f5826d58c34e6b6d2705a"
+      sha256: ecdf06db8442567eb988889e0a5b1a8781227d1fcf29afb66a2126084af97147
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.1"
+    version: "2.0.0"
   oghref_material:
     dependency: "direct main"
     description:
@@ -443,18 +443,18 @@ packages:
     dependency: transitive
     description:
       name: oghref_media_control
-      sha256: "3ac394d082d9fc1cadb0e1d634185ea549b6a18cb6555f69d33d1390910b101b"
+      sha256: "6bdc56c9e29a246650f446198f02e3e3f231810656cdb7bd279590a52ec478dd"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.2"
+    version: "3.0.1"
   oghref_model:
     dependency: transitive
     description:
       name: oghref_model
-      sha256: "74587e58574ff6c833ca4009e17e51f7f44c09cbcf099d703d6dcd341043ca89"
+      sha256: "88dfb9516e10f612c8ee1d3a3fb6d20fa3e16e44dcda056a99c1c506566dac7b"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "2.0.1"
   package_config:
     dependency: transitive
     description:
