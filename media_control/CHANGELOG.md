@@ -1,3 +1,7 @@
+## 3.0.1
+
+* Fix `BuildContext` not offered on `onLoading` invoked.
+
 ## 3.0.0
 
 **Major changes: This version API is backward incompatable**

@@ -88,7 +88,7 @@ final class _MediaPlaybackState extends State<MediaPlayback> {
           if (snapshot.hasError) {
             return widget.onLoadFailed(context);
           } else if (!snapshot.hasData) {
-            return (widget.onLoading ?? () => const SizedBox())();
+            return (widget.onLoading ?? (_) => const SizedBox())(context);
           }
 
           return snapshot.data!
