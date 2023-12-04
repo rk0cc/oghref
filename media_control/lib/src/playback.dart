@@ -79,18 +79,22 @@ final class _MediaPlaybackState extends State<MediaPlayback> {
       return false;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(future: allPlayable, builder: (context, snapshot) {
-      if (snapshot.hasError) {
-        return widget.onLoadFailed(context);
-      } else if (!snapshot.hasData) {
-        return (widget.onLoading ?? () => const SizedBox())();
-      }
+    return FutureBuilder<bool>(
+        future: allPlayable,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return widget.onLoadFailed(context);
+          } else if (!snapshot.hasData) {
+            return (widget.onLoading ?? () => const SizedBox())();
+          }
 
-      return snapshot.data! ? _MediaPlaybackRender(widget.resources) : widget.onLoadFailed(context);
-    });
+          return snapshot.data!
+              ? _MediaPlaybackRender(widget.resources)
+              : widget.onLoadFailed(context);
+        });
   }
 }
 
@@ -98,7 +102,7 @@ final class _MediaPlaybackRender extends StatefulWidget {
   final List<Uri> resources;
 
   _MediaPlaybackRender(this.resources, {super.key});
-  
+
   @override
   _MediaPlaybackRenderState createState() => _MediaPlaybackRenderState();
 }
@@ -110,15 +114,16 @@ final class _MediaPlaybackRenderState extends State<_MediaPlaybackRender> {
   @override
   void initState() {
     super.initState();
-    player = Player(configuration: PlayerConfiguration(
-      muted: true,
-      ready: () async {
-        await player.pause();
-      }
-    ));
+    player = Player(
+        configuration: PlayerConfiguration(
+            muted: true,
+            ready: () async {
+              await player.pause();
+            }));
     vidCtrl = VideoController(player);
 
-    player.open(Playlist(widget.resources.map((e) => Media(e.toString())).toList()));
+    player.open(
+        Playlist(widget.resources.map((e) => Media(e.toString())).toList()));
   }
 
   @override
@@ -126,7 +131,7 @@ final class _MediaPlaybackRenderState extends State<_MediaPlaybackRender> {
     player.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Video(controller: vidCtrl, controls: AdaptiveVideoControls);
