@@ -1,3 +1,12 @@
+## 3.0.0
+
+**Major changes: This version API is backward incompatable**
+
+* Redesigned API of `MediaPlayback`
+  * Provided `onLoadFailed` as fallback option if not all `resources` are playable media type.
+  * Custom theme of control widget no longer allows to implement.
+* `AspectRatioValue` no longer existed
+
 ## 2.0.2
 
 * Update builder dependency.
