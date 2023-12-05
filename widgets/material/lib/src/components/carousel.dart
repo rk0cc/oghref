@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:oghref_builder/oghref_builder.dart' show MetaFetch, MetaInfo;
 import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
@@ -92,15 +91,11 @@ final class _ImageCarouselState extends State<ImageCarousel> {
       destination = imgInfo.secureUrl;
     }
 
-    return CachedNetworkImage(
-        imageUrl: destination!.toString(),
+    return Image.network(destination!.toString(),
         fit: BoxFit.contain,
-        httpHeaders: {"user-agent": MetaFetch.userAgentString},
-        errorWidget: (context, url, error) =>
-            const Center(child: Icon(Icons.broken_image_outlined)),
-        placeholder: (context, url) => const Center(
-            child: SizedBox.square(
-                dimension: 16, child: CircularProgressIndicator())));
+        headers: {"user-agent": MetaFetch.userAgentString},
+        errorBuilder: (context, _, __) =>
+            const Center(child: Icon(Icons.broken_image_outlined)));
   }
 
   FutureBuilder<PageController> _buildWithDeferredCtrl(BuildContext context,

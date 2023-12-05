@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:oghref_builder/oghref_builder.dart'
     show OgHrefBuilder, MetaFetch, MultiMetaInfoHandler;
@@ -93,17 +92,14 @@ base class OgHrefMaterialTile extends StatelessWidget
       }
 
       return SizedBox.square(
-        dimension: dimension,
-        child: CachedNetworkImage(
-            imageUrl: "$imgUri",
+          dimension: dimension,
+          child: Image.network(
+            "$imgUri",
             fit: BoxFit.cover,
-            httpHeaders: {"user-agent": MetaFetch.userAgentString},
-            errorWidget: (context, url, error) =>
+            headers: {"user-agent": MetaFetch.userAgentString},
+            errorBuilder: (context, _, __) =>
                 const Center(child: Icon(Icons.broken_image_outlined)),
-            placeholder: (context, url) => const Center(
-                child: SizedBox.square(
-                    dimension: 14, child: CircularProgressIndicator()))),
-      );
+          ));
     }
 
     return Container(

@@ -1,3 +1,7 @@
+## 1.1.1
+
+* Drop cache image support
+
 ## 1.1.0
 
 * Add style configuration for `OgHrefMaterialCard`
