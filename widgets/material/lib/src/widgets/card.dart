@@ -108,19 +108,19 @@ base class OgHrefMaterialCard extends StatelessWidget
       return e.url!;
     }));
 
+    final ImageCarousel carousel = ImageCarousel(
+        List.unmodifiable(images.where((element) => element.url != null)),
+        preferHTTPS: preferHTTPS);
 
     if (multimedia && multimediaResources.isNotEmpty) {
       // Get media playback if enabled multimedia features with provided resources.
-      return MediaPlayback(multimediaResources, 
-      onLoading: (context) => const Center(child: CircularProgressIndicator()),
-      onLoadFailed: (context) => ImageCarousel(
-          List.unmodifiable(images.where((element) => element.url != null)),
-          preferHTTPS: preferHTTPS));
+      return MediaPlayback(multimediaResources,
+          onLoading: (context) =>
+              const Center(child: CircularProgressIndicator()),
+          onLoadFailed: (context) => carousel);
     } else if (images.isNotEmpty) {
       // Get images either no multimedia resources provided or disabled multimedia features.
-      return ImageCarousel(
-          List.unmodifiable(images.where((element) => element.url != null)),
-          preferHTTPS: preferHTTPS);
+      return carousel;
     }
 
     // Get Icon for placeholder
@@ -177,8 +177,7 @@ base class OgHrefMaterialCard extends StatelessWidget
         // Media frame
         SizedBox(
             width: preferredWidth,
-            height: mediaHeight ??
-                preferredWidth * 9 / 16,
+            height: mediaHeight ?? preferredWidth * 9 / 16,
             child: _buildMediaFrame(context, images, videos, audios)),
         // Tile link
         SizedBox(

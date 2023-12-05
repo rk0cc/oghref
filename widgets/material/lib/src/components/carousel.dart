@@ -1,17 +1,47 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:oghref_builder/oghref_builder.dart' show MetaFetch;
+import 'package:oghref_builder/oghref_builder.dart' show MetaFetch, MetaInfo;
 import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
 
+/// Reviewing multiple images provided from [oghref.ImageInfo] and
+/// display all images in a single carousel [Widget].
 ///
+/// Every images appeared in [ImageCarousel] will be cached already
+/// that reducing duration of redownloading assets when same images
+/// content will be displayed again.
 base class ImageCarousel extends StatefulWidget {
+  /// Images metadata from [MetaInfo.images] in a single site.
   final List<oghref.ImageInfo> images;
+
+  /// Uses [oghref.ImageInfo.secureUrl] instead of default value if available.
+  ///
+  /// This options is enabled by default in case with fulfillment
+  /// of browsers' security policy when deploying Flutter web with
+  /// `HTTPS` hosting. Eventhough there is no difference for running
+  /// in native platform, it is recommended that keep this options
+  /// enabled to prevents man-in-middle attack.
   final bool preferHTTPS;
+
+  /// Define size of control icon for changing pages.
+  ///
+  /// Default value is `18`.
   final double controlIconSize;
+
+  /// Specify [Duration] of animating page changes when event
+  /// triggered.
+  ///
+  /// Default value is `500 ms`.
   final Duration pageChangeDuration;
+
+  /// Define animation behaviour during [pageChangeDuration].
+  ///
+  /// By default, it uses [Curves.easeInOut].
   final Curve pageChangeCurve;
+
+  /// Override a [Color] for displaying control icons if applied.
   final Color? iconColour;
 
+  /// Construct a new carousel [Widget] for displaying [images].
   ImageCarousel(this.images,
       {this.preferHTTPS = true,
       this.controlIconSize = 18,
@@ -28,11 +58,13 @@ base class ImageCarousel extends StatefulWidget {
 
 final class _ImageCarouselState extends State<ImageCarousel> {
   late final PageController controller;
+  late final Future<PageController> deferredCtrl;
 
   @override
   void initState() {
     controller = PageController();
     super.initState();
+    deferredCtrl = Future.value(controller);
   }
 
   @override
@@ -41,14 +73,16 @@ final class _ImageCarouselState extends State<ImageCarousel> {
     super.dispose();
   }
 
-  void movePrevious() {
-    controller.previousPage(
+  void movePrevious() async {
+    await controller.previousPage(
         duration: widget.pageChangeDuration, curve: widget.pageChangeCurve);
+    setState(() {});
   }
 
-  void moveNext() {
-    controller.nextPage(
+  void moveNext() async {
+    await controller.nextPage(
         duration: widget.pageChangeDuration, curve: widget.pageChangeCurve);
+    setState(() {});
   }
 
   Widget _buildSingleImage(BuildContext context, oghref.ImageInfo imgInfo) {
@@ -69,32 +103,57 @@ final class _ImageCarouselState extends State<ImageCarousel> {
                 dimension: 16, child: CircularProgressIndicator())));
   }
 
+  FutureBuilder<PageController> _buildWithDeferredCtrl(BuildContext context,
+      {required AsyncWidgetBuilder<PageController> builder}) {
+    return FutureBuilder(future: deferredCtrl, builder: builder);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      alignment: Alignment.center,
-      children: [
-        PageView.builder(
-            controller: controller,
-            itemBuilder: (context, index) =>
-                _buildSingleImage(context, widget.images[index]),
-            itemCount: widget.images.length),
-        Positioned(
-            left: 0,
-            child: IconButton(
-                onPressed: movePrevious,
+    return Stack(fit: StackFit.expand, alignment: Alignment.center, children: [
+      // Images
+      PageView.builder(
+          controller: controller,
+          itemBuilder: (context, index) =>
+              _buildSingleImage(context, widget.images[index]),
+          itemCount: widget.images.length),
+      // Move previous page button
+      Positioned(
+          left: 0,
+          child: _buildWithDeferredCtrl(context, builder: (context, snapshot) {
+            VoidCallback? pressEvent;
+
+            if (snapshot.hasData) {
+              pressEvent = (snapshot.data!.page?.floor() ?? 0) == 0
+                  ? null
+                  : movePrevious;
+            }
+
+            return IconButton(
+                onPressed: pressEvent,
                 color: widget.iconColour,
                 icon: Icon(Icons.arrow_back_ios_outlined,
-                    size: widget.controlIconSize))),
-        Positioned(
-            right: 0,
-            child: IconButton(
-                onPressed: moveNext,
+                    size: widget.controlIconSize));
+          })),
+      // Move next page button
+      Positioned(
+          right: 0,
+          child: _buildWithDeferredCtrl(context, builder: (context, snapshot) {
+            final int maxLen = widget.images.length - 1;
+            VoidCallback? pressEvent;
+
+            if (snapshot.hasData) {
+              pressEvent = (snapshot.data!.page?.ceil() ?? maxLen) == maxLen
+                  ? null
+                  : moveNext;
+            }
+
+            return IconButton(
+                onPressed: pressEvent,
                 color: widget.iconColour,
                 icon: Icon(Icons.arrow_forward_ios_outlined,
-                    size: widget.controlIconSize)))
-      ],
-    );
+                    size: widget.controlIconSize));
+          }))
+    ]);
   }
 }
