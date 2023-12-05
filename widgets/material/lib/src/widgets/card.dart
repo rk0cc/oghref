@@ -75,8 +75,12 @@ base class OgHrefMaterialCard extends StatelessWidget
   /// security reason.
   final BeforeOpenLinkConfirmation? confirmation;
 
+  /// A message will be display in [SnackBar] if [Uri] launch failed.
   @override
   final String launchFailedMessage;
+
+  /// Decides the preferred [MetaInfo] from various prefix if applied.
+  final MultiMetaInfoHandler? multiMetaInfoHandler;
 
   /// Create rich information link [Card] by given [url].
   ///
@@ -92,6 +96,7 @@ base class OgHrefMaterialCard extends StatelessWidget
       this.preferHTTPS = true,
       this.onLoading,
       required this.confirmation,
+      this.multiMetaInfoHandler,
       super.key});
 
   Widget _buildMediaFrame(BuildContext context, List<oghref.ImageInfo> images,
@@ -197,6 +202,7 @@ base class OgHrefMaterialCard extends StatelessWidget
           width: preferredWidth,
           child: Card(
               child: OgHrefBuilder(url,
+                  multiInfoHandler: multiMetaInfoHandler,
                   onLoading: onLoading == null
                       ? null
                       : (context) => Padding(

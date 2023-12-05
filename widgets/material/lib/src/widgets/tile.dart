@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:oghref_builder/oghref_builder.dart'
-    show OgHrefBuilder, MetaFetch;
+    show OgHrefBuilder, MetaFetch, MultiMetaInfoHandler;
 import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
 
 import '../launch_failed_snackbar.dart';
@@ -47,6 +47,10 @@ base class OgHrefMaterialTile extends StatelessWidget
   /// security reason.
   final BeforeOpenLinkConfirmation? confirmation;
 
+  /// Decides the preferred [MetaInfo] from various prefix if applied.
+  final MultiMetaInfoHandler? multiMetaInfoHandler;
+
+  /// A message will be display in [SnackBar] if [Uri] launch failed.
   @override
   final String launchFailedMessage;
 
@@ -62,6 +66,7 @@ base class OgHrefMaterialTile extends StatelessWidget
       this.launchFailedMessage = "Unable to open URL.",
       this.imagePreviewDimension,
       required this.confirmation,
+      this.multiMetaInfoHandler,
       super.key});
 
   Widget _buildImagePreview(
@@ -125,6 +130,7 @@ base class OgHrefMaterialTile extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return OgHrefBuilder(url,
+        multiInfoHandler: multiMetaInfoHandler,
         onRetrived: (context, metaInfo, openLink) {
           return ListTile(
               leading: _buildImagePreview(context, metaInfo.images),
