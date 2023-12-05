@@ -41,12 +41,12 @@ base class OgHrefMaterialCard extends StatelessWidget
 
   /// Enable playing video and audio support if applied.
   ///
-  /// ### Issues for previewing YouTube or other non-video / non-audio file URL property in `og:video` / `og:audio`
-  ///
-  /// Since playback feature is based on [media_kit](https://github.com/media-kit/media-kit) which only supported
-  /// playing "actual media file" only, it no longer be functional for providing URL is not linked to video or
-  /// audio files. As a result, it is strongly suggest to disable [multimedia] if failed to play due to
-  /// unsatified file format of URL.
+  /// To activate multimedia functions, the given [url] must contains
+  /// metadata related to audios, videos or both with supported data type
+  /// from response of `HEAD` request for each denoted resources URL.
+  /// If no audio or video available or at least one resources responded
+  /// invalid content type, this feature will not available and fallback to
+  /// [ImageCarousel].
   final bool multimedia;
 
   /// [TextStyle] for displaying link title.
