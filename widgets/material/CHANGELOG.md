@@ -1,3 +1,9 @@
+## 1.1.0
+
+* Add style configuration for `OgHrefMaterialCard`
+* Known issues:
+    * Some website which no metadata offered may not be able to fetch fallback content.
+
 ## 1.0.1
 
 * Remove `media_kit_video` in `pubspec.yaml` due to no API used directly

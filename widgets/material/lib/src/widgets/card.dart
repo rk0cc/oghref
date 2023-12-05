@@ -11,6 +11,29 @@ import '../width_size_calculator.dart';
 import '../components/carousel.dart';
 import '../typedefs.dart';
 
+/// An [OgHrefMaterialCard] style preference related to [Card]
+/// which related to [Color]s and [ShapeBorder].
+final class OgHrefMaterialCardStyle {
+  /// [Card] background colour applied in [OgHrefMaterialCard].
+  ///
+  /// This value will redirect to [Card.color].
+  final Color? backgroundColour;
+
+  /// Shadow colour applied for [Card].
+  ///
+  /// This value will redirect to [Card.shadowColor].
+  final Color? shadowColour;
+
+  /// Determine shape of [Card].
+  ///
+  /// This value will refirect to [Card.shape].
+  final ShapeBorder? shape;
+
+  /// Create preference of [OgHrefMaterialCard] style.
+  const OgHrefMaterialCardStyle(
+      {this.backgroundColour, this.shadowColour, this.shape});
+}
+
 /// Rich information link preview under [Card] implementation.
 ///
 /// If the given [url] marked metadata with recognizable from [MetaFetch],
@@ -82,6 +105,15 @@ base class OgHrefMaterialCard extends StatelessWidget
   /// Decides the preferred [MetaInfo] from various prefix if applied.
   final MultiMetaInfoHandler? multiMetaInfoHandler;
 
+  /// Specify styles of [Card].
+  final OgHrefMaterialCardStyle? style;
+
+  /// Determine [Clip] behaviour of the [Card].
+  final Clip? clipBehaviour;
+
+  /// Define margin of [Card].
+  final EdgeInsetsGeometry? margin;
+
   /// Create rich information link [Card] by given [url].
   ///
   /// If either [mediaWidth] or [mediaHeight] omitted, it will
@@ -97,6 +129,9 @@ base class OgHrefMaterialCard extends StatelessWidget
       this.onLoading,
       required this.confirmation,
       this.multiMetaInfoHandler,
+      this.style,
+      this.clipBehaviour,
+      this.margin,
       super.key});
 
   Widget _buildMediaFrame(BuildContext context, List<oghref.ImageInfo> images,
@@ -113,19 +148,20 @@ base class OgHrefMaterialCard extends StatelessWidget
       return e.url!;
     }));
 
-    final ImageCarousel carousel = ImageCarousel(
-        List.unmodifiable(images.where((element) => element.url != null)),
-        preferHTTPS: preferHTTPS);
+    if (images.isNotEmpty) {
+      final ImageCarousel carousel = ImageCarousel(
+          List.unmodifiable(images.where((element) => element.url != null)),
+          preferHTTPS: preferHTTPS);
 
-    if (multimedia && multimediaResources.isNotEmpty) {
-      // Get media playback if enabled multimedia features with provided resources.
-      return MediaPlayback(multimediaResources,
-          onLoading: (context) =>
-              const Center(child: CircularProgressIndicator()),
-          onLoadFailed: (context) => carousel);
-    } else if (images.isNotEmpty) {
-      // Get images either no multimedia resources provided or disabled multimedia features.
-      return carousel;
+      if (multimedia && multimediaResources.isNotEmpty) {
+        // Get media playback if enabled multimedia features with provided resources.
+        return MediaPlayback(multimediaResources,
+            onLoading: (context) =>
+                const Center(child: CircularProgressIndicator()),
+            onLoadFailed: (context) => carousel);
+      } else {
+        return carousel;
+      }
     }
 
     // Get Icon for placeholder
@@ -176,21 +212,18 @@ base class OgHrefMaterialCard extends StatelessWidget
       List<oghref.ImageInfo> images = const [],
       List<oghref.VideoInfo> videos = const [],
       List<oghref.AudioInfo> audios = const []}) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Media frame
-        SizedBox(
-            width: preferredWidth,
-            height: mediaHeight ?? preferredWidth * 9 / 16,
-            child: _buildMediaFrame(context, images, videos, audios)),
-        // Tile link
-        SizedBox(
-            width: preferredWidth,
-            child: _buildTile(context, title,
-                openLink: openLink, description: description))
-      ],
-    );
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      // Media frame
+      SizedBox(
+          width: preferredWidth,
+          height: mediaHeight ?? preferredWidth * 9 / 16,
+          child: _buildMediaFrame(context, images, videos, audios)),
+      // Tile link
+      SizedBox(
+          width: preferredWidth,
+          child: _buildTile(context, title,
+              openLink: openLink, description: description))
+    ]);
   }
 
   @override
@@ -201,6 +234,11 @@ base class OgHrefMaterialCard extends StatelessWidget
       return SizedBox(
           width: preferredWidth,
           child: Card(
+              color: style?.backgroundColour,
+              shadowColor: style?.shadowColour,
+              shape: style?.shape,
+              clipBehavior: clipBehaviour,
+              margin: margin,
               child: OgHrefBuilder(url,
                   multiInfoHandler: multiMetaInfoHandler,
                   onLoading: onLoading == null

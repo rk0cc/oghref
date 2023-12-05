@@ -123,6 +123,10 @@ class _OgHrefMaterialExampleHomeState extends State<OgHrefMaterialExampleHome> {
                       flex: 8,
                       child: TextField(
                           controller: controller,
+                          textInputAction: TextInputAction.go,
+                          onSubmitted: (_) {
+                            _applyChanges();
+                          },
                           decoration: InputDecoration(
                               errorText: invalid ? "Invalid URL website" : null,
                               hintText: "https://www.example.com",

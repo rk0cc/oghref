@@ -1,6 +1,6 @@
 name: oghref_material
 description: Material themed widget for generating rich information link from URL.
-version: 1.0.1
+version: 1.1.0
 repository: https://github.com/rk0cc/oghref/tree/main/widgets/material
 issue_tracker: https://github.com/rk0cc/oghref/issues
 screenshots:
