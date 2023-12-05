@@ -44,6 +44,9 @@ Providing rich information links in Material themed widgets.
 
 ### `OgHrefMaterialCard`
 
+![oghref_material_card](https://github.com/rk0cc/oghref/assets/70585816/28b4014b-e5ab-49f8-a6fe-f69043454514)
+
+
 `OgHrefMaterialCard` has three two major components in a card: media and information sections where placed vertically. The media section can be either image carousel or a player if `multimedia` is activated and the given URL provides at least one metadata related with audio or video with **exact** location of the resources (in another words, no redirection allowed) and responded content type.
 
 Image carousel has two buttons for page control, simply as move previous or next pages. And the page view will display all images resources available from metadata. The content of images will be shown in contain mode of `BoxFit` and will be cached once it loaded already.
@@ -53,6 +56,8 @@ Player is a widget for handling audio and video playback with [media_kit](https:
 For the information section, it contains title and descriptions if provided. Otherwise, when title omitted, URL address will be shown instead. This section also plays a role of linking given URL that it will open link when pressed.
 
 ### `OgHrefMaterialTile`
+
+![oghref_material_tile](https://github.com/rk0cc/oghref/assets/70585816/98fa26b0-f28b-4dfb-83e0-1c66ee524326)
 
 `OgHrefMaterialTile` is another widgets based on `ListTile` which integrated an image, title, description as well as open link features into a compact widget to reduce occupied spaces.
 
