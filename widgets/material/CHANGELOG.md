@@ -1,3 +1,7 @@
+## 1.1.3
+
+* Resolve incorrect decoding content issues.
+
 ## 1.1.2
 
 * Loading widget reimplementations.
