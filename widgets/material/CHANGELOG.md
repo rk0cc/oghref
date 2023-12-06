@@ -1,3 +1,8 @@
+## 1.1.2
+
+* Loading widget reimplementations.
+* Downgrade `meta` constraint
+
 ## 1.1.1
 
 * Drop cache image support

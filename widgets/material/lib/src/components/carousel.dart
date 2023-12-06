@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:oghref_builder/oghref_builder.dart' show MetaFetch, MetaInfo;
 import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
 
+import 'img_builders.dart';
+
 /// Reviewing multiple images provided from [oghref.ImageInfo] and
 /// display all images in a single carousel [Widget].
 ///
@@ -94,8 +96,8 @@ final class _ImageCarouselState extends State<ImageCarousel> {
     return Image.network(destination!.toString(),
         fit: BoxFit.contain,
         headers: {"user-agent": MetaFetch.userAgentString},
-        errorBuilder: (context, _, __) =>
-            const Center(child: Icon(Icons.broken_image_outlined)));
+        errorBuilder: errorImageMaterial,
+        loadingBuilder: loadingImageMaterial);
   }
 
   FutureBuilder<PageController> _buildWithDeferredCtrl(BuildContext context,

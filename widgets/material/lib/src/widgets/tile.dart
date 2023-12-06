@@ -3,6 +3,7 @@ import 'package:oghref_builder/oghref_builder.dart'
     show OgHrefBuilder, MetaFetch, MultiMetaInfoHandler;
 import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
 
+import '../components/img_builders.dart';
 import '../launch_failed_snackbar.dart';
 import '../width_size_calculator.dart';
 import '../typedefs.dart';
@@ -93,13 +94,11 @@ base class OgHrefMaterialTile extends StatelessWidget
 
       return SizedBox.square(
           dimension: dimension,
-          child: Image.network(
-            "$imgUri",
-            fit: BoxFit.cover,
-            headers: {"user-agent": MetaFetch.userAgentString},
-            errorBuilder: (context, _, __) =>
-                const Center(child: Icon(Icons.broken_image_outlined)),
-          ));
+          child: Image.network("$imgUri",
+              fit: BoxFit.cover,
+              headers: {"user-agent": MetaFetch.userAgentString},
+              errorBuilder: errorImageMaterial,
+              loadingBuilder: loadingImageMaterial));
     }
 
     return Container(
