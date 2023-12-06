@@ -12,6 +12,24 @@ import '../width_size_calculator.dart';
 import '../components/carousel.dart';
 import '../typedefs.dart';
 
+/// An [OgHrefFluentCard] style preference related to [Card]
+/// which related to [Color]s and [ShapeBorder].
+final class OgHrefFluentCardStyle {
+  /// [Card] background colour applied in [OgHrefMaterialCard].
+  ///
+  /// This value will redirect to [Card.backgroundColor].
+  final Color? backgroundColour;
+
+  /// Shadow colour applied for [Card].
+  ///
+  /// This value will redirect to [Card.borderColor].
+  final Color? borderColour;
+
+  /// Create preference of [OgHrefFluentCard] style.
+  const OgHrefFluentCardStyle(
+      {this.backgroundColour, this.borderColour});
+}
+
 /// Rich information link preview under [Card] implementation.
 ///
 /// If the given [url] marked metadata with recognizable from [MetaFetch],
@@ -83,6 +101,10 @@ base class OgHrefFluentCard extends StatelessWidget
   /// Decides the preferred [MetaInfo] from various prefix if applied.
   final MultiMetaInfoHandler? multiMetaInfoHandler;
 
+  final OgHrefFluentCardStyle? style;
+
+  final EdgeInsetsGeometry? margin;
+
   /// Create rich information link [Card] by given [url].
   ///
   /// If either [mediaWidth] or [mediaHeight] omitted, it will
@@ -98,6 +120,8 @@ base class OgHrefFluentCard extends StatelessWidget
       this.onLoading,
       required this.confirmation,
       this.multiMetaInfoHandler,
+      this.style,
+      this.margin,
       super.key});
 
   Widget _buildMediaFrame(BuildContext context, List<oghref.ImageInfo> images,
@@ -202,6 +226,9 @@ base class OgHrefFluentCard extends StatelessWidget
       return SizedBox(
           width: preferredWidth,
           child: Card(
+              backgroundColor: style?.backgroundColour,
+              borderColor: style?.borderColour,
+              margin: margin,
               child: OgHrefBuilder(url,
                   multiInfoHandler: multiMetaInfoHandler,
                   onLoading: onLoading == null
