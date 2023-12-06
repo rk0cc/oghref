@@ -1,3 +1,7 @@
+## 3.0.4
+
+* Fix content broken during parsing metadata
+
 ## 3.0.3
 
 * Resolve tofu decode issue in `oghref_model`
