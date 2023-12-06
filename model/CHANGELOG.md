@@ -1,3 +1,7 @@
+## 2.0.3
+
+* Enforce every decoded content using UTF-8
+
 ## 2.0.2
 
 * Fix Twitter Card absent in library issue

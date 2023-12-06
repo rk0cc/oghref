@@ -227,7 +227,7 @@ final class MetaFetch {
           url, resp.contentType, const {"text/html", "application/xhtml+xml"});
     }
 
-    return html_parser.parse(resp.body);
+    return html_parser.parse(resp.body, encoding: "utf-8");
   }
 
   /// Retrive [MetaInfo] from HTTP request from [url].

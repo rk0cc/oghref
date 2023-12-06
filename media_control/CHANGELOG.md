@@ -1,3 +1,8 @@
+## 3.0.2
+
+* Enforce UTF-8 decoding content for `oghref_model`
+* Update `flutter_lints` to `^3.0.1`
+
 ## 3.0.1
 
 * Fix `BuildContext` not offered on `onLoading` invoked.

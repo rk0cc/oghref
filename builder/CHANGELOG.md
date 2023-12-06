@@ -1,3 +1,7 @@
+## 2.0.2
+
+* Update `oghref_model` to `^2.0.3` to enforce UTF-8 decoding.
+
 ## 2.0.1
 
 * Update `oghref_model` to `^2.0.2` to tackle Twitter Card does not ship issue

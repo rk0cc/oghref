@@ -101,6 +101,7 @@ final class _MediaPlaybackState extends State<MediaPlayback> {
 final class _MediaPlaybackRender extends StatefulWidget {
   final List<Uri> resources;
 
+  // ignore: unused_element
   _MediaPlaybackRender(this.resources, {super.key});
 
   @override
