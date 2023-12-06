@@ -1,6 +1,6 @@
 ## 2.0.4
 
-* Response body will be decoded by UTF-8
+* Response body will be decoded by UTF-8.
 
 ## 2.0.3
 
