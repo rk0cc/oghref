@@ -102,6 +102,17 @@ final class _OgHrefCupertinoExampleHomeState
                           pref.darkMode
                               ? CupertinoIcons.moon
                               : CupertinoIcons.sun_max,
+                          size: 14)),
+                  CupertinoButton(
+                      onPressed: () {
+                        setState(() {
+                          multimedia = !multimedia;
+                        });
+                      },
+                      child: Icon(
+                          multimedia
+                              ? CupertinoIcons.film_fill
+                              : CupertinoIcons.film,
                           size: 14))
                 ])),
         child: SafeArea(
@@ -155,6 +166,7 @@ final class _OgHrefCupertinoExampleHomeState
                             onLoading: (context) => const Center(
                                 child: CupertinoActivityIndicator()),
                             multimedia: multimedia),
+                        const SizedBox(height: 16),
                         OgHrefCupertinoTile(uri!,
                             confirmation: _confirmIsOpen,
                             onLoading: (context) => const Center(
