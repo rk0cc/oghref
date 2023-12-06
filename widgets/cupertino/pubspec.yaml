@@ -3,6 +3,8 @@ description: Cupertino themed widget for generating rich information link from U
 version: 1.0.0
 repository: https://github.com/rk0cc/oghref/tree/main/widgets/material
 issue_tracker: https://github.com/rk0cc/oghref/issues
+funding:
+  - https://github.com/sponsors/rk0cc
 environment:
   sdk: '>=3.0.0 <4.0.0'
   flutter: '>=3.10.0'
