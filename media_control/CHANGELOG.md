@@ -1,3 +1,7 @@
+## 3.0.3
+
+* Resolve tofu decode issue in `oghref_model`
+
 ## 3.0.2
 
 * Enforce UTF-8 decoding content for `oghref_model`
