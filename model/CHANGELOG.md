@@ -1,3 +1,7 @@
+## 2.0.5
+
+* Move UTF-8 decode process during decoding
+
 ## 2.0.4
 
 * Response body will be decoded by UTF-8.

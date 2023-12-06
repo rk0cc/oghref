@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:html/dom.dart';
 import 'package:meta/meta.dart';
@@ -55,7 +56,7 @@ abstract base mixin class MetaPropertyParser {
         .map((e) {
       final attr = e.attributes;
 
-      return (attr['property']!, attr['content']!);
+      return (attr['property']!, utf8.decode(attr['content']!.runes.toList()));
     });
 
     resolveMetaTags(metaParser, UnmodifiableListView(metaTagsProp));

@@ -9,11 +9,10 @@ environment:
 dependencies: 
   flutter:
     sdk: flutter
-  oghref_builder: ^2.0.0
-  oghref_media_control: ^3.0.1
-  oghref_model: ^2.0.1
-  cached_network_image: ^3.3.0
-  meta: ^1.10.0
+  oghref_builder: ^2.0.3
+  oghref_media_control: ^3.0.3
+  oghref_model: ^2.0.4
+  meta: ^1.9.1
   media_kit: ^1.1.10+1
   cupertino_icons: ^1.0.6
 dev_dependencies: 

@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:oghref_builder/oghref_builder.dart'
     show OgHrefBuilder, MetaFetch, MultiMetaInfoHandler, MetaInfo;
 import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
 
+import '../components/img_builders.dart';
 import '../launch_failed_dialog.dart';
 import '../width_size_calculator.dart';
 import '../typedefs.dart';
@@ -96,18 +96,15 @@ base class OgHrefCupertinoTile extends StatelessWidget
         imgUri = appliedImage.secureUrl!;
       }
 
-      return SizedBox.square(
-        dimension: dimension,
-        child: CachedNetworkImage(
-            imageUrl: "$imgUri",
-            fit: BoxFit.cover,
-            httpHeaders: {"user-agent": MetaFetch.userAgentString},
-            errorWidget: (context, url, error) =>
-                const Center(child: Icon(CupertinoIcons.xmark_rectangle)),
-            placeholder: (context, url) => const Center(
-                child: SizedBox.square(
-                    dimension: 14, child: CupertinoActivityIndicator()))),
-      );
+      return Container(
+          width: dimension,
+          height: dimension,
+          decoration: const BoxDecoration(color: CupertinoColors.white),
+          child: Image.network("$imgUri",
+              fit: BoxFit.cover,
+              headers: {"user-agent": MetaFetch.userAgentString},
+              errorBuilder: errorImageCupertino,
+              loadingBuilder: loadingImageCupertino));
     }
 
     return Container(
@@ -136,26 +133,30 @@ base class OgHrefCupertinoTile extends StatelessWidget
     return OgHrefBuilder(url,
         multiInfoHandler: multiMetaInfoHandler,
         onRetrived: (context, metaInfo, openLink) {
-          return CupertinoListTile(
-              leading: _buildImagePreview(context, metaInfo.images),
-              title: Text(
-                  metaInfo.title ??
-                      metaInfo.siteName ??
-                      metaInfo.url?.toString() ??
-                      "$url",
-                  style: tileTitleTextStyle,
-                  overflow: TextOverflow.ellipsis),
-              subtitle: metaInfo.description == null
-                  ? null
-                  : Text(metaInfo.description!,
-                      style: tileDescriptionTextStyle,
+          return MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: CupertinoListTile(
+                  leading: _buildImagePreview(context, metaInfo.images),
+                  title: Text(
+                      metaInfo.title ??
+                          metaInfo.siteName ??
+                          metaInfo.url?.toString() ??
+                          "$url",
+                      style: tileTitleTextStyle,
                       overflow: TextOverflow.ellipsis),
-              onTap: () => _openLinkConfirm(context, openLink));
+                  subtitle: metaInfo.description == null
+                      ? null
+                      : Text(metaInfo.description!,
+                          style: tileDescriptionTextStyle,
+                          overflow: TextOverflow.ellipsis),
+                  onTap: () => _openLinkConfirm(context, openLink)));
         },
-        onFetchFailed: (context, exception, openLink) => CupertinoListTile(
-            title: Text("$url",
-                style: tileTitleTextStyle, overflow: TextOverflow.ellipsis),
-            onTap: () => _openLinkConfirm(context, openLink)),
+        onFetchFailed: (context, exception, openLink) => MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: CupertinoListTile(
+                title: Text("$url",
+                    style: tileTitleTextStyle, overflow: TextOverflow.ellipsis),
+                onTap: () => _openLinkConfirm(context, openLink))),
         onLoading: onLoading == null
             ? null
             : (context) => Padding(
