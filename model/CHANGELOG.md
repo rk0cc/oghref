@@ -1,3 +1,8 @@
+## 2.0.2
+
+* Fix Twitter Card absent in library issue
+* Lint
+
 ## 2.0.1
 
 * Downgrade `meta` version constraint that ensure it can be implemented with Flutter.

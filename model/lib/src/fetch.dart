@@ -76,7 +76,8 @@ final class MetaFetch {
 
   /// Define a value of user agent when making request in [fetchFromHttp].
   static changeUserAgent(String? userAgent) {
-    OgHrefClient.userAgent = userAgent ?? OgHrefClient.DEFAULT_USER_AGENT_STRING;
+    OgHrefClient.userAgent =
+        userAgent ?? OgHrefClient.DEFAULT_USER_AGENT_STRING;
   }
 
   /// Retrive current preference of user agent [String].

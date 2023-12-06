@@ -91,7 +91,7 @@ final class UrlInfoContentTypeResult {
       this.urlInfo, this.httpContentType, this.httpsContentType);
 
   /// Check does [httpContentType] and [httpsContentType] are equals.
-  /// 
+  ///
   /// If [httpsContentType] is not provided, it will return `null` instead
   /// of making decision.
   bool? isEqualsCategory() {
@@ -141,7 +141,7 @@ extension _UriFileExtensionInfo on Uri {
 /// with resolved content type.
 extension IteratedUrlInfoContentTypeResolver on Iterable<UrlInfo> {
   /// Resolve content type from [UrlInfo] and export result.
-  /// 
+  ///
   /// The condition of returned [ContentTypeCategory] will be depended on
   /// given extendion from [Uri.path] first. If not offered, it will
   /// try to find `Content-Type` in HTTP response header by making HTTP HEAD request.
@@ -180,7 +180,7 @@ extension IteratedUrlInfoContentTypeResolver on Iterable<UrlInfo> {
 /// Resolve a single [UrlInfo] into [UrlInfoContentTypeResult].
 extension UrlInfoContentTypeResolver on UrlInfo {
   /// Resolve content type of this [UrlInfo].
-  /// 
+  ///
   /// See [IteratedUrlInfoContentTypeResolver.determineContentTypes] for
   /// more details on operations.
   Future<UrlInfoContentTypeResult> determineContentTypes() =>
