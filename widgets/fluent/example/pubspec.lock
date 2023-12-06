@@ -425,10 +425,10 @@ packages:
     dependency: transitive
     description:
       name: oghref_builder
-      sha256: a17f1d9d831372c28162fc14770fc9f36b619c211a0605c1b46783d1dece09b0
+      sha256: "86c784360e25d4049cb2438233e4062986a7141cbfb57292f76f1d9cdfeed2b5"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.4"
   oghref_fluent:
     dependency: "direct main"
     description:
@@ -440,18 +440,18 @@ packages:
     dependency: transitive
     description:
       name: oghref_media_control
-      sha256: "3b2ac513f7f962d6eda346dfd2fe479c2210a14c90b1aa56d878db47c5e8ae86"
+      sha256: "1d83698bbd86b9e99e63cdb4a1a739c3e0e6d85752fbfa1da02b41e7989dd736"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.3"
+    version: "3.0.4"
   oghref_model:
     dependency: transitive
     description:
       name: oghref_model
-      sha256: "6bd009699d22f111860965370d06a4e470788d33f9c13f5f742d3b001308d4cb"
+      sha256: beedd03f5ab53370335d7a46cebf328ff5a60e4cb10c9d05f96cf8bc7a4377e0
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
   package_config:
     dependency: transitive
     description:

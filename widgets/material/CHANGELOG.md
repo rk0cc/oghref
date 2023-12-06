@@ -1,3 +1,7 @@
+## 1.1.4
+
+* Fix content broken issue
+
 ## 1.1.3
 
 * Resolve incorrect decoding content issues.
