@@ -1,3 +1,7 @@
+## 2.0.4
+
+* Response body will be decoded by UTF-8
+
 ## 2.0.3
 
 * Enforce every decoded content using UTF-8

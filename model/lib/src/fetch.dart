@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' as html_parser show parse;
@@ -227,7 +228,7 @@ final class MetaFetch {
           url, resp.contentType, const {"text/html", "application/xhtml+xml"});
     }
 
-    return html_parser.parse(resp.body, encoding: "utf-8");
+    return html_parser.parse(utf8.decode(resp.body.runes.toList()), encoding: "utf-8");
   }
 
   /// Retrive [MetaInfo] from HTTP request from [url].
