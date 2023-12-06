@@ -6,6 +6,8 @@ issue_tracker: https://github.com/rk0cc/oghref/issues
 screenshots:
   - description: Screenshot of OgHref Material example
     path: screenshots/oghref_material.png
+funding:
+  - https://github.com/sponsors/rk0cc
 environment:
   sdk: '>=3.0.0 <4.0.0'
   flutter: '>=3.10.0'
