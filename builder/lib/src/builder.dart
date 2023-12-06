@@ -119,22 +119,15 @@ base mixin _OgHrefBuilderStateMixin<T extends OgHrefBuilder> on State<T> {
   }
 
   Widget _buildHref(BuildContext context, AsyncSnapshot<MetaInfo> snapshot) {
-    switch (snapshot.connectionState) {
-      case ConnectionState.active:
-        if (snapshot.hasError) {
-          return widget.onFetchFailed(
-              context, snapshot.error!, () => _launchUrl(context));
-        }
-      case ConnectionState.done:
-        if (snapshot.hasData) {
-          return widget.onRetrived(
-              context, snapshot.data!, () => _launchUrl(context));
-        }
-      default:
-        break;
+    if (snapshot.hasError) {
+      return widget.onFetchFailed(
+          context, snapshot.error!, () => _launchUrl(context));
+    } else if (!snapshot.hasData) {
+      return (widget.onLoading ?? (_) => const SizedBox())(context);
     }
 
-    return (widget.onLoading ?? (_) => const SizedBox())(context);
+    return widget.onRetrived(
+        context, snapshot.data!, () => _launchUrl(context));
   }
 }
 
