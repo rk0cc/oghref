@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluent_ui/fluent_ui.dart' hide FluentIcons;
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:oghref_builder/oghref_builder.dart'
     show OgHrefBuilder, MetaFetch, MultiMetaInfoHandler, MetaInfo;
 import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
 
+import '../components/img_builders.dart';
 import '../launch_failed_infobar.dart';
 import '../width_size_calculator.dart';
 import '../typedefs.dart';
@@ -94,17 +94,12 @@ base class OgHrefFluentTile extends StatelessWidget
       }
 
       return SizedBox.square(
-        dimension: dimension,
-        child: CachedNetworkImage(
-            imageUrl: "$imgUri",
-            fit: BoxFit.cover,
-            httpHeaders: {"user-agent": MetaFetch.userAgentString},
-            errorWidget: (context, url, error) =>
-                const Center(child: Icon(FluentIcons.image_off_20_regular)),
-            placeholder: (context, url) => const Center(
-                child: SizedBox.square(
-                    dimension: 14, child: ProgressRing()))),
-      );
+          dimension: dimension,
+          child: Image.network("$imgUri",
+              fit: BoxFit.cover,
+              headers: {"user-agent": MetaFetch.userAgentString},
+              errorBuilder: errorImageFluent,
+              loadingBuilder: loadingImageFluent));
     }
 
     return Container(

@@ -11,6 +11,7 @@ dependencies:
   oghref_fluent:
     path: ../
   provider: ^6.1.1
+  fluentui_system_icons: ^1.1.222
 dev_dependencies:
   flutter_test:
     sdk: flutter

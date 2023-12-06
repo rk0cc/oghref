@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluent_ui/fluent_ui.dart' hide FluentIcons;
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:oghref_builder/oghref_builder.dart' show MetaFetch, MetaInfo;
 import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
 
 import 'button_states.dart';
+import 'img_builders.dart';
 
 /// Reviewing multiple images provided from [oghref.ImageInfo] and
 /// display all images in a single carousel [Widget].
@@ -102,8 +102,7 @@ final class _ImageCarouselState extends State<ImageCarousel> {
 
   void _bindBtnStyle() {
     appliedBtnStyle = ButtonStyle(
-      foregroundColor: SingleButtonState<Color?>(widget.iconColour)
-    );
+        foregroundColor: SingleButtonState<Color?>(widget.iconColour));
   }
 
   Widget _buildSingleImage(BuildContext context, oghref.ImageInfo imgInfo) {
@@ -113,15 +112,11 @@ final class _ImageCarouselState extends State<ImageCarousel> {
       destination = imgInfo.secureUrl;
     }
 
-    return CachedNetworkImage(
-        imageUrl: destination!.toString(),
+    return Image.network(destination!.toString(),
         fit: BoxFit.contain,
-        httpHeaders: {"user-agent": MetaFetch.userAgentString},
-        errorWidget: (context, url, error) =>
-            const Center(child: Icon(FluentIcons.image_off_20_regular)),
-        placeholder: (context, url) => const Center(
-            child: SizedBox.square(
-                dimension: 16, child: ProgressRing())));
+        headers: {"user-agent": MetaFetch.userAgentString},
+        errorBuilder: errorImageFluent,
+        loadingBuilder: loadingImageFluent);
   }
 
   FutureBuilder<PageController> _buildWithDeferredCtrl(BuildContext context,

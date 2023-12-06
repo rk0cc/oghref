@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart' as microsoft;
 import 'package:oghref_fluent/oghref_fluent.dart';
 import 'package:provider/provider.dart';
 
@@ -81,6 +82,15 @@ class _OgHrefFluentExampleHomeState extends State<OgHrefFluentExampleHome> {
     return allowOpen ?? false;
   }
 
+  CommandBarItem _buildCommandBarButtonWithTooltip(
+      {required VoidCallback? onPressed,
+      required IconData icon,
+      String? message}) {
+    return CommandBarBuilderItem(
+        builder: (context, _, child) => Tooltip(message: message, child: child),
+        wrappedItem: CommandBarButton(onPressed: onPressed, icon: Icon(icon)));
+  }
+
   @override
   Widget build(BuildContext context) {
     final pref = Provider.of<ThemePreference>(context);
@@ -91,13 +101,26 @@ class _OgHrefFluentExampleHomeState extends State<OgHrefFluentExampleHome> {
             commandBar: CommandBar(
                 mainAxisAlignment: MainAxisAlignment.end,
                 primaryItems: <CommandBarItem>[
-                  CommandBarButton(
+                  _buildCommandBarButtonWithTooltip(
                       onPressed: () {
                         pref.darkMode = !pref.darkMode;
                       },
-                      icon: Icon(pref.darkMode
+                      icon: pref.darkMode
                           ? FluentIcons.clear_night
-                          : FluentIcons.sunny))
+                          : FluentIcons.sunny,
+                      message:
+                          "Switch to ${pref.darkMode ? 'light' : 'dark'} mode"),
+                  _buildCommandBarButtonWithTooltip(
+                      onPressed: () {
+                        setState(() {
+                          multimedia = !multimedia;
+                        });
+                      },
+                      icon: multimedia
+                          ? microsoft.FluentIcons.movies_and_tv_24_filled
+                          : microsoft.FluentIcons.movies_and_tv_24_regular,
+                      message:
+                          "${multimedia ? 'Disable' : 'Enable'} playback review")
                 ])),
         content: NavigationView(
             content: Column(children: [
@@ -113,6 +136,10 @@ class _OgHrefFluentExampleHomeState extends State<OgHrefFluentExampleHome> {
                             label: "URL of website",
                             child: TextBox(
                                 controller: controller,
+                                textInputAction: TextInputAction.go,
+                                onSubmitted: (_) {
+                                  _applyChanges();
+                                },
                                 placeholder: "https://www.example.com",
                                 decoration: BoxDecoration(
                                     border: invalid
@@ -159,21 +186,19 @@ class _OgHrefFluentExampleHomeState extends State<OgHrefFluentExampleHome> {
 }
 
 final class _GoButtonState implements ButtonState<Color?> {
-  final Color baseColour = Colors.successPrimaryColor;
-
   const _GoButtonState();
 
   @override
   Color? resolve(Set<ButtonStates> states) {
-    if (states.contains(ButtonStates.pressing)) {
-      return baseColour;
+    if (states.contains(ButtonStates.disabled)) {
+      return null;
+    } else if (states.contains(ButtonStates.pressing)) {
+      return Colors.green.darker;
     } else if ([ButtonStates.focused, ButtonStates.hovering]
         .any(states.contains)) {
-      return baseColour.withGreen(64).withRed(32);
-    } else if (states.contains(ButtonStates.none)) {
-      return Colors.green.light;
+      return Colors.successPrimaryColor;
     }
 
-    return null;
+    return Colors.green.lighter;
   }
 }
