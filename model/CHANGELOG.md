@@ -1,6 +1,6 @@
 ## 2.0.5
 
-* Move UTF-8 decode process during decoding
+* Move UTF-8 decode process during parsing property
 
 ## 2.0.4
 

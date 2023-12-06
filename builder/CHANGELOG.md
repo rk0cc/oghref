@@ -1,3 +1,7 @@
+## 2.0.4
+
+* Update `oghref_model` to `^2.0.5` to enforce UTF-8 decoding.
+
 ## 2.0.3
 
 * Update `oghref_model` to `^2.0.4` to enforce UTF-8 decoding.
