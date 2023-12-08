@@ -16,6 +16,8 @@ abstract final class OgHrefFluentBinding {
   /// Initalize all necessary setup which will be required to used later.
   static void ensureInitialized() {
     MediaKit.ensureInitialized();
-    MetaFetch().register(const OpenGraphPropertyParser());
+    MetaFetch()
+      ..register(const OpenGraphPropertyParser())
+      ..primaryPrefix = "og";
   }
 }
