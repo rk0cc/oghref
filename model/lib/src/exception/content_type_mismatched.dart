@@ -11,7 +11,7 @@ final class ContentTypeMismatchedException implements ClientException {
   final String? receivedContentType;
 
   /// Specify a [Set] with MIME [String] which required for following process.
-  /// 
+  ///
   /// It will assume as plain text if it contains empty.
   final Set<String> idealContentType;
 

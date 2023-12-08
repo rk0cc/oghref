@@ -255,7 +255,7 @@ final class MetaFetch {
   /// If [url] is not `HTTP` or `HTTPS`, [NonHttpUrlException]
   /// will be thrown. Additionally, if [url] located neither
   /// HTML nor XHTML resources, [ContentTypeMismatchedException]
-  /// will be thrown. 
+  /// will be thrown.
   ///
   /// Optionally, [userAgentString] can be modified before making request
   /// that allowing to identify as another user agent rather than
