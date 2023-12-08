@@ -1,3 +1,12 @@
+## 1.2.0
+
+* Update dependencies constraints:
+    * `oghref_model`: `^2.1.1`
+    * `oghref_builder`: `^3.0.1`
+    * `oghref_media_control`: `^3.0.5`
+* Add icon for `OgHrefMaterialTile` if the website of URL failed to retrive content.
+* Uses `WidthSizeMeasurment` mixin from `oghref_builder` to measure width.
+
 ## 1.1.4
 
 * Fix content broken issue

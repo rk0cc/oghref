@@ -143,6 +143,7 @@ base class OgHrefMaterialTile extends StatelessWidget
               onTap: () => _openLinkConfirm(context, openLink));
         },
         onFetchFailed: (context, exception, openLink) => ListTile(
+            leading: const Icon(Icons.web),
             title: Text("$url",
                 style: tileTitleTextStyle, overflow: TextOverflow.ellipsis),
             onTap: () => _openLinkConfirm(context, openLink)),

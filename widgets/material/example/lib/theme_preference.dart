@@ -4,7 +4,7 @@ final class ThemePreference extends ChangeNotifier {
   bool _materialThree;
   bool _darkMode;
 
-  ThemePreference({bool materialThree = false, bool darkMode = false})
+  ThemePreference({bool materialThree = true, bool darkMode = false})
       : _materialThree = materialThree,
         _darkMode = darkMode;
 
