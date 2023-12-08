@@ -119,12 +119,15 @@ class _OgHrefMaterialExampleHomeState extends State<OgHrefMaterialExampleHome> {
             children: [
               const DrawerHeader(child: null),
               ListTile(
-                leading: const Icon(Icons.keyboard_return),
-                title: const Text("Redirect"), trailing: Switch(value: MetaFetch().allowRedirect, onChanged: (newVal) {
-                setState(() {
-                  MetaFetch().allowRedirect = newVal;
-                });
-              }))
+                  leading: const Icon(Icons.keyboard_return),
+                  title: const Text("Redirect"),
+                  trailing: Switch(
+                      value: MetaFetch().allowRedirect,
+                      onChanged: (newVal) {
+                        setState(() {
+                          MetaFetch().allowRedirect = newVal;
+                        });
+                      }))
             ],
           ),
         ),
