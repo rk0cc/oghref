@@ -1,3 +1,7 @@
+## 3.0.5
+
+* Drop `oghref_model` and `oghref_builder` due to unused implementation.
+
 ## 3.0.4
 
 * Fix content broken during parsing metadata

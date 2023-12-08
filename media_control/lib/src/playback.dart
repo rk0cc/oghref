@@ -54,7 +54,7 @@ final class _MediaPlaybackState extends State<MediaPlayback> {
   }
 
   @override
-  void didUpdateWidget(MediaPlayback oldWidget) {
+  void didUpdateWidget(covariant MediaPlayback oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!const ListEquality().equals(oldWidget.resources, widget.resources)) {
       allPlayable = _playableCond();
