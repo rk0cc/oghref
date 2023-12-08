@@ -1,12 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart' hide FluentIcons;
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:oghref_builder/oghref_builder.dart'
-    show OgHrefBuilder, MetaFetch, MultiMetaInfoHandler, MetaInfo;
+    show OgHrefBuilder, MetaFetch, MultiMetaInfoHandler, MetaInfo, WidthSizeMeasurement;
 import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
 
 import '../components/img_builders.dart';
 import '../launch_failed_infobar.dart';
-import '../width_size_calculator.dart';
 import '../typedefs.dart';
 
 /// Create [ListTile] based widget for displaying rich information link.
@@ -15,7 +14,7 @@ import '../typedefs.dart';
 /// offered multimedia resources. At the same times, the image preview
 /// widget only offered as square frame only.
 base class OgHrefFluentTile extends StatelessWidget
-    with LaunchFailedInfoBarHandler, ResponsiveWidthSizeCalculator {
+    with LaunchFailedInfoBarHandler, WidthSizeMeasurement {
   /// URL of the link.
   final Uri url;
 
@@ -125,7 +124,7 @@ base class OgHrefFluentTile extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    return OgHrefBuilder(url,
+    return OgHrefBuilder.updatable(url,
         multiInfoHandler: multiMetaInfoHandler,
         onRetrived: (context, metaInfo, openLink) {
           return ListTile(
@@ -145,6 +144,7 @@ base class OgHrefFluentTile extends StatelessWidget
               onPressed: () => _openLinkConfirm(context, openLink));
         },
         onFetchFailed: (context, exception, openLink) => ListTile(
+          leading: const Icon(FluentIcons.web_asset_24_filled),
             title: Text("$url",
                 style: tileTitleTextStyle, overflow: TextOverflow.ellipsis),
             onPressed: () => _openLinkConfirm(context, openLink)),

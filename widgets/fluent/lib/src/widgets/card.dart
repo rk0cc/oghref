@@ -8,7 +8,6 @@ import 'package:oghref_media_control/oghref_media_control.dart';
 import 'package:oghref_model/buffer_parser.dart';
 
 import '../launch_failed_infobar.dart';
-import '../width_size_calculator.dart';
 import '../components/carousel.dart';
 import '../typedefs.dart';
 
@@ -40,7 +39,7 @@ final class OgHrefFluentCardStyle {
 /// will display placeholder icon with entire [url] to ensure functional
 /// whatever the metadata is provide or not.
 base class OgHrefFluentCard extends StatelessWidget
-    with LaunchFailedInfoBarHandler, ResponsiveWidthSizeCalculator {
+    with LaunchFailedInfoBarHandler, WidthSizeMeasurement {
   /// URL of the link which may be show rich link information if provided.
   final Uri url;
 
@@ -229,7 +228,7 @@ base class OgHrefFluentCard extends StatelessWidget
               backgroundColor: style?.backgroundColour,
               borderColor: style?.borderColour,
               margin: margin,
-              child: OgHrefBuilder(url,
+              child: OgHrefBuilder.updatable(url,
                   multiInfoHandler: multiMetaInfoHandler,
                   onLoading: onLoading == null
                       ? null

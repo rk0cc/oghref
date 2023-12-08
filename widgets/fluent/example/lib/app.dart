@@ -63,6 +63,7 @@ class _OgHrefFluentExampleHomeState extends State<OgHrefFluentExampleHome> {
 
     bool? allowOpen = await showDialog(
         context: context,
+        barrierDismissible: true,
         builder: (context) => ContentDialog(
                 title: const Text("Open link"),
                 content: Text("You are trying to open '$decodedUrl', proceed?"),
@@ -86,9 +87,16 @@ class _OgHrefFluentExampleHomeState extends State<OgHrefFluentExampleHome> {
       {required VoidCallback? onPressed,
       required IconData icon,
       String? message}) {
+    final CommandBarButton btn =
+        CommandBarButton(onPressed: onPressed, icon: Icon(icon));
+
+    if (message == null) {
+      return btn;
+    }
+
     return CommandBarBuilderItem(
         builder: (context, _, child) => Tooltip(message: message, child: child),
-        wrappedItem: CommandBarButton(onPressed: onPressed, icon: Icon(icon)));
+        wrappedItem: btn);
   }
 
   @override
