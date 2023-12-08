@@ -1,13 +1,21 @@
 import 'package:http/http.dart' show ClientException;
 
+/// An exception implement under [ClientException] that using invalid
+/// content type from given [uri].
 final class ContentTypeMismatchedException implements ClientException {
+  /// An [Uri] which locates to invalid content type.
   @override
   final Uri uri;
 
+  /// Content type value from response of [uri].
   final String? receivedContentType;
 
+  /// Specify a [Set] with MIME [String] which required for following process.
+  /// 
+  /// It will assume as plain text if it contains empty.
   final Set<String> idealContentType;
 
+  /// Construct an exception when using incorrect content type.
   ContentTypeMismatchedException(
       this.uri, this.receivedContentType, this.idealContentType);
 

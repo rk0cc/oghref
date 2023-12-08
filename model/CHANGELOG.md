@@ -1,3 +1,12 @@
+## 2.1.0
+
+* `MetaFetch.allowRedirect` is enabled by default
+* Added timeout options with `MetaFetch.timeout` and `MetaFetch.changeTimeout(int seconds)` for get and change preference.
+* Change `MetaFetch.changeUserAgent` from nullable parameter to optional parameter.
+* Provide `MetaFetch.disguiseUserAgent` for making request using web browser provided user agent.
+* `MetaFetch.fetchFromHttp(Uri url)` and `MetaFetch.fetchAllFromHttp(Uri url)` will thrown errors if applied.
+    * All exceptions are export publicly in case of catching thrown objects by specific types.
+
 ## 2.0.5
 
 * Move UTF-8 decode process during parsing property

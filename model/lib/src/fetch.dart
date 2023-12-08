@@ -34,7 +34,7 @@ final class MetaFetch {
 
   /// Allow [MetaFetch] fetch redirected [Uri]'s metadata instead of
   /// provided one.
-  bool allowRedirect = false;
+  bool allowRedirect = true;
 
   String? _primaryPrefix;
 
@@ -75,13 +75,33 @@ final class MetaFetch {
   static MetaFetch forTest() => MetaFetch._(true);
 
   /// Define a value of user agent when making request in [fetchFromHttp].
-  static changeUserAgent(String? userAgent) {
-    OgHrefClient.userAgent =
-        userAgent ?? OgHrefClient.DEFAULT_USER_AGENT_STRING;
+  static void changeUserAgent(
+      [String userAgent = OgHrefClient.DEFAULT_USER_AGENT_STRING]) {
+    OgHrefClient.userAgent = userAgent;
   }
+
+  /// Define timeout of response.
+  ///
+  /// Default value is `10`.
+  static void changeTimeout([int seconds = OgHrefClient.DEFAULT_TIMEOUT]) {
+    OgHrefClient.timeoutAt = seconds;
+  }
+
+  /// Change preference of using user agent given by web browser.
+  static set disguiseUserAgent(bool disguise) {
+    OgHrefClient.disguise = disguise;
+  }
+
+  /// Determine using user agent from web browser instead of [userAgentString].
+  ///
+  /// This does not applied under native environment.
+  static bool get disguiseUserAgent => OgHrefClient.disguise;
 
   /// Retrive current preference of user agent [String].
   static String get userAgentString => OgHrefClient.userAgent;
+
+  /// Retrive current preference of timeout.
+  static int get timeout => OgHrefClient.timeoutAt;
 
   /// Standardize [Function] for finding matched prefix in
   /// [Iterable.singleWhere].
@@ -233,11 +253,14 @@ final class MetaFetch {
   /// Retrive [MetaInfo] from HTTP request from [url].
   ///
   /// If [url] is not `HTTP` or `HTTPS`, [NonHttpUrlException]
-  /// will be thrown.
+  /// will be thrown. Additionally, if [url] located neither
+  /// HTML nor XHTML resources, [ContentTypeMismatchedException]
+  /// will be thrown. 
   ///
   /// Optionally, [userAgentString] can be modified before making request
   /// that allowing to identify as another user agent rather than
-  /// [DEFAULT_USER_AGENT_STRING].
+  /// default one unless [disguiseUserAgent] set as `true` which
+  /// override user agent string from web browser instead.
   ///
   /// Once the request got response, it's body content will be [html_parser.parse]
   /// to [Document] directly and perform [buildMetaInfo].
@@ -248,20 +271,21 @@ final class MetaFetch {
   /// For fetch all metadata protocols in a single [url], please uses
   /// [fetchAllFromHttp] instead.
   Future<MetaInfo> fetchFromHttp(Uri url) {
-    return _fetchHtmlDocument(url)
-        .then(buildMetaInfo)
-        .onError((error, stackTrace) => MetaInfo());
+    return _fetchHtmlDocument(url).then(buildMetaInfo);
   }
 
   /// Fetch all [MetaInfo] from various protocols into a single
   /// [Map].
   ///
   /// If [url] is not `HTTP` or `HTTPS`, [NonHttpUrlException]
+  /// will be thrown. Additionally, if [url] located neither
+  /// HTML nor XHTML resources, [ContentTypeMismatchedException]
   /// will be thrown.
   ///
   /// Optionally, [userAgentString] can be modified before making request
   /// that allowing to identify as another user agent rather than
-  /// [DEFAULT_USER_AGENT_STRING].
+  /// default one unless [disguiseUserAgent] set as `true` which
+  /// override user agent string from web browser instead.
   ///
   /// Once the request got response, it's body content will be [html_parser.parse]
   /// to [Document] directly and perform [buildAllMetaInfo].
@@ -269,8 +293,6 @@ final class MetaFetch {
   /// HTTP response code does not matter in this method that it only
   /// required to retrive HTML content from [url].
   Future<Map<String, MetaInfo>> fetchAllFromHttp(Uri url) {
-    return _fetchHtmlDocument(url)
-        .then(buildAllMetaInfo)
-        .onError((error, stackTrace) => const {});
+    return _fetchHtmlDocument(url).then(buildAllMetaInfo);
   }
 }
