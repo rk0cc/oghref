@@ -82,6 +82,31 @@ final class _OgHrefCupertinoExampleHomeState
     return allowOpen ?? false;
   }
 
+  Widget _buildTextFieldWithLabel(BuildContext context) {
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Padding(
+              padding: EdgeInsets.symmetric(vertical: 4),
+              child: Text("URL of website")),
+          CupertinoTextField(
+              controller: controller,
+              textInputAction: TextInputAction.go,
+              onSubmitted: (_) {
+                _applyChanges();
+              },
+              placeholder: "https://www.example.com",
+              decoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(
+                          color: invalid
+                              ? CupertinoColors.destructiveRed
+                              : CupertinoColors.activeBlue))))
+        ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final pref = Provider.of<ThemePreference>(context);
@@ -123,30 +148,7 @@ final class _OgHrefCupertinoExampleHomeState
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Expanded(
-                        flex: 8,
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 4),
-                                  child: Text("URL of website")),
-                              CupertinoTextField(
-                                  controller: controller,
-                                  textInputAction: TextInputAction.go,
-                                  onSubmitted: (_) {
-                                    _applyChanges();
-                                  },
-                                  placeholder: "https://www.example.com",
-                                  decoration: BoxDecoration(
-                                      border: invalid
-                                          ? Border.all(
-                                              color: CupertinoColors
-                                                  .destructiveRed)
-                                          : null))
-                            ])),
+                    Expanded(flex: 8, child: _buildTextFieldWithLabel(context)),
                     const Spacer(),
                     Expanded(
                         flex: 2,

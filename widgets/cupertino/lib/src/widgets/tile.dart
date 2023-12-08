@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:oghref_builder/oghref_builder.dart'
-    show OgHrefBuilder, MetaFetch, MultiMetaInfoHandler, MetaInfo, WidthSizeMeasurement;
+    show
+        OgHrefBuilder,
+        MetaFetch,
+        MultiMetaInfoHandler,
+        MetaInfo,
+        WidthSizeMeasurement;
 import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
 
 import '../components/img_builders.dart';
@@ -53,6 +58,7 @@ base class OgHrefCupertinoTile extends StatelessWidget
   @override
   final String launchFailedMessage;
 
+  /// A [String] display `OK` when launch URL failed.
   @override
   final String okText;
 
@@ -153,6 +159,7 @@ base class OgHrefCupertinoTile extends StatelessWidget
         onFetchFailed: (context, exception, openLink) => MouseRegion(
             cursor: SystemMouseCursors.click,
             child: CupertinoListTile(
+                leading: const Icon(CupertinoIcons.globe),
                 title: Text("$url",
                     style: tileTitleTextStyle, overflow: TextOverflow.ellipsis),
                 onTap: () => _openLinkConfirm(context, openLink))),

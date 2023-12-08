@@ -88,6 +88,7 @@ base class OgHrefCupertinoCard extends StatelessWidget
   @override
   final String launchFailedMessage;
 
+  /// A [String] display `OK` when launch URL failed.
   @override
   final String okText;
 
