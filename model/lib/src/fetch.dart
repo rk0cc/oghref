@@ -34,7 +34,7 @@ final class MetaFetch {
 
   /// Allow [MetaFetch] fetch redirected [Uri]'s metadata instead of
   /// provided one.
-  bool allowRedirect = true;
+  bool allowRedirect = false;
 
   String? _primaryPrefix;
 

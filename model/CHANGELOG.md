@@ -1,3 +1,7 @@
+## 2.1.1
+
+* Revert redirection disable as default
+
 ## 2.1.0
 
 * `MetaFetch.allowRedirect` is enabled by default
