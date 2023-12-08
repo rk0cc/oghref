@@ -7,7 +7,6 @@ import 'package:oghref_media_control/oghref_media_control.dart';
 import 'package:oghref_model/buffer_parser.dart';
 
 import '../launch_failed_dialog.dart';
-import '../width_size_calculator.dart';
 import '../components/carousel.dart';
 import '../typedefs.dart';
 
@@ -31,7 +30,7 @@ final class OgHrefCupertinoCardStyle {
 /// will display placeholder icon with entire [url] to ensure functional
 /// whatever the metadata is provide or not.
 base class OgHrefCupertinoCard extends StatelessWidget
-    with LaunchFailedDialogHandler, ResponsiveWidthSizeCalculator {
+    with LaunchFailedDialogHandler, WidthSizeMeasurement {
   /// URL of the link which may be show rich link information if provided.
   final Uri url;
 
@@ -224,7 +223,7 @@ base class OgHrefCupertinoCard extends StatelessWidget
               color: style?.backgroundColour ??
                   CupertinoTheme.of(context).barBackgroundColor.withAlpha(255),
               borderRadius: const BorderRadius.all(Radius.circular(8))),
-          child: OgHrefBuilder(url,
+          child: OgHrefBuilder.updatable(url,
               multiInfoHandler: multiMetaInfoHandler,
               onLoading: onLoading == null
                   ? null

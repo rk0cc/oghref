@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:oghref_builder/oghref_builder.dart'
-    show OgHrefBuilder, MetaFetch, MultiMetaInfoHandler, MetaInfo;
+    show OgHrefBuilder, MetaFetch, MultiMetaInfoHandler, MetaInfo, WidthSizeMeasurement;
 import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
 
 import '../components/img_builders.dart';
 import '../launch_failed_dialog.dart';
-import '../width_size_calculator.dart';
 import '../typedefs.dart';
 
 /// Create [CupertinoListTile] based widget for displaying rich information link.
@@ -14,7 +13,7 @@ import '../typedefs.dart';
 /// offered multimedia resources. At the same times, the image preview
 /// widget only offered as square frame only.
 base class OgHrefCupertinoTile extends StatelessWidget
-    with LaunchFailedDialogHandler, ResponsiveWidthSizeCalculator {
+    with LaunchFailedDialogHandler, WidthSizeMeasurement {
   /// URL of the link.
   final Uri url;
 
@@ -130,7 +129,7 @@ base class OgHrefCupertinoTile extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    return OgHrefBuilder(url,
+    return OgHrefBuilder.updatable(url,
         multiInfoHandler: multiMetaInfoHandler,
         onRetrived: (context, metaInfo, openLink) {
           return MouseRegion(
