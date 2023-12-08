@@ -149,7 +149,7 @@ abstract base class OgHrefBuilderState<T extends OgHrefBuilder>
     if (snapshot.hasError) {
       return widget.onFetchFailed(
           context, snapshot.error!, () => launchUrl(context));
-    } else if (!snapshot.hasData) {
+    } else if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
       return (widget.onLoading ?? (_) => const SizedBox())(context);
     }
 

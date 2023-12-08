@@ -7,7 +7,6 @@ import 'package:oghref_media_control/oghref_media_control.dart';
 import 'package:oghref_model/buffer_parser.dart';
 
 import '../launch_failed_snackbar.dart';
-import '../width_size_calculator.dart';
 import '../components/carousel.dart';
 import '../typedefs.dart';
 
@@ -44,7 +43,7 @@ final class OgHrefMaterialCardStyle {
 /// will display placeholder icon with entire [url] to ensure functional
 /// whatever the metadata is provide or not.
 base class OgHrefMaterialCard extends StatelessWidget
-    with LaunchFailedSnackBarHandler, ResponsiveWidthSizeCalculator {
+    with LaunchFailedSnackBarHandler, WidthSizeMeasurement {
   /// URL of the link which may be show rich link information if provided.
   final Uri url;
 
@@ -239,7 +238,7 @@ base class OgHrefMaterialCard extends StatelessWidget
               shape: style?.shape,
               clipBehavior: clipBehaviour,
               margin: margin,
-              child: OgHrefBuilder(url,
+              child: OgHrefBuilder.updatable(url,
                   multiInfoHandler: multiMetaInfoHandler,
                   onLoading: onLoading == null
                       ? null

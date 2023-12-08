@@ -1,3 +1,7 @@
+## 3.0.1
+
+* Fix loading widget not appeared when previous result has been loaded and attempted to load new data.
+
 ## 3.0.0
 
 * `OgHrefBuilder` marked as astract base class along with `OgHrefBuilderState` for customize builder behaviour.
