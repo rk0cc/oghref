@@ -21,7 +21,7 @@ class SampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OgHrefBuilder(Uri.parse("example.com"),
+    return OgHrefBuilder.updatable(Uri.parse("example.com"),
         onRetrived: _onRetrived, onFetchFailed: _onFetchFailed);
   }
 }

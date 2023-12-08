@@ -1,3 +1,11 @@
+## 3.0.0
+
+* `OgHrefBuilder` marked as astract base class along with `OgHrefBuilderState` for customize builder behaviour.
+    * The origin constructor has been moved to `OgHrefBuilder.updatable`.
+* Reimplement updatable and run once builders under `OgHrefBuilderState`.
+    * `AsyncMemorizer` is no longer be used that dependency of `async` library has been removed.
+* Update `oghref_model` to `^2.1.0`.
+
 ## 2.0.5
 
 * Simply building href procedure
