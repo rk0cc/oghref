@@ -1,3 +1,7 @@
+## 3.0.2
+
+* Hide `protected` metadata which shipped from Flutter.
+
 ## 3.0.1
 
 * Fix loading widget not appeared when previous result has been loaded and attempted to load new data.

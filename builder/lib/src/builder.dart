@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide protected;
 import 'package:meta/meta.dart';
 import 'package:oghref_model/model.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher
@@ -149,7 +149,8 @@ abstract base class OgHrefBuilderState<T extends OgHrefBuilder>
     if (snapshot.hasError) {
       return widget.onFetchFailed(
           context, snapshot.error!, () => launchUrl(context));
-    } else if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
+    } else if (!snapshot.hasData ||
+        snapshot.connectionState == ConnectionState.waiting) {
       return (widget.onLoading ?? (_) => const SizedBox())(context);
     }
 
