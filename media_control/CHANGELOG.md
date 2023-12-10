@@ -1,3 +1,8 @@
+## 3.0.6
+
+* Fix retain previous widget problem when loading new context.
+* Uses browser's user agent for making request in web platform.
+
 ## 3.0.5
 
 * Drop `oghref_model` and `oghref_builder` due to unused implementation.

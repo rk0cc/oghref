@@ -5,6 +5,8 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:http/http.dart' as http show head;
 import 'package:http/http.dart' show Response;
 
+import 'ua.dart' if (dart.library.html) 'ua_web.dart';
+
 /// A [Widget] for handle audio and video playback if offered.
 final class MediaPlayback extends StatefulWidget {
   static const List<String> _protocolWhitelist = <String>["http", "https"];
@@ -87,7 +89,8 @@ final class _MediaPlaybackState extends State<MediaPlayback> {
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return widget.onLoadFailed(context);
-          } else if (!snapshot.hasData) {
+          } else if (!snapshot.hasData ||
+              snapshot.connectionState == ConnectionState.waiting) {
             return (widget.onLoading ?? (_) => const SizedBox())(context);
           }
 
@@ -123,8 +126,16 @@ final class _MediaPlaybackRenderState extends State<_MediaPlaybackRender> {
             }));
     vidCtrl = VideoController(player);
 
-    player.open(
-        Playlist(widget.resources.map((e) => Media(e.toString())).toList()));
+    Map<String, String> header = {};
+    String? ua = requestUserAgent;
+
+    if (ua != null) {
+      header["user-agent"] = ua;
+    }
+
+    player.open(Playlist(widget.resources
+        .map((e) => Media(e.toString(), httpHeaders: header))
+        .toList()));
   }
 
   @override
