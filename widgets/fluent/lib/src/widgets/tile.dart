@@ -1,7 +1,12 @@
 import 'package:fluent_ui/fluent_ui.dart' hide FluentIcons;
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:oghref_builder/oghref_builder.dart'
-    show OgHrefBuilder, MetaFetch, MultiMetaInfoHandler, MetaInfo, WidthSizeMeasurement;
+    show
+        OgHrefBuilder,
+        MetaFetch,
+        MultiMetaInfoHandler,
+        MetaInfo,
+        WidthSizeMeasurement;
 import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
 
 import '../components/img_builders.dart';
@@ -144,7 +149,7 @@ base class OgHrefFluentTile extends StatelessWidget
               onPressed: () => _openLinkConfirm(context, openLink));
         },
         onFetchFailed: (context, exception, openLink) => ListTile(
-          leading: const Icon(FluentIcons.web_asset_24_filled),
+            leading: const Icon(FluentIcons.web_asset_24_filled),
             title: Text("$url",
                 style: tileTitleTextStyle, overflow: TextOverflow.ellipsis),
             onPressed: () => _openLinkConfirm(context, openLink)),

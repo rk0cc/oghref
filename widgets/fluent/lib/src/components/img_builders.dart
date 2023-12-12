@@ -3,9 +3,11 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:meta/meta.dart';
 
 @internal
-Widget loadingImageFluent(BuildContext context, Widget child, ImageChunkEvent? loadingProcess)
-  => loadingProcess == null ? child : const Center(child: ProgressRing());
+Widget loadingImageFluent(
+        BuildContext context, Widget child, ImageChunkEvent? loadingProcess) =>
+    loadingProcess == null ? child : const Center(child: ProgressRing());
 
 @internal
-Widget errorImageFluent(BuildContext context, Object error, StackTrace? stackTrace) =>
-            const Center(child: Icon(FluentIcons.image_off_20_regular));
+Widget errorImageFluent(
+        BuildContext context, Object error, StackTrace? stackTrace) =>
+    const Center(child: Icon(FluentIcons.image_off_20_regular));

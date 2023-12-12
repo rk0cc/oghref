@@ -25,8 +25,7 @@ final class OgHrefFluentCardStyle {
   final Color? borderColour;
 
   /// Create preference of [OgHrefFluentCard] style.
-  const OgHrefFluentCardStyle(
-      {this.backgroundColour, this.borderColour});
+  const OgHrefFluentCardStyle({this.backgroundColour, this.borderColour});
 }
 
 /// Rich information link preview under [Card] implementation.
@@ -144,8 +143,7 @@ base class OgHrefFluentCard extends StatelessWidget
     if (multimedia && multimediaResources.isNotEmpty) {
       // Get media playback if enabled multimedia features with provided resources.
       return MediaPlayback(multimediaResources,
-          onLoading: (context) =>
-              const Center(child: ProgressRing()),
+          onLoading: (context) => const Center(child: ProgressRing()),
           onLoadFailed: (context) => carousel);
     } else if (images.isNotEmpty) {
       // Get images either no multimedia resources provided or disabled multimedia features.
@@ -163,7 +161,8 @@ base class OgHrefFluentCard extends StatelessWidget
     return Container(
         color: FluentTheme.of(context).inactiveColor.withAlpha(16),
         child: Center(
-            child: Icon(FluentIcons.image_off_48_regular, size: disableIconSize)));
+            child:
+                Icon(FluentIcons.image_off_48_regular, size: disableIconSize)));
   }
 
   ListTile _buildTile(BuildContext context, String title,

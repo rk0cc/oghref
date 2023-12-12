@@ -17,14 +17,16 @@ class OgHrefCupertinoExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (_) => ThemePreference(), builder: (context, _) {
-      final pref = context.watch<ThemePreference>();
+    return ChangeNotifierProvider(
+        create: (_) => ThemePreference(),
+        builder: (context, _) {
+          final pref = context.watch<ThemePreference>();
 
-      return CupertinoApp(
-        theme: CupertinoThemeData(brightness: pref.darkMode ? Brightness.dark : Brightness.light),
-        home: const OgHrefCupertinoExampleHome()
-      );
-    });
+          return CupertinoApp(
+              theme: CupertinoThemeData(
+                  brightness:
+                      pref.darkMode ? Brightness.dark : Brightness.light),
+              home: const OgHrefCupertinoExampleHome());
+        });
   }
-
 }

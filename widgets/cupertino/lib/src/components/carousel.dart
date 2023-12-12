@@ -129,8 +129,7 @@ final class _ImageCarouselState extends State<ImageCarousel> {
             return CupertinoButton(
                 onPressed: pressEvent,
                 color: widget.iconColour,
-                child: Icon(CupertinoIcons.back,
-                    size: widget.controlIconSize));
+                child: Icon(CupertinoIcons.back, size: widget.controlIconSize));
           })),
       // Move next page button
       Positioned(
@@ -148,8 +147,8 @@ final class _ImageCarouselState extends State<ImageCarousel> {
             return CupertinoButton(
                 onPressed: pressEvent,
                 color: widget.iconColour,
-                child: Icon(CupertinoIcons.forward,
-                    size: widget.controlIconSize));
+                child:
+                    Icon(CupertinoIcons.forward, size: widget.controlIconSize));
           }))
     ]);
   }

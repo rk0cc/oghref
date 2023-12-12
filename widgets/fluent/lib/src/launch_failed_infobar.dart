@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 @internal
 mixin LaunchFailedInfoBarHandler {
   String get launchFailedMessage;
-  
+
   @protected
   void showLaunchFailedInfoBar(BuildContext context) {
     displayInfoBar(context,

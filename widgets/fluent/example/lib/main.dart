@@ -17,16 +17,17 @@ class OgHrefFluentExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ThemePreference>(create: (_) => ThemePreference(), builder: (context, child) {
-      final pref = context.watch<ThemePreference>();
+    return ChangeNotifierProvider<ThemePreference>(
+        create: (_) => ThemePreference(),
+        builder: (context, child) {
+          final pref = context.watch<ThemePreference>();
 
-      return FluentApp(
-        home: const OgHrefFluentExampleHome(),
-        themeMode: pref.darkMode ? ThemeMode.dark : ThemeMode.light,
-        theme: FluentThemeData().copyWith(scaffoldBackgroundColor: Colors.blue.lightest),
-        darkTheme: FluentThemeData.dark()
-      );
-    });
+          return FluentApp(
+              home: const OgHrefFluentExampleHome(),
+              themeMode: pref.darkMode ? ThemeMode.dark : ThemeMode.light,
+              theme: FluentThemeData()
+                  .copyWith(scaffoldBackgroundColor: Colors.blue.lightest),
+              darkTheme: FluentThemeData.dark());
+        });
   }
-
 }
