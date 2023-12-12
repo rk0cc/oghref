@@ -1,7 +1,7 @@
 name: oghref_fluent
 description: Fluent themed widget for generating rich information link from URL.
 version: 1.0.0
-repository: https://github.com/rk0cc/oghref/tree/main/widgets/material
+repository: https://github.com/rk0cc/oghref/tree/main/widgets/fluent
 issue_tracker: https://github.com/rk0cc/oghref/issues
 funding:
   - https://github.com/sponsors/rk0cc
