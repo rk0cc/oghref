@@ -92,15 +92,17 @@ base class OgHrefFluentCard extends StatelessWidget
   /// security reason.
   final BeforeOpenLinkConfirmation? confirmation;
 
-  /// A message will be display in [SnackBar] if [Uri] launch failed.
+  /// A message will be display in [InfoBar] if [Uri] launch failed.
   @override
   final String launchFailedMessage;
 
   /// Decides the preferred [MetaInfo] from various prefix if applied.
   final MultiMetaInfoHandler? multiMetaInfoHandler;
 
+  /// Specify style preferences for rendering [OgHrefFluentCard].
   final OgHrefFluentCardStyle? style;
 
+  /// Apply margin uses to leave a blank space of [OgHrefFluentCard].
   final EdgeInsetsGeometry? margin;
 
   /// Create rich information link [Card] by given [url].

@@ -4,7 +4,7 @@
     <a href="https://pub.dev/packages/oghref_fluent"><img alt="oghref_fluent version" src="https://img.shields.io/pub/v/oghref_fluent?style=flat-square"></a>
 </p>
 
-Providing rich information links in Material themed widgets.
+Providing rich information links in Fluent themed widgets.
 
 ## Setup
 

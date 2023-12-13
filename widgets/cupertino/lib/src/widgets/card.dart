@@ -10,8 +10,7 @@ import '../launch_failed_dialog.dart';
 import '../components/carousel.dart';
 import '../typedefs.dart';
 
-/// An [OgHrefMaterialCard] style preference related to [Card]
-/// which related to [Color]s and [ShapeBorder].
+/// An [OgHrefCupertinoCard] style preference which onoy
 final class OgHrefCupertinoCardStyle {
   /// Background colour applied in [OgHrefCupertinoCard].
   final Color? backgroundColour;
@@ -20,7 +19,7 @@ final class OgHrefCupertinoCardStyle {
   const OgHrefCupertinoCardStyle({this.backgroundColour});
 }
 
-/// Rich information link preview under [Card] implementation.
+/// Rich information link preview under card implementation.
 ///
 /// If the given [url] marked metadata with recognizable from [MetaFetch],
 /// it will shows informations that provided in markup language including
@@ -35,8 +34,6 @@ base class OgHrefCupertinoCard extends StatelessWidget
   final Uri url;
 
   /// Specified witdth of media frame.
-  ///
-  /// This also be applied to entire [Card].
   ///
   /// If it is null, it will calculate the suitable width according
   /// to [MediaQuery.sizeOf].
@@ -84,21 +81,21 @@ base class OgHrefCupertinoCard extends StatelessWidget
   /// security reason.
   final BeforeOpenLinkConfirmation? confirmation;
 
-  /// A message will be display in [SnackBar] if [Uri] launch failed.
+  /// A message will be display in [CupertinoAlertDialog] if [Uri] launch failed.
   @override
   final String launchFailedMessage;
 
-  /// A [String] display `OK` when launch URL failed.
+  /// A [String] display `OK` button in [CupertinoAlertDialog] when launch URL failed.
   @override
   final String okText;
 
   /// Decides the preferred [MetaInfo] from various prefix if applied.
   final MultiMetaInfoHandler? multiMetaInfoHandler;
 
-  /// Specify styles of [Card].
+  /// Specify styles for this widget.
   final OgHrefCupertinoCardStyle? style;
 
-  /// Create rich information link [Card] by given [url].
+  /// Create rich information link card by given [url].
   ///
   /// If either [mediaWidth] or [mediaHeight] omitted, it will
   /// calculate reasonable value in responsive view.

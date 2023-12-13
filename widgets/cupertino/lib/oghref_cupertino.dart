@@ -1,3 +1,4 @@
+/// Cupertino themed widgets for displaying rich information link.
 library oghref_cupertino;
 
 import 'package:oghref_builder/oghref_builder.dart';
