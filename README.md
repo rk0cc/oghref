@@ -4,5 +4,5 @@
 
 ## Licenses
 
-* AGPL-3.0 or later for importing `model` library only
-* MIT if also importing widgets libraries.
+* AGPL-3.0 or later if republish packages based on `oghref_model`.
+* MIT if publish as binary executable file or involves with Flutter.
