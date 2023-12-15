@@ -56,7 +56,15 @@ abstract base mixin class MetaPropertyParser {
         .map((e) {
       final attr = e.attributes;
 
-      return (attr['property']!, utf8.decode(attr['content']!.runes.toList()));
+      String ctx = attr['content']!;
+
+      try {
+        ctx = utf8.decode(ctx.runes.toList());
+      } on FormatException {
+        // If not work, leave origin ctx.
+      }
+
+      return (attr['property']!, ctx);
     });
 
     resolveMetaTags(metaParser, UnmodifiableListView(metaTagsProp));

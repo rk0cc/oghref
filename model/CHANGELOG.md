@@ -1,3 +1,7 @@
+## 2.1.2
+
+* Fix decode error if original String displayed normal already.
+
 ## 2.1.1
 
 * Revert redirection disable as default
