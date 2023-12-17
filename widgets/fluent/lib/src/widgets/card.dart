@@ -221,7 +221,8 @@ base class OgHrefFluentCard extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      double preferredWidth = mediaWidth ?? calculateResponsiveWidth(context);
+      double preferredWidth = mediaWidth ??
+          calculateResponsiveWidth(context, constraints: constraints);
 
       return SizedBox(
           width: preferredWidth,

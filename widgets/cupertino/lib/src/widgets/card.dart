@@ -212,7 +212,8 @@ base class OgHrefCupertinoCard extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      double preferredWidth = mediaWidth ?? calculateResponsiveWidth(context);
+      double preferredWidth = mediaWidth ??
+          calculateResponsiveWidth(context, constraints: constraints);
 
       return Container(
           width: preferredWidth,

@@ -1,3 +1,7 @@
+## 1.2.1
+
+* Implement width measurment depending on parent widget if bounded.
+
 ## 1.2.0
 
 * Update dependencies constraints:
