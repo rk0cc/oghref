@@ -1,10 +1,13 @@
 name: oghref_cupertino
 description: Cupertino themed widget for generating rich information link from URL.
-version: 1.0.1
+version: 1.0.2
 repository: https://github.com/rk0cc/oghref/tree/main/widgets/cupertino
 issue_tracker: https://github.com/rk0cc/oghref/issues
 funding:
   - https://github.com/sponsors/rk0cc
+screenshots:
+  - description: Screenshot of OgHref Cupertino example
+    path: screenshots/oghref_cupertino.png
 environment:
   sdk: '>=3.0.0 <4.0.0'
   flutter: '>=3.10.0'

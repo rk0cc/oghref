@@ -1,3 +1,9 @@
+## 1.0.2
+
+* Upload screenshot.
+* Add padding for link section in card.
+* Add divider to sperate area of card and tile.
+
 ## 1.0.1
 
 * Implement width measurment depending on parent widget if bounded.

@@ -8,6 +8,7 @@ import 'package:oghref_model/buffer_parser.dart';
 
 import '../launch_failed_dialog.dart';
 import '../components/carousel.dart';
+import '../components/divider.dart';
 import '../typedefs.dart';
 
 /// An [OgHrefCupertinoCard] style preference which onoy
@@ -193,19 +194,25 @@ base class OgHrefCupertinoCard extends StatelessWidget
       List<oghref.ImageInfo> images = const [],
       List<oghref.VideoInfo> videos = const [],
       List<oghref.AudioInfo> audios = const []}) {
+    const double tileTopPadding = 4;
+
     return Column(mainAxisSize: MainAxisSize.min, children: [
       // Media frame
       SizedBox(
           width: preferredWidth,
           height: mediaHeight ?? preferredWidth * 9 / 16,
           child: _buildMediaFrame(context, images, videos, audios)),
-      // Tile link
+      // Divider
+      const CupertinoDivider(),
       SizedBox(
           width: preferredWidth,
           child: MouseRegion(
               cursor: SystemMouseCursors.click,
-              child: _buildTile(context, title,
-                  openLink: openLink, description: description)))
+              child: Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                      top: tileTopPadding, bottom: tileTopPadding * 2),
+                  child: _buildTile(context, title,
+                      openLink: openLink, description: description))))
     ]);
   }
 
