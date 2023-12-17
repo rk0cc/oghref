@@ -1,3 +1,8 @@
+## 3.1.0
+
+* Add `BoxConstraint` to measure width if parent widget has finite width already.
+* Update minimum version bound of `oghref_model` to `2.1.2`
+
 ## 3.0.2
 
 * Hide `protected` metadata which shipped from Flutter.
