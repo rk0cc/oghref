@@ -1,0 +1,50 @@
+name: Bug Report
+description: Report bugs regarding to OgHref's features
+labels:
+  - bug
+body:
+  - type: dropdown
+    attributes:
+      label: Packages
+      description: Select which package is the most related caused this bug occured
+      multiple: false
+      options:
+        - Model
+        - Builder
+        - Media control
+        - Widget (Material)
+        - Widget (Cupertino)
+        - Widget (Fluent)
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Package version
+      description: Please type `dart pub deps` and find the applied version of `oghref_<subpackage name>` from lock file, you **SHOULD NOT** copy content from `pubspec.yaml` which denoted as version constraint insteaded.
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Operating system
+      description: Please select which platform is affected. You can select nothing if uncertainty.
+      options:
+        - label: Windows
+        - label: macOS
+        - label: Linux
+  - type: input
+    attributes:
+      label: OS version
+      description: Specify version of selected operating system (if applied).
+      placeholder: Windows 10.0.22631.2861 / macOS 14.2.1 / Ubuntu 23.10.1 / Fedora 39
+  - type: textarea
+    attributes:
+      label: Reproduction steps, expected result and actual behaviour
+      description: Please describe how this bug occured in ordered list, then point out expectations in normal operations as well as specify current result that you were unexpected. It is preferred to upload screenshot for better diagnosis.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Debug logging
+      description: Please dump any messages included but not limited to uncaught exceptions, infos and exit codes which printed to debug console to this area if necessary.
+      render: plain text

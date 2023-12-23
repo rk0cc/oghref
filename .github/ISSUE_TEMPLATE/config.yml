@@ -1,0 +1,6 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report command line tools bugs
+    url: https://github.com/rk0cc/oghref_cmd/issues/new
+    about: Please open new issue in oghref_cmd repository if regarding to command line tools
+
