@@ -13,6 +13,7 @@ typedef PropertyPair = (String name, String content);
 
 /// A parser for constructing [MetaInfo] given [Document]
 /// in HTML.
+@doNotStore
 abstract base mixin class MetaPropertyParser {
   /// Create new [MetaInfoParser] for resolving property name
   /// with [propertyNamePrefix].

@@ -106,6 +106,7 @@ final class MetaFetch {
   /// Standardize [Function] for finding matched prefix in
   /// [Iterable.singleWhere].
   static bool Function(MetaPropertyParser) _prefixEquals(String prefix) =>
+      // ignore: return_of_do_not_store
       (mpp) => mpp.propertyNamePrefix == prefix;
 
   /// Get the corresponded parser from [prefix].
