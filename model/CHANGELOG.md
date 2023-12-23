@@ -1,3 +1,7 @@
+## 2.1.3
+
+* Add `doNotStore` annotation to `MetaPropertyParser`.
+
 ## 2.1.2
 
 * Fix decode error if original String displayed normal already.
