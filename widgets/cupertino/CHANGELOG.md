@@ -1,3 +1,7 @@
+## 1.0.3
+
+* Fix semantic label absent issue.
+
 ## 1.0.2
 
 * Upload screenshot.

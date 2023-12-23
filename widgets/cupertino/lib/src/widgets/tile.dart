@@ -109,7 +109,8 @@ base class OgHrefCupertinoTile extends StatelessWidget
               fit: BoxFit.cover,
               headers: {"user-agent": MetaFetch.userAgentString},
               errorBuilder: errorImageCupertino,
-              loadingBuilder: loadingImageCupertino));
+              loadingBuilder: loadingImageCupertino,
+              semanticLabel: appliedImage.alt));
     }
 
     return Container(
