@@ -1,3 +1,8 @@
+## 1.0.2
+
+* Fix semantic label absent issue.
+* Fix mouse cursor does not changes to click symbol issue.
+
 ## 1.0.1+1
 
 * Upload screenshot.

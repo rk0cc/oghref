@@ -201,21 +201,20 @@ base class OgHrefFluentCard extends StatelessWidget
       List<oghref.ImageInfo> images = const [],
       List<oghref.VideoInfo> videos = const [],
       List<oghref.AudioInfo> audios = const []}) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Media frame
-        SizedBox(
-            width: preferredWidth,
-            height: mediaHeight ?? preferredWidth * 9 / 16,
-            child: _buildMediaFrame(context, images, videos, audios)),
-        // Tile link
-        SizedBox(
-            width: preferredWidth,
-            child: _buildTile(context, title,
-                openLink: openLink, description: description))
-      ],
-    );
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      // Media frame
+      SizedBox(
+          width: preferredWidth,
+          height: mediaHeight ?? preferredWidth * 9 / 16,
+          child: _buildMediaFrame(context, images, videos, audios)),
+      // Tile link
+      SizedBox(
+          width: preferredWidth,
+          child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: _buildTile(context, title,
+                  openLink: openLink, description: description)))
+    ]);
   }
 
   @override

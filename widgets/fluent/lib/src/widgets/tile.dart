@@ -103,7 +103,8 @@ base class OgHrefFluentTile extends StatelessWidget
               fit: BoxFit.cover,
               headers: {"user-agent": MetaFetch.userAgentString},
               errorBuilder: errorImageFluent,
-              loadingBuilder: loadingImageFluent));
+              loadingBuilder: loadingImageFluent,
+              semanticLabel: appliedImage.alt));
     }
 
     return Container(
@@ -132,27 +133,31 @@ base class OgHrefFluentTile extends StatelessWidget
     return OgHrefBuilder.updatable(url,
         multiInfoHandler: multiMetaInfoHandler,
         onRetrived: (context, metaInfo, openLink) {
-          return ListTile(
-              leading: _buildImagePreview(context, metaInfo.images),
-              title: Text(
-                  metaInfo.title ??
-                      metaInfo.siteName ??
-                      metaInfo.url?.toString() ??
-                      "$url",
-                  style: tileTitleTextStyle,
-                  overflow: TextOverflow.ellipsis),
-              subtitle: metaInfo.description == null
-                  ? null
-                  : Text(metaInfo.description!,
-                      style: tileDescriptionTextStyle,
+          return MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: ListTile(
+                  leading: _buildImagePreview(context, metaInfo.images),
+                  title: Text(
+                      metaInfo.title ??
+                          metaInfo.siteName ??
+                          metaInfo.url?.toString() ??
+                          "$url",
+                      style: tileTitleTextStyle,
                       overflow: TextOverflow.ellipsis),
-              onPressed: () => _openLinkConfirm(context, openLink));
+                  subtitle: metaInfo.description == null
+                      ? null
+                      : Text(metaInfo.description!,
+                          style: tileDescriptionTextStyle,
+                          overflow: TextOverflow.ellipsis),
+                  onPressed: () => _openLinkConfirm(context, openLink)));
         },
-        onFetchFailed: (context, exception, openLink) => ListTile(
-            leading: const Icon(FluentIcons.web_asset_24_filled),
-            title: Text("$url",
-                style: tileTitleTextStyle, overflow: TextOverflow.ellipsis),
-            onPressed: () => _openLinkConfirm(context, openLink)),
+        onFetchFailed: (context, exception, openLink) => MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: ListTile(
+                leading: const Icon(FluentIcons.web_asset_24_filled),
+                title: Text("$url",
+                    style: tileTitleTextStyle, overflow: TextOverflow.ellipsis),
+                onPressed: () => _openLinkConfirm(context, openLink))),
         onLoading: onLoading == null
             ? null
             : (context) => Padding(
