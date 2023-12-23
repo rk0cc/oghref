@@ -1,3 +1,7 @@
+## 1.2.2
+
+* Fix image semantics feature does not offered.
+
 ## 1.2.1
 
 * Implement width measurment depending on parent widget if bounded.

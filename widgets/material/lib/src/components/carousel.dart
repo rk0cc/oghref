@@ -97,7 +97,8 @@ final class _ImageCarouselState extends State<ImageCarousel> {
         fit: BoxFit.contain,
         headers: {"user-agent": MetaFetch.userAgentString},
         errorBuilder: errorImageMaterial,
-        loadingBuilder: loadingImageMaterial);
+        loadingBuilder: loadingImageMaterial,
+        semanticLabel: imgInfo.alt);
   }
 
   FutureBuilder<PageController> _buildWithDeferredCtrl(BuildContext context,

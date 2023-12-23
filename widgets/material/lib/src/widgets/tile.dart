@@ -97,7 +97,8 @@ base class OgHrefMaterialTile extends StatelessWidget
               fit: BoxFit.cover,
               headers: {"user-agent": MetaFetch.userAgentString},
               errorBuilder: errorImageMaterial,
-              loadingBuilder: loadingImageMaterial));
+              loadingBuilder: loadingImageMaterial,
+              semanticLabel: appliedImage.alt));
     }
 
     return Container(
