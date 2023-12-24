@@ -1,0 +1,50 @@
+version: 2
+updates:
+  - directory: /model
+    open-pull-requests-limit: 0
+    package-ecosystem: pub
+    schedule:
+      time: "15:00"
+      timezone: Asia/Hong_Kong
+      interval: monthly
+  - directory: /builder
+    open-pull-requests-limit: 0
+    package-ecosystem: pub
+    schedule:
+      time: "15:00"
+      timezone: Asia/Hong_Kong
+      interval: monthly
+  - directory: /media_control
+    open-pull-requests-limit: 0
+    package-ecosystem: pub
+    schedule:
+      time: "15:00"
+      timezone: Asia/Hong_Kong
+      interval: monthly
+  - directory: /widgets/cupertino
+    open-pull-requests-limit: 0
+    package-ecosystem: pub
+    schedule:
+      time: "15:00"
+      timezone: Asia/Hong_Kong
+      interval: monthly
+  - directory: /widgets/fluent
+    open-pull-requests-limit: 0
+    package-ecosystem: pub
+    schedule:
+      time: "15:00"
+      timezone: Asia/Hong_Kong
+      interval: monthly
+  - directory: /widgets/material
+    open-pull-requests-limit: 0
+    package-ecosystem: pub
+    schedule:
+      time: "15:00"
+      timezone: Asia/Hong_Kong
+      interval: monthly
+  - directory: /
+    package-ecosystem: github-actions
+    schedule:
+      time: "15:00"
+      timezone: Asia/Hong_Kong
+      interval: monthly
