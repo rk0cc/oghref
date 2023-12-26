@@ -75,7 +75,7 @@ final class MetaFetch {
   static MetaFetch forTest() => MetaFetch._(true);
 
   /// Define a value of user agent when making request in [fetchFromHttp].
-  /// 
+  ///
   /// If [disguiseUserAgent] enabled, any changes will not be applied
   /// until it disabled and uses user defined again.
   static void changeUserAgent(
@@ -102,7 +102,7 @@ final class MetaFetch {
   static bool get disguiseUserAgent => OgHrefClient.disguise;
 
   /// Retrive current preference of user agent [String].
-  /// 
+  ///
   /// When [disguiseUserAgent] enabled in web platform, it returns web
   /// browser's user agent instead of user defined value.
   static String get userAgentString => OgHrefClient.userAgent;

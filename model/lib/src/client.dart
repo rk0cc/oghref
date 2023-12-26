@@ -27,7 +27,7 @@ final class OgHrefClient extends BaseClient {
   }
 
   /// Return current user agent string.
-  /// 
+  ///
   /// If [disguise] enabled, it returns [disguisedUserAgent] instead of
   /// user defined.
   static String get userAgent {
