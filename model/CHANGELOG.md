@@ -2,6 +2,7 @@
 
 * Add `doNotStore` annotation to `MetaPropertyParser`.
 * Disguised user agent string can be get from `MetaFetch.userAgentString`.
+* Provides topics
 
 ## 2.1.2
 
