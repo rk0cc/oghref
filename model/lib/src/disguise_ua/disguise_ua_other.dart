@@ -1,6 +1,4 @@
 import 'package:meta/meta.dart';
 
-import '../client.dart';
-
 @internal
-String get disguisedUserAgent => OgHrefClient.userAgent;
+String get disguisedUserAgent => throw UnsupportedError("This feature requires dart:html only.");

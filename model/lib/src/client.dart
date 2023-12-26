@@ -19,7 +19,28 @@ final class OgHrefClient extends BaseClient {
   final Client _c = Client();
 
   /// Current user agent preference of following requests.
-  static String userAgent = DEFAULT_USER_AGENT_STRING;
+  static String _userAgent = DEFAULT_USER_AGENT_STRING;
+
+  /// Specify new value of user agent if offered.
+  static set userAgent(String value) {
+    _userAgent = value;
+  }
+
+  /// Return current user agent string.
+  /// 
+  /// If [disguise] enabled, it returns [disguisedUserAgent] instead of
+  /// user defined.
+  static String get userAgent {
+    if (disguise) {
+      try {
+        return disguisedUserAgent;
+      } on UnsupportedError {
+        // Mostly triggered if running in VM.
+      }
+    }
+
+    return _userAgent;
+  }
 
   /// Specify timeout of response after specific seconds.
   static int timeoutAt = DEFAULT_TIMEOUT;
@@ -33,7 +54,7 @@ final class OgHrefClient extends BaseClient {
   @override
   Future<StreamedResponse> send(BaseRequest request) {
     request
-      ..headers["user-agent"] = disguise ? disguisedUserAgent : userAgent
+      ..headers["user-agent"] = userAgent
       ..followRedirects = redirect;
     return _c.send(request).timeout(Duration(seconds: timeoutAt));
   }
