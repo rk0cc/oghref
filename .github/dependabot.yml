@@ -44,6 +44,7 @@ updates:
       interval: monthly
   - directory: /
     package-ecosystem: github-actions
+    open-pull-requests-limit: 0
     schedule:
       time: "15:00"
       timezone: Asia/Hong_Kong
