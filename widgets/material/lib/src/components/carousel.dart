@@ -387,7 +387,7 @@ final class _ImageCarouselState extends State<ImageCarousel>
               }))),
       // Move previous page button
       Positioned(
-          left: widget.preferences.controlIconSize,
+          left: widget.preferences.controlButtonsSpacing,
           child: _buildControlWidgets(context,
               child:
                   _buildWithDeferredCtrl(context, builder: (context, snapshot) {
@@ -407,7 +407,7 @@ final class _ImageCarouselState extends State<ImageCarousel>
               }))),
       // Move next page button
       Positioned(
-          right: widget.preferences.controlIconSize,
+          right: widget.preferences.controlButtonsSpacing,
           child: _buildControlWidgets(context,
               child:
                   _buildWithDeferredCtrl(context, builder: (context, snapshot) {

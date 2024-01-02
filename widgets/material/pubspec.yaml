@@ -8,6 +8,12 @@ screenshots:
     path: screenshots/oghref_material.png
 funding:
   - https://github.com/sponsors/rk0cc
+topics:
+  - web
+  - link
+  - graph
+  - http
+  - material
 environment:
   sdk: '>=3.0.0 <4.0.0'
   flutter: '>=3.10.0'

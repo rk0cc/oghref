@@ -168,7 +168,9 @@ base class OgHrefMaterialCard extends StatelessWidget
     if (images.isNotEmpty) {
       final ImageCarousel carousel = ImageCarousel(
           List.unmodifiable(images.where((element) => element.url != null)),
-          preferHTTPS: preferHTTPS);
+          preferHTTPS: preferHTTPS,
+          preferences: style?.imageCarouselPreferences ??
+              const ImageCarouselPreferences());
 
       if (multimedia && multimediaResources.isNotEmpty) {
         // Get media playback if enabled multimedia features with provided resources.
