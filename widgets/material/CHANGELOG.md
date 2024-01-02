@@ -1,3 +1,13 @@
+## 2.0.0
+
+* Migration of theme setting to dedicated classes.
+    * All original style setting existed as widget's properties will marked as deprecated and will be removed in next major release (`3.0.0`).
+    * Currently they perform as fallback preferences if style property absents.
+* Control buttons from `ImageCarousel` will be visiable when either hovering or tapping widget area.
+    * If shown due to tapping widget, it will hide automatically in specific seconds.
+* Add preferences for `ImageCarousel` and can be speficied in `OgHrefMaterialCard`.
+* Add current index of images in `ImageCarousel`.
+
 ## 1.2.2
 
 * Fix image semantics feature does not offered.

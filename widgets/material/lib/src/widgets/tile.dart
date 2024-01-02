@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide immutable;
+import 'package:meta/meta.dart';
 import 'package:oghref_builder/oghref_builder.dart'
     show OgHrefBuilder, MetaFetch, MultiMetaInfoHandler, WidthSizeMeasurement;
 import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
@@ -6,6 +7,20 @@ import 'package:oghref_builder/oghref_builder.dart' as oghref show ImageInfo;
 import '../components/img_builders.dart';
 import '../launch_failed_snackbar.dart';
 import '../typedefs.dart';
+
+/// Define style prefences for rendering [OgHrefMaterialTile].
+@immutable
+class OgHrefMaterialTileStyle {
+  /// [TextStyle] for displaying link title.
+  final TextStyle? tileTitleTextStyle;
+
+  /// [TextStyle] for displaying description.
+  final TextStyle? tileDescriptionTextStyle;
+
+  /// Construct style prefence for rendering [OgHrefMaterialTile].
+  const OgHrefMaterialTileStyle(
+      {this.tileTitleTextStyle, this.tileDescriptionTextStyle});
+}
 
 /// Create [ListTile] based widget for displaying rich information link.
 ///
@@ -17,10 +32,17 @@ base class OgHrefMaterialTile extends StatelessWidget
   /// URL of the link.
   final Uri url;
 
+  /// Specify style of [OgHrefMaterialTile].
+  final OgHrefMaterialTileStyle? style;
+
   /// [TextStyle] for displaying link title.
+  @Deprecated(
+      "This feature is integrated into OgHrefMaterialTileStyle, and will be removed at 3.0.0 and beyond.")
   final TextStyle? tileTitleTextStyle;
 
   /// [TextStyle] for displaying description.
+  @Deprecated(
+      "This feature is integrated into OgHrefMaterialTileStyle, and will be removed at 3.0.0 and beyond.")
   final TextStyle? tileDescriptionTextStyle;
 
   /// Uses `HTTPS` [Uri] resources instead of the default value
@@ -59,6 +81,7 @@ base class OgHrefMaterialTile extends StatelessWidget
   /// dimension based on calculated value in responsive view.
   const OgHrefMaterialTile(this.url,
       {this.preferHTTPS = true,
+      this.style,
       this.tileTitleTextStyle,
       this.tileDescriptionTextStyle,
       this.onLoading,
@@ -134,19 +157,23 @@ base class OgHrefMaterialTile extends StatelessWidget
                       metaInfo.siteName ??
                       metaInfo.url?.toString() ??
                       "$url",
-                  style: tileTitleTextStyle,
+                  style: style?.tileTitleTextStyle,
                   overflow: TextOverflow.ellipsis),
               subtitle: metaInfo.description == null
                   ? null
                   : Text(metaInfo.description!,
-                      style: tileDescriptionTextStyle,
+                      style: style?.tileDescriptionTextStyle ??
+                          // ignore: deprecated_member_use_from_same_package
+                          tileDescriptionTextStyle,
                       overflow: TextOverflow.ellipsis),
               onTap: () => _openLinkConfirm(context, openLink));
         },
         onFetchFailed: (context, exception, openLink) => ListTile(
             leading: const Icon(Icons.web),
             title: Text("$url",
-                style: tileTitleTextStyle, overflow: TextOverflow.ellipsis),
+                // ignore: deprecated_member_use_from_same_package
+                style: style?.tileTitleTextStyle ?? tileTitleTextStyle,
+                overflow: TextOverflow.ellipsis),
             onTap: () => _openLinkConfirm(context, openLink)),
         onLoading: onLoading == null
             ? null

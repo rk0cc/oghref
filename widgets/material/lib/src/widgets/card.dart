@@ -28,9 +28,23 @@ final class OgHrefMaterialCardStyle {
   /// This value will refirect to [Card.shape].
   final ShapeBorder? shape;
 
+  /// [TextStyle] for displaying link title.
+  final TextStyle? tileTitleTextStyle;
+
+  /// [TextStyle] for displaying description.
+  final TextStyle? tileDescriptionTextStyle;
+
+  /// Specify preferences for visualizing image carousel content.
+  final ImageCarouselPreferences imageCarouselPreferences;
+
   /// Create preference of [OgHrefMaterialCard] style.
   const OgHrefMaterialCardStyle(
-      {this.backgroundColour, this.shadowColour, this.shape});
+      {this.backgroundColour,
+      this.shadowColour,
+      this.shape,
+      this.tileTitleTextStyle,
+      this.tileDescriptionTextStyle,
+      this.imageCarouselPreferences = const ImageCarouselPreferences()});
 }
 
 /// Rich information link preview under [Card] implementation.
@@ -72,9 +86,13 @@ base class OgHrefMaterialCard extends StatelessWidget
   final bool multimedia;
 
   /// [TextStyle] for displaying link title.
+  @Deprecated(
+      "This feature is integrated into OgHrefMaterialCardStyle, and will be removed at 3.0.0 and beyond.")
   final TextStyle? tileTitleTextStyle;
 
   /// [TextStyle] for displaying description.
+  @Deprecated(
+      "This feature is integrated into OgHrefMaterialCardStyle, and will be removed at 3.0.0 and beyond.")
   final TextStyle? tileDescriptionTextStyle;
 
   /// Uses `HTTPS` [Uri] resources instead of the default value
@@ -107,7 +125,7 @@ base class OgHrefMaterialCard extends StatelessWidget
   /// Specify styles of [Card].
   final OgHrefMaterialCardStyle? style;
 
-  /// Determine [Clip] behaviour of the [Card].
+  /// Determine [Clip] behaviour of [OgHrefMaterialCard].
   final Clip? clipBehaviour;
 
   /// Define margin of [Card].
@@ -183,12 +201,16 @@ base class OgHrefMaterialCard extends StatelessWidget
 
     if (description != null) {
       descTxt = Text(description,
-          style: tileDescriptionTextStyle, overflow: TextOverflow.ellipsis);
+          // ignore: deprecated_member_use_from_same_package
+          style: style?.tileDescriptionTextStyle ?? tileDescriptionTextStyle,
+          overflow: TextOverflow.ellipsis);
     }
 
     return ListTile(
         title: Text(title,
-            style: tileTitleTextStyle, overflow: TextOverflow.ellipsis),
+            // ignore: deprecated_member_use_from_same_package
+            style: style?.tileTitleTextStyle ?? tileTitleTextStyle,
+            overflow: TextOverflow.ellipsis),
         subtitle: descTxt,
         onTap: () async {
           if (confirmation != null) {
