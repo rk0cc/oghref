@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 
 /// Activate [SnackBar] appearance when given link no longer be
 /// accessible.
-/// 
+///
 /// This mixin must be mixed with [State], [StatelessWidget] or
 /// classes with `build` function.
 @internal
