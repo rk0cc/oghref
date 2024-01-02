@@ -13,6 +13,20 @@ import '../components/img_builders.dart';
 import '../launch_failed_infobar.dart';
 import '../typedefs.dart';
 
+/// Define style prefences for rendering [OgHrefFluentTile].
+@immutable
+class OgHrefFluentTileStyle {
+  /// [TextStyle] for displaying link title.
+  final TextStyle? tileTitleTextStyle;
+
+  /// [TextStyle] for displaying description.
+  final TextStyle? tileDescriptionTextStyle;
+
+  /// Construct style prefence for rendering [OgHrefFluentTile].
+  const OgHrefFluentTileStyle(
+      {this.tileTitleTextStyle, this.tileDescriptionTextStyle});
+}
+
 /// Create [ListTile] based widget for displaying rich information link.
 ///
 /// It only shows image preview only no matter the given [url]
@@ -24,9 +38,13 @@ base class OgHrefFluentTile extends StatelessWidget
   final Uri url;
 
   /// [TextStyle] for displaying link title.
+  @Deprecated(
+      "This feature is integrated into OgHrefFluentTileStyle, and will be removed at 3.0.0 and beyond.")
   final TextStyle? tileTitleTextStyle;
 
   /// [TextStyle] for displaying description.
+  @Deprecated(
+      "This feature is integrated into OgHrefFluentTileStyle, and will be removed at 3.0.0 and beyond.")
   final TextStyle? tileDescriptionTextStyle;
 
   /// Uses `HTTPS` [Uri] resources instead of the default value
@@ -59,6 +77,9 @@ base class OgHrefFluentTile extends StatelessWidget
   @override
   final String launchFailedMessage;
 
+  /// Specify theme preference of [OgHrefFluentTile].
+  final OgHrefFluentTileStyle? style;
+
   /// Create rich information link [ListTile] by given [url].
   ///
   /// If [imagePreviewDimension] is omitted, it will uses calculated
@@ -72,6 +93,7 @@ base class OgHrefFluentTile extends StatelessWidget
       this.imagePreviewDimension,
       required this.confirmation,
       this.multiMetaInfoHandler,
+      this.style,
       super.key});
 
   Widget _buildImagePreview(
@@ -142,12 +164,15 @@ base class OgHrefFluentTile extends StatelessWidget
                           metaInfo.siteName ??
                           metaInfo.url?.toString() ??
                           "$url",
-                      style: tileTitleTextStyle,
+                      // ignore: deprecated_member_use_from_same_package
+                      style: style?.tileTitleTextStyle ?? tileTitleTextStyle,
                       overflow: TextOverflow.ellipsis),
                   subtitle: metaInfo.description == null
                       ? null
                       : Text(metaInfo.description!,
-                          style: tileDescriptionTextStyle,
+                          style: style?.tileDescriptionTextStyle ??
+                              // ignore: deprecated_member_use_from_same_package
+                              tileDescriptionTextStyle,
                           overflow: TextOverflow.ellipsis),
                   onPressed: () => _openLinkConfirm(context, openLink)));
         },
@@ -156,7 +181,9 @@ base class OgHrefFluentTile extends StatelessWidget
             child: ListTile(
                 leading: const Icon(FluentIcons.web_asset_24_filled),
                 title: Text("$url",
-                    style: tileTitleTextStyle, overflow: TextOverflow.ellipsis),
+                    // ignore: deprecated_member_use_from_same_package
+                    style: style?.tileTitleTextStyle ?? tileTitleTextStyle,
+                    overflow: TextOverflow.ellipsis),
                 onPressed: () => _openLinkConfirm(context, openLink))),
         onLoading: onLoading == null
             ? null

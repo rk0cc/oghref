@@ -24,8 +24,22 @@ final class OgHrefFluentCardStyle {
   /// This value will redirect to [Card.borderColor].
   final Color? borderColour;
 
+  /// [TextStyle] for displaying link title.
+  final TextStyle? tileTitleTextStyle;
+
+  /// [TextStyle] for displaying description.
+  final TextStyle? tileDescriptionTextStyle;
+
+  /// Specify preferences for visualizing image carousel content.
+  final ImageCarouselPreferences imageCarouselPreferences;
+
   /// Create preference of [OgHrefFluentCard] style.
-  const OgHrefFluentCardStyle({this.backgroundColour, this.borderColour});
+  const OgHrefFluentCardStyle(
+      {this.backgroundColour,
+      this.borderColour,
+      this.tileTitleTextStyle,
+      this.tileDescriptionTextStyle,
+      this.imageCarouselPreferences = const ImageCarouselPreferences()});
 }
 
 /// Rich information link preview under [Card] implementation.
@@ -67,9 +81,13 @@ base class OgHrefFluentCard extends StatelessWidget
   final bool multimedia;
 
   /// [TextStyle] for displaying link title.
+  @Deprecated(
+      "This feature is integrated into OgHrefFluentCardStyle, and will be removed at 3.0.0 and beyond.")
   final TextStyle? tileTitleTextStyle;
 
   /// [TextStyle] for displaying description.
+  @Deprecated(
+      "This feature is integrated into OgHrefFluentCardStyle, and will be removed at 3.0.0 and beyond.")
   final TextStyle? tileDescriptionTextStyle;
 
   /// Uses `HTTPS` [Uri] resources instead of the default value
@@ -140,7 +158,9 @@ base class OgHrefFluentCard extends StatelessWidget
 
     final ImageCarousel carousel = ImageCarousel(
         List.unmodifiable(images.where((element) => element.url != null)),
-        preferHTTPS: preferHTTPS);
+        preferHTTPS: preferHTTPS,
+        preferences: style?.imageCarouselPreferences ??
+            const ImageCarouselPreferences());
 
     if (multimedia && multimediaResources.isNotEmpty) {
       // Get media playback if enabled multimedia features with provided resources.
@@ -173,12 +193,16 @@ base class OgHrefFluentCard extends StatelessWidget
 
     if (description != null) {
       descTxt = Text(description,
-          style: tileDescriptionTextStyle, overflow: TextOverflow.ellipsis);
+          // ignore: deprecated_member_use_from_same_package
+          style: style?.tileDescriptionTextStyle ?? tileDescriptionTextStyle,
+          overflow: TextOverflow.ellipsis);
     }
 
     return ListTile(
         title: Text(title,
-            style: tileTitleTextStyle, overflow: TextOverflow.ellipsis),
+            // ignore: deprecated_member_use_from_same_package
+            style: style?.tileTitleTextStyle ?? tileTitleTextStyle,
+            overflow: TextOverflow.ellipsis),
         subtitle: descTxt,
         onPressed: () async {
           if (confirmation != null) {
