@@ -1,0 +1,13 @@
+name: bootleg_url_launcher
+description: Replicated url_launcher interface that it does perform same behaviour of browser in Dart but no real browser opened.
+publish_to: 'none' # This package should not be publish to pub.dev
+environment: 
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.10.0'
+dependencies: 
+  flutter:
+    sdk: flutter
+  faker: ^2.1.0
+  http: ^1.1.0
+  meta: ^1.9.1
+  url_launcher_platform_interface: ^2.2.0
