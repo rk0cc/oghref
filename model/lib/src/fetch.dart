@@ -19,16 +19,28 @@ import 'content_type_verifier.dart';
 /// At the same time, it manages all [MetaPropertyParser] according to
 /// [MetaPropertyParser.propertyNamePrefix] and will be refer them
 /// for finding matched [MetaPropertyParser].
-final class MetaFetch {
+abstract final class MetaFetch {
   /// Instance of [MetaFetch].
-  static final MetaFetch _instance = MetaFetch._(false);
+  static MetaFetch? _instance;
+
+  /// Get current [instance] of [MetaFetch].
+  ///
+  /// It will construct automatically if no instance created before.
+  static MetaFetch get instance {
+    _instance ??= MetaFetch();
+
+    return _instance!;
+  }
+
+  /// Set a new [instance] for retrive [MetaFetch].
+  static set instance(MetaFetch newInstance) {
+    _instance = newInstance;
+  }
 
   /// A collection of [MetaPropertyParser] which identified with their prefix.
   final Set<MetaPropertyParser> _parsers = HashSet(
       equals: (p0, p1) => p0.propertyNamePrefix == p1.propertyNamePrefix,
       hashCode: (p0) => p0.propertyNamePrefix.hashCode);
-
-  final bool _ignoreContentType;
 
   final OgHrefClient _client = OgHrefClient(true);
 
@@ -59,20 +71,30 @@ final class MetaFetch {
   /// If it is [Null], the feature will be disabled.
   String? get primaryPrefix => _primaryPrefix;
 
-  MetaFetch._(this._ignoreContentType);
+  /// Determine does [primaryPrefix] is ready to uses.
+  ///
+  /// This getter is completely equals with the following
+  /// syntax:
+  ///
+  /// ```dart
+  /// bool isPrimaryPrefixEnabled = MetaFetch.instance.primaryPrefix != null;
+  /// ```
+  bool get isPrimaryPrefixEnabled => _primaryPrefix != null;
+
+  MetaFetch._();
 
   /// Get a instance of [MetaFetch].
   ///
   /// [MetaFetch] is a singleton object that it allows to uses same [register]
   /// preference whatever been made.
-  factory MetaFetch() => _instance;
+  factory MetaFetch() = _MetaFetchProducer;
 
   /// A dedicated [MetaFetch] which ignore content type condition that allowing
   /// parse to HTML [Document].
   ///
   /// This only available for testing only.
   @visibleForTesting
-  static MetaFetch forTest() => MetaFetch._(true);
+  factory MetaFetch.forTest() = _MetaFetchTester;
 
   /// Define a value of user agent when making request in [fetchFromHttp].
   ///
@@ -190,18 +212,7 @@ final class MetaFetch {
     }
   }
 
-  /// Construct [MetaInfo] with given [Document].
-  ///
-  /// If `<meta>` [Element]'s property prefix [hasBeenRegistered],
-  /// it refers to the first matched prefix given from an order
-  /// of [Document] and apply all available fields in [MetaInfo].
-  /// Otherwise, it will return [MetaInfo] with all empty field
-  /// when it cannot be able to find matched prefix.
-  ///
-  /// **Update in `1.1.1`: This method no longer available
-  /// for non testing purpose.**
-  @visibleForTesting
-  MetaInfo buildMetaInfo(Document htmlDocument) {
+  MetaInfo _buildMetaInfo(Document htmlDocument) {
     MetaInfo parsedResult = MetaInfo();
 
     for (String prefix in _prefixSequence(htmlDocument)) {
@@ -218,13 +229,7 @@ final class MetaFetch {
     return parsedResult;
   }
 
-  /// Construct all [MetaInfo] with given [Document].
-  ///
-  /// It returns an unmodifiable [Map] which contains all [register]ed
-  /// [MetaPropertyParser]'s results with
-  /// [MetaPropertyParser.propertyNamePrefix] as a key of the [Map].
-  @visibleForTesting
-  Map<String, MetaInfo> buildAllMetaInfo(Document htmlDocument) {
+  Map<String, MetaInfo> _buildAllMetaInfo(Document htmlDocument) {
     Map<String, MetaInfo> metaInfoMap = HashMap<String, MetaInfo>();
 
     for (String prefix in _prefixSequence(htmlDocument)) {
@@ -240,20 +245,16 @@ final class MetaFetch {
     return Map.unmodifiable(metaInfoMap);
   }
 
-  Future<Document> _fetchHtmlDocument(Uri url) async {
-    const Set<String> eligableType = <String>{"html", "xhtml"};
+  bool _verifyContentType(Response resp);
 
+  Future<Document> _fetchHtmlDocument(Uri url) async {
     if (!RegExp(r"^https?$").hasMatch(url.scheme)) {
       throw NonHttpUrlException(url);
     }
 
     Response resp = await _client.get(url);
 
-    if (!_ignoreContentType &&
-        !resp.isSatisfiedExtension(fileExtensions: eligableType)) {
-      throw ContentTypeMismatchedException(
-          url, resp.contentType, const {"text/html", "application/xhtml+xml"});
-    }
+    _verifyContentType(resp);
 
     return html_parser.parse(resp.body);
   }
@@ -271,7 +272,7 @@ final class MetaFetch {
   /// override user agent string from web browser instead.
   ///
   /// Once the request got response, it's body content will be [html_parser.parse]
-  /// to [Document] directly and perform [buildMetaInfo].
+  /// to [Document] directly and perform build [MetaInfo].
   ///
   /// HTTP response code does not matter in this method that it only
   /// required to retrive HTML content from [url].
@@ -279,7 +280,7 @@ final class MetaFetch {
   /// For fetch all metadata protocols in a single [url], please uses
   /// [fetchAllFromHttp] instead.
   Future<MetaInfo> fetchFromHttp(Uri url) {
-    return _fetchHtmlDocument(url).then(buildMetaInfo);
+    return _fetchHtmlDocument(url).then(_buildMetaInfo);
   }
 
   /// Fetch all [MetaInfo] from various protocols into a single
@@ -296,11 +297,41 @@ final class MetaFetch {
   /// override user agent string from web browser instead.
   ///
   /// Once the request got response, it's body content will be [html_parser.parse]
-  /// to [Document] directly and perform [buildAllMetaInfo].
+  /// to [Document] directly and build [MetaInfo] for all
+  /// supported protocols.
   ///
   /// HTTP response code does not matter in this method that it only
   /// required to retrive HTML content from [url].
   Future<Map<String, MetaInfo>> fetchAllFromHttp(Uri url) {
-    return _fetchHtmlDocument(url).then(buildAllMetaInfo);
+    return _fetchHtmlDocument(url).then(_buildAllMetaInfo);
+  }
+}
+
+final class _MetaFetchTester extends MetaFetch {
+  _MetaFetchTester() : super._();
+
+  @override
+  bool _verifyContentType(Response resp) {
+    return true;
+  }
+}
+
+final class _MetaFetchProducer extends MetaFetch {
+  static const Set<String> eligableExtensions = <String>{"html", "xhtml"};
+  static const Set<String> supportedContentType = <String>{
+    "text/html",
+    "application/xhtml+xml"
+  };
+
+  _MetaFetchProducer() : super._();
+
+  @override
+  bool _verifyContentType(Response resp) {
+    if (!resp.isSatisfiedExtension(fileExtensions: eligableExtensions)) {
+      throw ContentTypeMismatchedException(
+          resp.request!.url, resp.contentType, supportedContentType);
+    }
+
+    return true;
   }
 }

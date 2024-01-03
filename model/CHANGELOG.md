@@ -1,3 +1,9 @@
+## 3.0.0
+
+* New strucutre of instance definition
+    * The instance will be stored automatically by invoking instance getter directly.
+* `buildMetaInfo` and `buildAllMetaInfo` becomes private scopes.
+
 ## 2.1.3
 
 * Add `doNotStore` annotation to `MetaPropertyParser`.
