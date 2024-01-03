@@ -38,7 +38,7 @@ body:
       description: Specify version of selected operating system (if applied).
   - type: markdown
     attributes:
-      value: >
+      value: |
         The version string **MUST** be followed the following format depending which Operating System you uses：
         |Operating System|Version format|
         |:---:|:---:|
