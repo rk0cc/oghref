@@ -240,14 +240,10 @@ base class ImageCarousel extends StatefulWidget {
   /// Determine render preferences applied into this [ImageCarousel].
   final ImageCarouselPreferences preferences;
 
-  /// Override a [Color] for displaying control icons if applied.
-  final Color? iconColour;
-
   /// Construct a new carousel [Widget] for displaying [images].
   ImageCarousel(this.images,
       {this.preferHTTPS = true,
       this.preferences = const ImageCarouselPreferences(),
-      this.iconColour,
       super.key});
 
   @override
@@ -307,14 +303,14 @@ final class _ImageCarouselState extends State<ImageCarousel> {
   void didUpdateWidget(covariant ImageCarousel oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (oldWidget.iconColour != widget.iconColour) {
+    if (oldWidget.preferences.controlIconColour != widget.preferences.controlIconColour) {
       _bindBtnStyle();
     }
   }
 
   void _bindBtnStyle() {
     appliedBtnStyle = ButtonStyle(
-        foregroundColor: SingleButtonState<Color?>(widget.iconColour));
+        foregroundColor: SingleButtonState<Color?>(widget.preferences.controlIconColour));
   }
 
   Widget _buildSingleImage(BuildContext context, oghref.ImageInfo imgInfo) {
@@ -432,11 +428,10 @@ final class _ImageCarouselState extends State<ImageCarousel> {
           child: _buildControlWidgets(context,
               child:
                   _buildWithDeferredCtrl(context, builder: (context, snapshot) {
-                final int maxLen = widget.images.length - 1;
                 VoidCallback? pressEvent;
 
                 if (snapshot.hasData) {
-                  pressEvent = (snapshot.data!.page?.ceil() ?? maxLen) == maxLen
+                  pressEvent = (snapshot.data!.page?.ceil() ?? maxImgIdx) == maxImgIdx
                       ? null
                       : moveNext;
                 }

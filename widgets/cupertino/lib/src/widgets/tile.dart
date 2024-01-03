@@ -12,6 +12,17 @@ import '../components/img_builders.dart';
 import '../launch_failed_dialog.dart';
 import '../typedefs.dart';
 
+final class OgHrefCupertinoTileStyle {
+  /// [TextStyle] for displaying link title.
+  final TextStyle? tileTitleTextStyle;
+
+  /// [TextStyle] for displaying description.
+  final TextStyle? tileDescriptionTextStyle;
+
+  const OgHrefCupertinoTileStyle(
+      {this.tileTitleTextStyle, this.tileDescriptionTextStyle});
+}
+
 /// Create [CupertinoListTile] based widget for displaying rich information link.
 ///
 /// It only shows image preview only no matter the given [url]
@@ -23,9 +34,13 @@ base class OgHrefCupertinoTile extends StatelessWidget
   final Uri url;
 
   /// [TextStyle] for displaying link title.
+  @Deprecated(
+      "This feature is integrated into OgHrefCupertinoTileStyle, and will be removed at 3.0.0 and beyond.")
   final TextStyle? tileTitleTextStyle;
 
   /// [TextStyle] for displaying description.
+  @Deprecated(
+      "This feature is integrated into OgHrefCupertinoTileStyle, and will be removed at 3.0.0 and beyond.")
   final TextStyle? tileDescriptionTextStyle;
 
   /// Uses `HTTPS` [Uri] resources instead of the default value
@@ -62,6 +77,8 @@ base class OgHrefCupertinoTile extends StatelessWidget
   @override
   final String okText;
 
+  final OgHrefCupertinoTileStyle? style;
+
   /// Create rich information link [CupertinoListTile] by given [url].
   ///
   /// If [imagePreviewDimension] is omitted, it will uses calculated
@@ -76,6 +93,7 @@ base class OgHrefCupertinoTile extends StatelessWidget
       this.imagePreviewDimension,
       required this.confirmation,
       this.multiMetaInfoHandler,
+      this.style,
       super.key});
 
   Widget _buildImagePreview(
@@ -148,12 +166,15 @@ base class OgHrefCupertinoTile extends StatelessWidget
                           metaInfo.siteName ??
                           metaInfo.url?.toString() ??
                           "$url",
-                      style: tileTitleTextStyle,
+                      // ignore: deprecated_member_use_from_same_package
+                      style: style?.tileTitleTextStyle ?? tileTitleTextStyle,
                       overflow: TextOverflow.ellipsis),
                   subtitle: metaInfo.description == null
                       ? null
                       : Text(metaInfo.description!,
-                          style: tileDescriptionTextStyle,
+                          style: style?.tileDescriptionTextStyle ??
+                              // ignore: deprecated_member_use_from_same_package
+                              tileDescriptionTextStyle,
                           overflow: TextOverflow.ellipsis),
                   onTap: () => _openLinkConfirm(context, openLink)));
         },
@@ -162,7 +183,9 @@ base class OgHrefCupertinoTile extends StatelessWidget
             child: CupertinoListTile(
                 leading: const Icon(CupertinoIcons.globe),
                 title: Text("$url",
-                    style: tileTitleTextStyle, overflow: TextOverflow.ellipsis),
+                    // ignore: deprecated_member_use_from_same_package
+                    style: style?.tileTitleTextStyle ?? tileTitleTextStyle,
+                    overflow: TextOverflow.ellipsis),
                 onTap: () => _openLinkConfirm(context, openLink))),
         onLoading: onLoading == null
             ? null

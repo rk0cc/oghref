@@ -23,7 +23,9 @@ final class CupertinoDivider extends StatelessWidget {
                         const BorderRadius.all(Radius.circular(thickness / 2)),
                     border: Border(
                         bottom: BorderSide(
-                            color: CupertinoColors.inactiveGray.withAlpha(128),
+                            color: CupertinoColors.inactiveGray
+                                .withAlpha(128)
+                                .withOpacity(0.3),
                             width: thickness))))));
     // Tile link
   }

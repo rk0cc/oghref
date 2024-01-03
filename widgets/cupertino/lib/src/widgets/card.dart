@@ -16,8 +16,21 @@ final class OgHrefCupertinoCardStyle {
   /// Background colour applied in [OgHrefCupertinoCard].
   final Color? backgroundColour;
 
+  /// [TextStyle] for displaying link title.
+  final TextStyle? tileTitleTextStyle;
+
+  /// [TextStyle] for displaying description.
+  final TextStyle? tileDescriptionTextStyle;
+
+  /// Specify preferences for visualizing image carousel content.
+  final ImageCarouselPreferences imageCarouselPreferences;
+
   /// Create preference of [OgHrefCupertinoCard] style.
-  const OgHrefCupertinoCardStyle({this.backgroundColour});
+  const OgHrefCupertinoCardStyle(
+      {this.backgroundColour,
+      this.tileTitleTextStyle,
+      this.tileDescriptionTextStyle,
+      this.imageCarouselPreferences = const ImageCarouselPreferences()});
 }
 
 /// Rich information link preview under card implementation.
@@ -57,9 +70,13 @@ base class OgHrefCupertinoCard extends StatelessWidget
   final bool multimedia;
 
   /// [TextStyle] for displaying link title.
+  @Deprecated(
+      "This feature is integrated into OgHrefCupertinoCardStyle, and will be removed at 3.0.0 and beyond.")
   final TextStyle? tileTitleTextStyle;
 
   /// [TextStyle] for displaying description.
+  @Deprecated(
+      "This feature is integrated into OgHrefCupertinoCardStyle, and will be removed at 3.0.0 and beyond.")
   final TextStyle? tileDescriptionTextStyle;
 
   /// Uses `HTTPS` [Uri] resources instead of the default value
@@ -166,12 +183,16 @@ base class OgHrefCupertinoCard extends StatelessWidget
 
     if (description != null) {
       descTxt = Text(description,
-          style: tileDescriptionTextStyle, overflow: TextOverflow.ellipsis);
+          // ignore: deprecated_member_use_from_same_package
+          style: style?.tileDescriptionTextStyle ?? tileDescriptionTextStyle,
+          overflow: TextOverflow.ellipsis);
     }
 
     return CupertinoListTile(
         title: Text(title,
-            style: tileTitleTextStyle, overflow: TextOverflow.ellipsis),
+            // ignore: deprecated_member_use_from_same_package
+            style: style?.tileTitleTextStyle ?? tileTitleTextStyle,
+            overflow: TextOverflow.ellipsis),
         subtitle: descTxt,
         onTap: () async {
           if (confirmation != null) {
