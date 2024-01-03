@@ -35,8 +35,10 @@ body:
   - type: input
     attributes:
       label: OS version
-      description: >
-        Specify version of selected operating system (if applied).
+      description: Specify version of selected operating system (if applied).
+  - type: markdown
+    attributes:
+      value: >
         The version string **MUST** be followed the following format depending which Operating System you uses：
         |Operating System|Version format|
         |:---:|:---:|
