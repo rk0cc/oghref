@@ -35,8 +35,16 @@ body:
   - type: input
     attributes:
       label: OS version
-      description: Specify version of selected operating system (if applied).
-      placeholder: Windows 10.0.22631.2861 / macOS 14.2.1 / Ubuntu 23.10.1 / Fedora 39
+      description: >
+        Specify version of selected operating system (if applied).
+        The version string **MUST** be followed the following format depending which Operating System you uses：
+        |Operating System|Version format|
+        |:---:|:---:|
+        |Windows|`Windows 10.0.22631.2861`|
+        |macOS|`macOS 14.2.1`|
+        |Ubuntu|`Ubuntu 23.10.1`|
+        |Fedora|`Fedora 39`|
+        If unlisted (especially for other Linux Distros which not listed in the table) operating system, just type `(Operating System / Distros name) (Version)` into this field.
   - type: textarea
     attributes:
       label: Reproduction steps, expected result and actual behaviour
