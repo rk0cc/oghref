@@ -283,13 +283,15 @@ final class _ImageCarouselState extends State<ImageCarousel> {
 
   void movePrevious() async {
     await controller.previousPage(
-        duration: widget.preferences.pageChangeDuration, curve: widget.preferences.pageChangeCurve);
+        duration: widget.preferences.pageChangeDuration,
+        curve: widget.preferences.pageChangeCurve);
     setState(() {});
   }
 
   void moveNext() async {
     await controller.nextPage(
-        duration: widget.preferences.pageChangeDuration, curve: widget.preferences.pageChangeCurve);
+        duration: widget.preferences.pageChangeDuration,
+        curve: widget.preferences.pageChangeCurve);
     setState(() {});
   }
 
@@ -364,22 +366,23 @@ final class _ImageCarouselState extends State<ImageCarousel> {
                             ));
                       case DotPageIndication():
                         // Must be wrapped into Material widget since dot indicator uses material library
-                        final materialTheme = mdc.ThemeData(cupertinoOverrideTheme: currentTheme);
+                        final materialTheme =
+                            mdc.ThemeData(cupertinoOverrideTheme: currentTheme);
 
                         return mdc.Material(
-                          child: PageViewDotIndicator(
-                            currentItem: currentPage,
-                            count: maxImgIdx + 1,
-                            fadeEdges: indication.style.fadeEdges,
-                            boxShape: indication.style.shape,
-                            borderRadius: indication.style.radius,
-                            size: indication.style.activeSize,
-                            unselectedSize: indication.style.inactiveSize,
-                            unselectedColor: indication.style.secondaryColour ??
-                                materialTheme.highlightColor,
-                            selectedColor: indication.style.primaryColour ??
-                                materialTheme.disabledColor)
-                        );
+                            child: PageViewDotIndicator(
+                                currentItem: currentPage,
+                                count: maxImgIdx + 1,
+                                fadeEdges: indication.style.fadeEdges,
+                                boxShape: indication.style.shape,
+                                borderRadius: indication.style.radius,
+                                size: indication.style.activeSize,
+                                unselectedSize: indication.style.inactiveSize,
+                                unselectedColor:
+                                    indication.style.secondaryColour ??
+                                        materialTheme.highlightColor,
+                                selectedColor: indication.style.primaryColour ??
+                                    materialTheme.disabledColor));
                     }
                   }
                 }
@@ -388,41 +391,45 @@ final class _ImageCarouselState extends State<ImageCarousel> {
               }))),
       // Move previous page button
       Positioned(
-          left: 0,
+          left: widget.preferences.controlButtonsSpacing,
           child: _buildControlWidgets(context,
-              child: _buildWithDeferredCtrl(context, builder: (context, snapshot) {
-            VoidCallback? pressEvent;
+              child:
+                  _buildWithDeferredCtrl(context, builder: (context, snapshot) {
+                VoidCallback? pressEvent;
 
-            if (snapshot.hasData) {
-              pressEvent = (snapshot.data!.page?.floor() ?? 0) == 0
-                  ? null
-                  : movePrevious;
-            }
+                if (snapshot.hasData) {
+                  pressEvent = (snapshot.data!.page?.floor() ?? 0) == 0
+                      ? null
+                      : movePrevious;
+                }
 
-            return CupertinoButton(
-                onPressed: pressEvent,
-                color: widget.preferences.controlIconColour,
-                child: Icon(CupertinoIcons.back, size: widget.preferences.controlIconSize));
-          }))),
+                return CupertinoButton(
+                    onPressed: pressEvent,
+                    color: widget.preferences.controlIconColour,
+                    child: Icon(CupertinoIcons.back,
+                        size: widget.preferences.controlIconSize));
+              }))),
       // Move next page button
       Positioned(
-          right: 0,
+          right: widget.preferences.controlButtonsSpacing,
           child: _buildControlWidgets(context,
-              child: _buildWithDeferredCtrl(context, builder: (context, snapshot) {
-            VoidCallback? pressEvent;
+              child:
+                  _buildWithDeferredCtrl(context, builder: (context, snapshot) {
+                VoidCallback? pressEvent;
 
-            if (snapshot.hasData) {
-              pressEvent = (snapshot.data!.page?.ceil() ?? maxImgIdx) == maxImgIdx
-                  ? null
-                  : moveNext;
-            }
+                if (snapshot.hasData) {
+                  pressEvent =
+                      (snapshot.data!.page?.ceil() ?? maxImgIdx) == maxImgIdx
+                          ? null
+                          : moveNext;
+                }
 
-            return CupertinoButton(
-                onPressed: pressEvent,
-                color: widget.preferences.controlIconColour,
-                child:
-                    Icon(CupertinoIcons.forward, size: widget.preferences.controlIconSize));
-          })))
+                return CupertinoButton(
+                    onPressed: pressEvent,
+                    color: widget.preferences.controlIconColour,
+                    child: Icon(CupertinoIcons.forward,
+                        size: widget.preferences.controlIconSize));
+              })))
     ]);
   }
 
