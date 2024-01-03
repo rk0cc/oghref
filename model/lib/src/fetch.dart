@@ -42,11 +42,11 @@ abstract final class MetaFetch {
       equals: (p0, p1) => p0.propertyNamePrefix == p1.propertyNamePrefix,
       hashCode: (p0) => p0.propertyNamePrefix.hashCode);
 
-  final OgHrefClient _client = OgHrefClient(true);
+  //final OgHrefClient _client = OgHrefClient(true);
 
   /// Allow [MetaFetch] fetch redirected [Uri]'s metadata instead of
   /// provided one.
-  bool allowRedirect = false;
+  bool allowRedirect = true;
 
   String? _primaryPrefix;
 
@@ -252,7 +252,15 @@ abstract final class MetaFetch {
       throw NonHttpUrlException(url);
     }
 
-    Response resp = await _client.get(url);
+    Client client = OgHrefClient(allowRedirect);
+
+    late Response resp;
+
+    try {
+      resp = await client.get(url);
+    } finally {
+      client.close();
+    }
 
     _verifyContentType(resp);
 

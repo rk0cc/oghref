@@ -1,3 +1,8 @@
+## 3.0.1
+
+* Fix `allowRedirect` still enabled eventhough disabled already.
+* `allowRedirect` enabled by default again.
+
 ## 3.0.0
 
 * New strucutre of instance definition
