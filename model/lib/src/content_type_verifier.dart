@@ -45,8 +45,11 @@ extension ContentTypeVerifier on Response {
         orElse: () => ContentTypeCategory.text);
   }
 
-  /// Determine the [contentType] is one of the expected [fileExtensions].
-  bool isSatisfiedExtension({Set<String> fileExtensions = const {}}) {
+  /// Determine the [contentType] is one of the expected [fileExtensions]
+  /// or found from [mimeOverride].
+  bool isSatisfiedExtension(
+      {Set<String> fileExtensions = const {},
+      Set<String> mimeOverride = const {}}) {
     final Set<String> acceptedExtension = {...fileExtensions};
     if (acceptedExtension.isEmpty) {
       acceptedExtension.add("txt");
@@ -54,7 +57,7 @@ extension ContentTypeVerifier on Response {
 
     String? mimeData = contentType;
 
-    final List<String> extTypes = [];
+    final List<String> extTypes = [...mimeOverride];
 
     if (mimeData != null) {
       extTypes.addAll(

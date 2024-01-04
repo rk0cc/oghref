@@ -6,12 +6,15 @@ import 'package:http/http.dart'
     hide delete, get, head, patch, post, put, read, readBytes, runWithClient;
 import 'package:meta/meta.dart';
 
-import 'exception/content_type_mismatched.dart';
-import 'exception/non_http_url.dart';
-import 'model/metainfo.dart';
-import 'parser/property_parser.dart';
-import 'client.dart';
-import 'content_type_verifier.dart';
+import '../exception/content_type_mismatched.dart';
+import '../exception/non_http_url.dart';
+import '../model/metainfo.dart';
+import '../parser/property_parser.dart';
+import '../client.dart';
+import '../content_type_verifier.dart';
+
+part 'producer.dart';
+part 'tester.dart';
 
 /// Read [Document] and find all metadata tags to generate corresponded
 /// [MetaInfo].
@@ -42,7 +45,9 @@ abstract final class MetaFetch {
       equals: (p0, p1) => p0.propertyNamePrefix == p1.propertyNamePrefix,
       hashCode: (p0) => p0.propertyNamePrefix.hashCode);
 
-  //final OgHrefClient _client = OgHrefClient(true);
+  final Set<String> _additionalSupportedExtensions;
+
+  final Set<String> _additionalSupportedContentType;
 
   /// Allow [MetaFetch] fetch redirected [Uri]'s metadata instead of
   /// provided one.
@@ -81,12 +86,16 @@ abstract final class MetaFetch {
   /// ```
   bool get isPrimaryPrefixEnabled => _primaryPrefix != null;
 
-  MetaFetch._();
+  MetaFetch._(
+      {Set<String> additionalSupportedExtensions = const {},
+      Set<String> additionalSupportedContentType = const {}})
+      : assert(additionalSupportedExtensions.every(RegExp(r"^[0-9a-zA-Z]{1,5}$").hasMatch)),
+        assert(additionalSupportedContentType.every(RegExp(r"^[-\w]+\/[-\w]+(\.[-\w]+)*(\+[-\w]+)?$").hasMatch)),
+        _additionalSupportedExtensions = {...additionalSupportedExtensions},
+        _additionalSupportedContentType = {...additionalSupportedContentType};
 
-  /// Get a instance of [MetaFetch].
-  ///
-  /// [MetaFetch] is a singleton object that it allows to uses same [register]
-  /// preference whatever been made.
+  /// Create new instance of [MetaFetch] which dedicated
+  /// from [instance].
   factory MetaFetch() = _MetaFetchProducer;
 
   /// A dedicated [MetaFetch] which ignore content type condition that allowing
@@ -245,7 +254,23 @@ abstract final class MetaFetch {
     return Map.unmodifiable(metaInfoMap);
   }
 
-  bool _verifyContentType(Response resp);
+  bool _verifyContentType(Response resp) {
+    if (!resp.isSatisfiedExtension(fileExtensions: {
+      "html",
+      "xhtml",
+      "htm",
+      ..._additionalSupportedExtensions
+    }, mimeOverride: _additionalSupportedContentType)) {
+      throw ContentTypeMismatchedException(
+          resp.request!.url, resp.contentType, {
+        "text/html",
+        "application/xhtml+xml",
+        ..._additionalSupportedContentType
+      });
+    }
+
+    return true;
+  }
 
   Future<Document> _fetchHtmlDocument(Uri url) async {
     if (!RegExp(r"^https?$").hasMatch(url.scheme)) {
@@ -312,34 +337,5 @@ abstract final class MetaFetch {
   /// required to retrive HTML content from [url].
   Future<Map<String, MetaInfo>> fetchAllFromHttp(Uri url) {
     return _fetchHtmlDocument(url).then(_buildAllMetaInfo);
-  }
-}
-
-final class _MetaFetchTester extends MetaFetch {
-  _MetaFetchTester() : super._();
-
-  @override
-  bool _verifyContentType(Response resp) {
-    return true;
-  }
-}
-
-final class _MetaFetchProducer extends MetaFetch {
-  static const Set<String> eligableExtensions = <String>{"html", "xhtml"};
-  static const Set<String> supportedContentType = <String>{
-    "text/html",
-    "application/xhtml+xml"
-  };
-
-  _MetaFetchProducer() : super._();
-
-  @override
-  bool _verifyContentType(Response resp) {
-    if (!resp.isSatisfiedExtension(fileExtensions: eligableExtensions)) {
-      throw ContentTypeMismatchedException(
-          resp.request!.url, resp.contentType, supportedContentType);
-    }
-
-    return true;
   }
 }

@@ -1,5 +1,5 @@
 import '../buffer/metainfo.dart';
-import '../fetch.dart';
+import '../fetch/fetch.dart';
 
 import 'property_parser.dart';
 

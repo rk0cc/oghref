@@ -1,3 +1,8 @@
+## 3.1.0
+
+* Redesign `MetaFetch` that enabling further extensions internally.
+* Update documents.
+
 ## 3.0.1
 
 * Fix `allowRedirect` still enabled eventhough disabled already.
