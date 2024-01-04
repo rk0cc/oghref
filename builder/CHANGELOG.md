@@ -1,3 +1,8 @@
+## 4.0.0
+
+* Update `oghref_model` version constraint.
+* Widget tests presents now.
+
 ## 3.1.0
 
 * Add `BoxConstraint` to measure width if parent widget has finite width already.

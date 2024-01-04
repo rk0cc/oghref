@@ -10,7 +10,7 @@ final class MockBrowserUAClient extends BaseClient {
   @override
   Future<StreamedResponse> send(BaseRequest request) {
     request
-      ..headers['user-agent'] = Faker().internet.userAgent()
+      ..headers.putIfAbsent('user-agent', Faker().internet.userAgent) 
       ..followRedirects = true;
 
     return _c.send(request).timeout(const Duration(minutes: 1));

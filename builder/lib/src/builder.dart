@@ -140,7 +140,7 @@ abstract base class OgHrefBuilderState<T extends OgHrefBuilder>
       return MetaFetch().fetchFromHttp(widget.url);
     }
 
-    return MetaFetch()
+    return MetaFetch.instance
         .fetchAllFromHttp(widget.url)
         .then(widget.multiInfoHandler!);
   }
