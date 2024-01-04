@@ -89,8 +89,10 @@ abstract final class MetaFetch {
   MetaFetch._(
       {Set<String> additionalSupportedExtensions = const {},
       Set<String> additionalSupportedContentType = const {}})
-      : assert(additionalSupportedExtensions.every(RegExp(r"^[0-9a-zA-Z]{1,5}$").hasMatch)),
-        assert(additionalSupportedContentType.every(RegExp(r"^[-\w]+\/[-\w]+(\.[-\w]+)*(\+[-\w]+)?$").hasMatch)),
+      : assert(additionalSupportedExtensions
+            .every(RegExp(r"^[0-9a-zA-Z]{1,5}$").hasMatch)),
+        assert(additionalSupportedContentType
+            .every(RegExp(r"^[-\w]+\/[-\w]+(\.[-\w]+)*(\+[-\w]+)?$").hasMatch)),
         _additionalSupportedExtensions = {...additionalSupportedExtensions},
         _additionalSupportedContentType = {...additionalSupportedContentType};
 
