@@ -12,18 +12,8 @@ dependencies:
   flutter:
     sdk: flutter
   url_launcher: ^6.1.14
-  oghref_model: ^3.1.0
+  oghref_model: ^3.2.1
   meta: ^1.9.1
 dev_dependencies: 
-  flutter_test:
-    sdk: flutter
   flutter_lints: ^3.0.0
-  bootleg_url_launcher:
-    git:
-      url: https://github.com/rk0cc/oghref.git
-      path: test/bootleg_url_launcher
-  url_launcher_platform_interface: ^2.2.0
-dependency_overrides:
-  bootleg_url_launcher:
-    path: ../test/bootleg_url_launcher
 flutter: 

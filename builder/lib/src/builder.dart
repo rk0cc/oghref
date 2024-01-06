@@ -137,7 +137,7 @@ abstract base class OgHrefBuilderState<T extends OgHrefBuilder>
   @nonVirtual
   Future<MetaInfo> constructInfo() {
     if (widget.multiInfoHandler == null) {
-      return MetaFetch().fetchFromHttp(widget.url);
+      return MetaFetch.instance.fetchFromHttp(widget.url);
     }
 
     return MetaFetch.instance
