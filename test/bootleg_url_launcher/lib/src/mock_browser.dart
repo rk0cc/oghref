@@ -25,12 +25,9 @@ final class MockBrowserUAClient extends BaseClient {
   MockBrowserUAClient(bool testMode)
       : _c = testMode
             ? MockClient((request) => Future.delayed(_simulatedDelay, () {
-                  Uri url = request.url;
-
-                  if (url.host == "127.0.0.2" && url.path == "/1.html") {
-                    return Response(
-                        request.method.toUpperCase() == "GET"
-                            ? r"""
+                  return Response(
+                      request.method.toUpperCase() == "GET"
+                          ? r"""
 <!DOCTYPE html>
 <html>
     <head>
@@ -49,13 +46,8 @@ final class MockBrowserUAClient extends BaseClient {
     </body>
 </html>
 """
-                            : "",
-                        200,
-                        request: request,
-                        headers: const {"content-type": "text/plain"});
-                  }
-
-                  return Response("", 400,
+                          : "",
+                      200,
                       request: request,
                       headers: const {"content-type": "text/plain"});
                 }))
