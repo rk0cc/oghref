@@ -7,6 +7,7 @@
     * If shown due to tapping widget, it will hide automatically in specific seconds.
 * Add preferences for `ImageCarousel` and can be speficied in `OgHrefMaterialCard`.
 * Add current index of images in `ImageCarousel`.
+* New model and builder APIs.
 
 ## 1.0.2
 
