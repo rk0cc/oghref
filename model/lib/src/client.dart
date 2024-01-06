@@ -1,3 +1,5 @@
+import 'dart:math' show Random;
+
 import 'package:http/http.dart'
     hide delete, get, head, patch, post, put, read, readBytes, runWithClient;
 import 'package:http/testing.dart';
@@ -79,7 +81,8 @@ final class MockOgHrefClient extends MockClient implements OgHrefClient {
       return Future.value(Response("", 400));
     }
 
-    return Future<Response>.delayed(const Duration(milliseconds: 250), () {
+    return Future<Response>.delayed(
+        Duration(milliseconds: Random().nextInt(3000) + 250), () {
       switch (int.parse(url.path.replaceAll(RegExp(r"[^0-9]"), ""))) {
         case 1:
           return Response(r"""
@@ -206,6 +209,8 @@ final class MockOgHrefClient extends MockClient implements OgHrefClient {
       ..headers["user-agent"] = OgHrefClient.userAgent
       ..followRedirects = redirect;
 
-    return super.send(request);
+    return super
+        .send(request)
+        .timeout(Duration(seconds: OgHrefClient.timeoutAt));
   }
 }
