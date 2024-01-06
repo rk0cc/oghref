@@ -61,6 +61,11 @@ final class OgHrefClient extends BaseClient {
       ..followRedirects = redirect;
     return _c.send(request).timeout(Duration(seconds: timeoutAt));
   }
+
+  @override
+  void close() {
+    _c.close();
+  }
 }
 
 @internal

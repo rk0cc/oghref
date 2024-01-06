@@ -1,6 +1,6 @@
 name: oghref_model
 description: Object standarized definition with parser interface for constructing rich information of given URL among various metadata protocols.
-version: 3.2.0
+version: 3.2.1
 repository: https://github.com/rk0cc/oghref/tree/main/model
 issue_tracker: https://github.com/rk0cc/oghref/issues
 funding:

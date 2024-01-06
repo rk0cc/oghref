@@ -1,3 +1,7 @@
+## 3.2.1
+
+* Fix `Client.close()` does absolutely nothing issue.
+
 ## 3.2.0
 
 * Uses `MockClient` for making request for test.
