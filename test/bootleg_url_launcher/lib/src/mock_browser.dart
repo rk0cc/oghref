@@ -13,6 +13,6 @@ final class MockBrowserUAClient extends BaseClient {
       ..headers.putIfAbsent('user-agent', Faker().internet.userAgent) 
       ..followRedirects = true;
 
-    return _c.send(request).timeout(const Duration(minutes: 1));
+    return _c.send(request).timeout(const Duration(seconds: 10));
   }
 }
