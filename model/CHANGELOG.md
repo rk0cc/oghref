@@ -1,6 +1,8 @@
 ## 3.2.0
 
 * Uses `MockClient` for making request for test.
+    * Since testes no longer using real networking for making request from resources, `test_resources` directory is renamed to `sample` that all HTML files becomes as references of path.
+    * The IP address uses for `MockClient` is `127.0.0.2`
 
 ## 3.1.0
 
