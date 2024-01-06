@@ -149,6 +149,9 @@ abstract final class MetaFetch {
       // ignore: return_of_do_not_store
       (mpp) => mpp.propertyNamePrefix == prefix;
 
+  @factory
+  OgHrefClient _createClient();
+
   /// Get the corresponded parser from [prefix].
   ///
   /// If no related [prefix] is assigned, [StateError] will
@@ -279,7 +282,7 @@ abstract final class MetaFetch {
       throw NonHttpUrlException(url);
     }
 
-    Client client = OgHrefClient(allowRedirect);
+    Client client = _createClient();
 
     late Response resp;
 

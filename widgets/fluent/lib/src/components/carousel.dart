@@ -303,14 +303,16 @@ final class _ImageCarouselState extends State<ImageCarousel> {
   void didUpdateWidget(covariant ImageCarousel oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (oldWidget.preferences.controlIconColour != widget.preferences.controlIconColour) {
+    if (oldWidget.preferences.controlIconColour !=
+        widget.preferences.controlIconColour) {
       _bindBtnStyle();
     }
   }
 
   void _bindBtnStyle() {
     appliedBtnStyle = ButtonStyle(
-        foregroundColor: SingleButtonState<Color?>(widget.preferences.controlIconColour));
+        foregroundColor:
+            SingleButtonState<Color?>(widget.preferences.controlIconColour));
   }
 
   Widget _buildSingleImage(BuildContext context, oghref.ImageInfo imgInfo) {
@@ -431,9 +433,10 @@ final class _ImageCarouselState extends State<ImageCarousel> {
                 VoidCallback? pressEvent;
 
                 if (snapshot.hasData) {
-                  pressEvent = (snapshot.data!.page?.ceil() ?? maxImgIdx) == maxImgIdx
-                      ? null
-                      : moveNext;
+                  pressEvent =
+                      (snapshot.data!.page?.ceil() ?? maxImgIdx) == maxImgIdx
+                          ? null
+                          : moveNext;
                 }
 
                 return IconButton(

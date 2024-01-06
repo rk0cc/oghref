@@ -5,4 +5,7 @@ final class _MetaFetchTester extends MetaFetch {
       : super._(
             additionalSupportedContentType: const {"text/plain"},
             additionalSupportedExtensions: const {"txt"});
+
+  @override
+  OgHrefClient _createClient() => MockOgHrefClient();
 }

@@ -3,8 +3,7 @@ import 'package:oghref_model/src/parser/open_graph.dart';
 import 'package:oghref_model/src/parser/twitter_card.dart';
 import 'package:test/test.dart';
 
-final Uri resourseUri = Uri.parse(
-    "https://raw.githubusercontent.com/rk0cc/oghref/main/model/test_resources/");
+final Uri resourseUri = Uri.parse("https://127.0.0.2/");
 
 void main() {
   setUpAll(() {

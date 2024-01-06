@@ -1,3 +1,7 @@
+## 3.2.0
+
+* Uses `MockClient` for making request for test.
+
 ## 3.1.0
 
 * Redesign `MetaFetch` that enabling further extensions internally.
