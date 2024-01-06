@@ -1,7 +1,8 @@
 ## 4.0.0
 
-* Update `oghref_model` version constraint.
-* Widget tests presents now.
+* Update `oghref_model` version constraint to `3.2.1`.
+* ~~Widget tests presents now.~~ **(Update at 2024-01-06: Due to complexity setup of testing environment, no testes will be run from library forever)**
+* Performing widget test becomes possible (technically).
 
 ## 3.1.0
 
