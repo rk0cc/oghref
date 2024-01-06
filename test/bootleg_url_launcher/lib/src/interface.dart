@@ -12,12 +12,16 @@ import 'mock_browser.dart';
 /// `url_launcher_platform_interface` dependency is required
 /// for overriding instance.
 final class BootlegUrlLauncher extends UrlLauncherPlatform {
+  final bool testMode;
+
+  BootlegUrlLauncher({this.testMode = false});
+
   @override
   LinkDelegate? get linkDelegate => null;
 
   @override
   Future<bool> canLaunch(String url) async {
-    Client c = MockBrowserUAClient();
+    Client c = MockBrowserUAClient(testMode);
 
     bool accessible = false;
 
@@ -46,7 +50,7 @@ final class BootlegUrlLauncher extends UrlLauncherPlatform {
       required bool universalLinksOnly,
       required Map<String, String> headers,
       String? webOnlyWindowName}) async {
-    Client c = MockBrowserUAClient();
+    Client c = MockBrowserUAClient(testMode);
 
     bool accessible = false;
 
