@@ -7,4 +7,4 @@ export 'src/exception/non_http_url.dart';
 export 'src/model/metainfo.dart';
 export 'src/parser/open_graph.dart';
 export 'src/parser/twitter_card.dart';
-export 'src/fetch/fetch.dart';
+export 'src/fetch/fetch.dart' show MetaFetch;

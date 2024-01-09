@@ -1,3 +1,7 @@
+## 3.3.0
+
+* Create `testing` library for deploys `MockOgHrefClient` and `MetaFetchTester` in testing environment. 
+
 ## 3.2.1
 
 * Fix `Client.close()` does absolutely nothing issue.

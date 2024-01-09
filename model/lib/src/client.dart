@@ -6,6 +6,8 @@ import 'package:http/testing.dart';
 import 'package:meta/meta.dart';
 
 import 'disguise_ua/disguise_ua.dart';
+import 'exception/content_type_mismatched.dart';
+import 'fetch/fetch.dart' show MetaFetch;
 
 /// [Client] implementation for OgHref packages.
 @internal
@@ -68,29 +70,80 @@ final class OgHrefClient extends BaseClient {
   }
 }
 
-@internal
-@visibleForTesting
-final class MockOgHrefClient extends MockClient implements OgHrefClient {
-  MockOgHrefClient() : super(_mockResponse);
+/// Simulated environment based on [MockClient] that
+/// all generated content are specified by
+/// tester already.
+final class MockOgHrefClient extends BaseClient
+    implements MockClient, OgHrefClient {
+  @override
+  late final Client _c;
 
-  static Future<Response> _mockResponse(Request request) {
-    const Map<String, String> mockHeaders = {"content-type": "text/plain"};
+  /// Redirect features is always disabled for [MockOgHrefClient].
+  @override
+  bool get redirect => false;
 
-    Uri url = request.url;
-
-    if (!RegExp(r"^https?", caseSensitive: false).hasMatch(url.scheme) ||
-        !url.isAbsolute) {
-      throw ClientException(
-          "The request URL must be completed HTTP(S) address, eventhough it made by mock client");
-    } else if (url.host != "127.0.0.2") {
-      return Future.value(Response("", 400));
+  /// Define new replicated [Client] for executing under
+  /// test environment.
+  /// 
+  /// All expected content in specific links should be stored
+  /// into [contentLinker] which is a [Map] with [Uri] key and
+  /// [String] value to denotes expected content in [contentType]
+  /// when "surfing" URL. If the incoming [Request.url]
+  /// can be found in [contentLinker], the returned [Response]
+  /// will provided content of the [Uri] in status code `200`.
+  /// Otherwise, it returns empty [String] with status code
+  /// `404`.
+  /// 
+  /// Default [contentType] uses `text/plain` as returned value
+  /// when making [Response]. However, there are only three
+  /// eligable values can be used without throwing [ContentTypeMismatchedException]
+  /// in [MetaFetch.fetchFromHttp] or [MetaFetch.fetchAllFromHttp] that 
+  /// they are the most suitable type for using in webpage:
+  /// 
+  /// * `text/plain`
+  /// * `text/html`
+  /// * `application/xhtml+xml`
+  /// 
+  /// Moreover, every [Uri] mapped in [contentLinker] **MUST BE** used
+  /// `HTTP(S)` protocol. If at least one [Uri.scheme] return other than
+  /// `HTTP(S)`, it throws [ArgumentError].
+  MockOgHrefClient(Map<Uri, String> contentLinker,
+      {String contentType = "text/plain"}) {
+    if (contentLinker.keys.any((element) => !_isHttpScheme(element))) {
+      throw ArgumentError(
+          "Content linker's URL must be assigned with HTTP(S) scheme.");
     }
 
-    return Future<Response>.delayed(
-        Duration(milliseconds: Random().nextInt(3000) + 250), () {
-      switch (int.parse(url.path.replaceAll(RegExp(r"[^0-9]"), ""))) {
-        case 1:
-          return Response(r"""
+    _c = MockClient((request) {
+      final Map<Uri, String> ctxLinker = Map.unmodifiable(contentLinker);
+
+      Uri incomingUrl = request.url;
+
+      if (!_isHttpScheme(incomingUrl)) {
+        throw ClientException(
+            "The request should be HTTP(S), eventhough is mock client.");
+      }
+
+      return Future.delayed(Duration(milliseconds: Random().nextInt(750) + 250),
+          () {
+        String? bodyCtx = ctxLinker[incomingUrl];
+
+        if (bodyCtx == null) {
+          return Response("", 404,
+              headers: {"content-type": contentType}, request: request);
+        }
+
+        return Response(bodyCtx, 200,
+            headers: {"content-type": contentType}, request: request);
+      });
+    });
+  }
+
+  /// Uses [sample files](https://github.com/rk0cc/oghref/tree/main/model/sample) to defined
+  /// content of the simulated HTML files with hosted IP address as `127.0.0.2` with `HTTPS`
+  /// protocol.
+  factory MockOgHrefClient.usesSample() => MockOgHrefClient({
+        Uri.parse("https://127.0.0.2/1.html"): r"""
 <!DOCTYPE html>
 <html>
     <head>
@@ -108,9 +161,8 @@ final class MockOgHrefClient extends MockClient implements OgHrefClient {
         <script src="alert.js"></script>
     </body>
 </html>
-""", 200, request: request, headers: mockHeaders);
-        case 2:
-          return Response(r"""
+""",
+        Uri.parse("https://127.0.0.2/2.html"): r"""
 <!DOCTYPE html>
 <html>
     <head>
@@ -130,9 +182,8 @@ final class MockOgHrefClient extends MockClient implements OgHrefClient {
         <script src="alert.js"></script>
     </body>
 </html>
-""", 200, request: request, headers: mockHeaders);
-        case 3:
-          return Response(r"""
+""",
+        Uri.parse("https://127.0.0.2/3.html"): r"""
 <!DOCTYPE html>
 <!-- This file suppose read absolutely noting -->
 <html>
@@ -172,9 +223,8 @@ final class MockOgHrefClient extends MockClient implements OgHrefClient {
         </script>
     </body>
 </html>
-""", 200, request: request, headers: mockHeaders);
-        case 4:
-          return Response(r"""
+""",
+        Uri.parse("https://127.0.0.2/4.html"): r"""
 <!DOCTYPE html>
 <html>
     <head>
@@ -192,30 +242,23 @@ final class MockOgHrefClient extends MockClient implements OgHrefClient {
         <script src="alert.js"></script>
     </body>
 </html>
-""", 200, request: request, headers: mockHeaders);
-        default:
-          return Response("Not found", 400,
-              request: request, headers: mockHeaders);
-      }
-    }).onError<Response>((error, stackTrace) {
-      return Response("", 500, request: request, headers: mockHeaders);
-    });
+"""
+      });
+
+  static bool _isHttpScheme(Uri url) {
+    return RegExp(r"^https?$", caseSensitive: false).hasMatch(url.scheme);
   }
 
   @override
-  Client get _c => this;
-
-  @override
-  bool redirect = false;
+  void close() {
+    _c.close();
+  }
 
   @override
   Future<StreamedResponse> send(BaseRequest request) {
     request
       ..headers["user-agent"] = OgHrefClient.userAgent
       ..followRedirects = redirect;
-
-    return super
-        .send(request)
-        .timeout(Duration(seconds: OgHrefClient.timeoutAt));
+    return _c.send(request).timeout(Duration(seconds: OgHrefClient.timeoutAt));
   }
 }

@@ -100,12 +100,16 @@ abstract final class MetaFetch {
   /// from [instance].
   factory MetaFetch() = _MetaFetchProducer;
 
-  /// A dedicated [MetaFetch] which ignore content type condition that allowing
-  /// parse to HTML [Document].
+  /// A dedicated [MetaFetch] which replicate [Client] behaviours with
+  /// mapped link in [MockOgHrefClient.usesSample].
+  /// 
+  /// To uses customized content rather than provided responses where found from
+  /// sample, please attach [MockOgHrefClient] with defined link
+  /// and contents to [MetaFetchTester.new], then assign into [instance].
   ///
   /// This only available for testing only.
   @visibleForTesting
-  factory MetaFetch.forTest() = _MetaFetchTester;
+  factory MetaFetch.forTest() => MetaFetchTester(MockOgHrefClient.usesSample);
 
   /// Define a value of user agent when making request in [fetchFromHttp].
   ///
