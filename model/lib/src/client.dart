@@ -84,7 +84,7 @@ final class MockOgHrefClient extends BaseClient
 
   /// Define new replicated [Client] for executing under
   /// test environment.
-  /// 
+  ///
   /// All expected content in specific links should be stored
   /// into [contentLinker] which is a [Map] with [Uri] key and
   /// [String] value to denotes expected content in [contentType]
@@ -93,17 +93,17 @@ final class MockOgHrefClient extends BaseClient
   /// will provided content of the [Uri] in status code `200`.
   /// Otherwise, it returns empty [String] with status code
   /// `404`.
-  /// 
+  ///
   /// Default [contentType] uses `text/plain` as returned value
   /// when making [Response]. However, there are only three
   /// eligable values can be used without throwing [ContentTypeMismatchedException]
-  /// in [MetaFetch.fetchFromHttp] or [MetaFetch.fetchAllFromHttp] that 
+  /// in [MetaFetch.fetchFromHttp] or [MetaFetch.fetchAllFromHttp] that
   /// they are the most suitable type for using in webpage:
-  /// 
+  ///
   /// * `text/plain`
   /// * `text/html`
   /// * `application/xhtml+xml`
-  /// 
+  ///
   /// Moreover, every [Uri] mapped in [contentLinker] **MUST BE** used
   /// `HTTP(S)` protocol. If at least one [Uri.scheme] return other than
   /// `HTTP(S)`, it throws [ArgumentError].

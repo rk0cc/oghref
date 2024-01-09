@@ -102,7 +102,7 @@ abstract final class MetaFetch {
 
   /// A dedicated [MetaFetch] which replicate [Client] behaviours with
   /// mapped link in [MockOgHrefClient.usesSample].
-  /// 
+  ///
   /// To uses customized content rather than provided responses where found from
   /// sample, please attach [MockOgHrefClient] with defined link
   /// and contents to [MetaFetchTester.new], then assign into [instance].
