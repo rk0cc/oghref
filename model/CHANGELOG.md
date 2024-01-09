@@ -1,3 +1,7 @@
+## 3.3.1
+
+* Remove `testing` library annotations.
+
 ## 3.3.0
 
 * Create `testing` library for deploys `MockOgHrefClient` and `MetaFetchTester` in testing environment. 
