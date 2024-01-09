@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart' hide protected;
 import 'package:meta/meta.dart';
 import 'package:oghref_model/model.dart';
+import 'package:oghref_model/testing.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher
     show canLaunchUrl, launchUrl;
 import 'package:url_launcher/url_launcher.dart'
@@ -12,12 +13,51 @@ import 'package:url_launcher/url_launcher.dart'
         canLaunch,
         closeWebView;
 
+import 'in_testing_env.dart' if (dart.library.io) 'in_testing_env_io.dart';
 import 'typedefs.dart';
 
 /// A utility for building [Widget] from [url] retrived [MetaInfo].
 ///
 /// [MetaInfo] only retrive once such that the metadata may not load
 /// correctly without retry.
+///
+/// ### Remarks for implementing in testing environment
+///
+/// If using [OgHrefBuilder.new], [OgHrefBuilder.updatable] and [OgHrefBuilder.runOnce]
+/// in widget test, [MetaFetch.instance] must be assigned with [MetaFetchTester] or
+/// it's extended classes already in [setUpAll](https://api.flutter.dev/flutter/flutter_test/setUpAll.html):
+///
+/// ```dart
+/// import 'package:flutter_test/flutter_test.dart';
+/// import 'package:oghref_builder/oghref_builder.dart';
+/// import 'package:oghref_builder/testing.dart';
+///
+///
+/// void main() {
+///   setUpAll(() {
+///     /* Uses mock url_launcher platform.
+///
+///        `MockOgHrefClient.usesSample` can be replaced any function that linking
+///        to `MockClient`'s constructor.
+///     setupMockInstances(MockUrlLauncherPlatform(MockOgHrefClient.usesSample));
+///
+///     // Attach instance with either MetaFetch.forTest() or custom classes extended from MetaFetchTester.
+///     MetaFetch.instance = MetaFetch.forTest()
+///       ..register(const OpenGraphPropertyParser())
+///       ..primaryPrefix = "og";
+///   });
+///
+///   testWidget("Do test here", (tester) async {
+///     // Test codes
+///   });
+/// }
+/// ```
+///
+/// If failed to process the mentioned steps and performs widget test,
+/// it yield assertion to stop [OgHrefBuilder] proceed with real
+/// network data which is unacceptable in [HttpClient](https://api.dart.dev/stable/dart-io/HttpClient-class.html)
+/// and always response with HTTP status code `400`, no matter the
+/// given URL is accessible or not.
 abstract base class OgHrefBuilder extends StatefulWidget {
   /// URL of website.
   ///
@@ -27,11 +67,14 @@ abstract base class OgHrefBuilder extends StatefulWidget {
   /// A [Widget] builder for handling [MetaInfo] retrived.
   ///
   /// [MetaInfo] may contains empty properties if
-  /// failed to resolved.
+  /// responded body does not contains metadatas.
+  /// And it also be called eventhough response status
+  /// code is representing error (`4xx` or `5xx`).
   final MetaInfoRetrivedBuilder onRetrived;
 
   /// A [Widget] builder for handling errors during
-  /// parsing [url] to [MetaInfo].
+  /// parsing [url] to [MetaInfo] and exception or error thrown
+  /// during making request.
   final MetaInfoFetchFailedBuilder onFetchFailed;
 
   /// A [Widget] builder during fetching data.
@@ -59,7 +102,15 @@ abstract base class OgHrefBuilder extends StatefulWidget {
       this.onOpenLinkFailed,
       this.openLinkConfirmation,
       this.multiInfoHandler,
-      super.key});
+      super.key})
+      : assert(() {
+          if (runningInTest) {
+            return MetaFetch.instance is MetaFetchTester;
+          }
+
+          return true;
+        }(),
+            "MetaFetch's instance must be MockOgHrefClient or it's extended classes when running in testing environment.");
 
   /// Create a builder for retiving received [url] and
   /// update content when the value changes on parent [Widget].

@@ -1,0 +1,4 @@
+test/
+
+# It's weird that `pub` still include this directory eventhough it defined .gitignore already
+build/

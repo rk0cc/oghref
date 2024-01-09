@@ -1,6 +1,14 @@
+## 4.1.0
+
+* Test implementation completed and features `testing` library.
+    * Please read [wiki page](https://github.com/rk0cc/oghref/wiki) for writing widget test in Flutter.
+* Add assertion to prevent uses real client in testing environment.
+    * REMARK: The detection relys on finding `FLUTTER_TEST` in environment variable which appeared when using `flutter_test`, and it still able to be bypassed if used oridinary `test` package.
+* Updated `oghref_model` version constraint to `^3.3.1`
+
 ## 4.0.0
 
-* Update `oghref_model` version constraint to `3.2.1`.
+* Update `oghref_model` version constraint to `^3.2.1`.
 * ~~Widget tests presents now.~~ **(Update at 2024-01-06: Due to complexity setup of testing environment, no testes will be run from library forever)**
 * Performing widget test becomes possible (technically).
 
