@@ -1,19 +1,19 @@
-name: Model testing
+name: Widget test (Builder)
 on: 
   push: 
     branches: 
       - main
     paths: 
-      - 'model/**/*.dart'
-      - .github/workflows/model_test.yml
+      - 'builder/**/*.dart'
+      - .github/workflows/builder_test.yml
   pull_request:
     branches: 
       - main
 jobs:
   test:
-    name: Unit test
+    name: Widget test
     env:
-      working-directory: './model'
+      working-directory: './builder'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
