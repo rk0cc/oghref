@@ -16,10 +16,11 @@ jobs:
       working-directory: './builder'
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         sdkver:
           - '3.x'
-          - '3.0.x'
+          - '3.10.x' # This is corresponded Flutter version which adopted Dart 3
     steps:
       - name: Checkout
         uses: actions/checkout@v4
