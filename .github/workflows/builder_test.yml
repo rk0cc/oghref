@@ -15,15 +15,23 @@ jobs:
     env:
       working-directory: './builder'
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        sdkver:
+          - '3.x'
+          - '3.0.x'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup dart
-        uses: dart-lang/setup-dart@v1
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ matrix.sdkver }}
       - name: Get dependencies
         working-directory: ${{ env.working-directory }}
-        run: dart pub get
+        run: flutter pub get
       - name: Perform test
         working-directory: ${{ env.working-directory }}
-        run: dart test
+        run: flutter test .
   
