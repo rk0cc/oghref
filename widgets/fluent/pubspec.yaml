@@ -1,6 +1,6 @@
 name: oghref_fluent
 description: Fluent themed widget for generating rich information link from URL.
-version: 2.0.0
+version: 2.0.1
 repository: https://github.com/rk0cc/oghref/tree/main/widgets/fluent
 issue_tracker: https://github.com/rk0cc/oghref/issues
 funding:
@@ -20,9 +20,9 @@ environment:
 dependencies: 
   flutter:
     sdk: flutter
-  oghref_builder: ^4.0.0
+  oghref_builder: ^4.1.0
   oghref_media_control: ^3.0.5
-  oghref_model: ^3.2.1
+  oghref_model: ^3.3.1
   meta: ^1.9.1
   media_kit: ^1.1.10+1
   fluent_ui: ^4.8.1

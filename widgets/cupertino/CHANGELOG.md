@@ -1,3 +1,8 @@
+## 2.0.1
+
+* Running widget test becomes possible now.
+* Provides missing documenataions.
+
 ## 2.0.0
 
 * Migration of theme setting to dedicated classes.

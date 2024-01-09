@@ -12,6 +12,7 @@ import '../components/img_builders.dart';
 import '../launch_failed_dialog.dart';
 import '../typedefs.dart';
 
+/// Define style prefences for rendering [OgHrefCupertinoTile].
 final class OgHrefCupertinoTileStyle {
   /// [TextStyle] for displaying link title.
   final TextStyle? tileTitleTextStyle;
@@ -19,6 +20,7 @@ final class OgHrefCupertinoTileStyle {
   /// [TextStyle] for displaying description.
   final TextStyle? tileDescriptionTextStyle;
 
+  /// Construct style prefence for rendering [OgHrefCupertinoTile].
   const OgHrefCupertinoTileStyle(
       {this.tileTitleTextStyle, this.tileDescriptionTextStyle});
 }
@@ -77,6 +79,7 @@ base class OgHrefCupertinoTile extends StatelessWidget
   @override
   final String okText;
 
+  /// Specify style of [OgHrefCupertinoTile].
   final OgHrefCupertinoTileStyle? style;
 
   /// Create rich information link [CupertinoListTile] by given [url].
