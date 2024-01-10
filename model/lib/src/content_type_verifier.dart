@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 import 'package:mime_dart/mime_dart.dart';
 import 'package:path/path.dart' as p;
 
-import 'client.dart';
+import 'client/client.dart';
 import 'model/url.dart';
 
 /// Determine the content type category from MIME.

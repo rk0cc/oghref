@@ -1,3 +1,7 @@
+## 3.3.2
+
+* More readability for client source codes.
+
 ## 3.3.1
 
 * Remove `testing` library annotations.

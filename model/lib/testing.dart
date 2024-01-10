@@ -3,4 +3,4 @@
 library testing;
 
 export 'src/fetch/fetch.dart' show MetaFetchTester, MockOgHrefClientConstructor;
-export 'src/client.dart' show MockOgHrefClient;
+export 'src/client/client.dart' show MockOgHrefClient;

@@ -10,7 +10,7 @@ import '../exception/content_type_mismatched.dart';
 import '../exception/non_http_url.dart';
 import '../model/metainfo.dart';
 import '../parser/property_parser.dart';
-import '../client.dart';
+import '../client/client.dart';
 import '../content_type_verifier.dart';
 
 part 'producer.dart';
