@@ -13,6 +13,7 @@ import '../parser/property_parser.dart';
 import '../client/client.dart';
 import '../content_type_verifier.dart';
 
+part '../exception/unnamed_prefix.dart';
 part 'producer.dart';
 part 'tester.dart';
 
@@ -58,8 +59,15 @@ abstract final class MetaFetch {
   /// Specify which prefix should be resolve at first.
   ///
   /// If it applied as [Null], this feature will be disabled.
+  /// 
+  /// It should not be assigned as empty [String]. Otherwise,
+  /// [ArgumentError] will be thrown.
   set primaryPrefix(String? prefix) {
     if (prefix != null) {
+      if (prefix.isEmpty) {
+        _encounteredEmptyPrefix("primaryPrefix");
+      }
+
       try {
         _findCorrespondedParser(prefix);
       } on StateError {
@@ -153,6 +161,10 @@ abstract final class MetaFetch {
       // ignore: return_of_do_not_store
       (mpp) => mpp.propertyNamePrefix == prefix;
 
+  Never _encounteredEmptyPrefix(String paramName) {
+    throw ArgumentError.value("", paramName, "Prefix should not be empty");
+  }
+
   @factory
   OgHrefClient _createClient();
 
@@ -164,13 +176,6 @@ abstract final class MetaFetch {
     return _parsers.singleWhere(_prefixEquals(prefix));
   }
 
-  /// Register [parser] into [MetaFetch].
-  ///
-  /// It returns `true` if registered sucessfully.
-  bool register(MetaPropertyParser parser) {
-    return _parsers.add(parser);
-  }
-
   /// Determine the [identifier] is registered or not.
   ///
   /// The [identifier] can be a [String] of prefix or [MetaPropertyParser].
@@ -179,8 +184,14 @@ abstract final class MetaFetch {
   bool hasBeenRegistered(Object identifier) {
     try {
       if (identifier is String) {
+        if (identifier.isEmpty) {
+          _encounteredEmptyPrefix("identifier");
+        }
         _findCorrespondedParser(identifier);
       } else if (identifier is MetaPropertyParser) {
+        if (identifier.propertyNamePrefix.isEmpty) {
+          _encounteredEmptyPrefix("identifier");
+        }
         _findCorrespondedParser(identifier.propertyNamePrefix);
       }
 
@@ -192,13 +203,36 @@ abstract final class MetaFetch {
     return false;
   }
 
+  /// Register [parser] into [MetaFetch].
+  ///
+  /// It returns `true` if registered sucessfully.
+  /// 
+  /// Attaching [parser] with empty [MetaPropertyParser.propertyNamePrefix]
+  /// is forbidden and [UnnamedMetaPropertyPrefixError] will be thrown
+  /// if attempted.
+  bool register(MetaPropertyParser parser) {
+    if (parser.propertyNamePrefix.isEmpty) {
+      throw UnnamedMetaPropertyPrefixError._(parser, name: "parser");
+    }
+
+    return _parsers.add(parser);
+  }
+
   /// Remove [MetaPropertyParser] with corresponded [prefix].
   ///
   /// It returns `true` if the given [prefix] has been removed.
   ///
   /// In additions, if [prefix] is the same value of [primaryPrefix],
   /// it will reset to [Null].
+  /// 
+  /// Since empty [MetaPropertyParser.propertyNamePrefix] is forbidden
+  /// in [register], it also throws [ArgumentError] is [prefix]
+  /// is an empty [String].
   bool deregister(String prefix) {
+    if (prefix.isEmpty) {
+      _encounteredEmptyPrefix("prefix");
+    }
+
     if (primaryPrefix == prefix) {
       primaryPrefix = null;
     }
