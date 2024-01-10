@@ -19,6 +19,8 @@ final class ContentTypeMismatchedException implements ClientException {
   ContentTypeMismatchedException(
       this.uri, this.receivedContentType, this.idealContentType);
 
+  /// Message displayed to inform invalid content type should not be
+  /// accepted.
   @override
   String get message =>
       "The given content type is not accepted for application.";
