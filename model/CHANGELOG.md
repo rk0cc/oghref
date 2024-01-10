@@ -1,3 +1,8 @@
+## (Next release)
+
+* Add validation to `MetaFetch` that property name prefix must not be an empty string and throws `ArgumentError` otherwise.
+* Add missing documentation back.
+
 ## 3.3.2
 
 * More readability for client source codes.
