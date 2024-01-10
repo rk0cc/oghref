@@ -40,67 +40,67 @@ final class TwitterCardPropertyParser extends MetaPropertyParser {
     final ImageInfoParser imgParser = ImageInfoParser();
     final VideoInfoParser vidParser = VideoInfoParser();
 
-    for (PropertyPair metaTag in propertyPair) {
-      var (property, value) = metaTag;
+    try {
+      for (var (property, value) in propertyPair) {
+        switch (property) {
+          case "twitter:site":
+            assigner.url ??= twitterSite.resolve("/${value.substring(1)}");
+            break;
+          case "twitter:site:id":
+            assigner.url ??= twitterSite.resolve("/i/user/$value");
+            break;
+          case "twitter:description":
+            assigner.description = value;
+            break;
+          case "twitter:title":
+            assigner.title = value;
+            break;
+          case "twitter:image":
+            if (imgParser.isInitalized) {
+              assigner.images.add(imgParser.compile());
+              imgParser.reset();
+            } else {
+              imgParser.markInitalized();
+            }
 
-      switch (property) {
-        case "twitter:site":
-          assigner.url ??= twitterSite.resolve("/${value.substring(1)}");
-          break;
-        case "twitter:site:id":
-          assigner.url ??= twitterSite.resolve("/i/user/$value");
-          break;
-        case "twitter:description":
-          assigner.description = value;
-          break;
-        case "twitter:title":
-          assigner.title = value;
-          break;
-        case "twitter:image":
-          if (imgParser.isInitalized) {
-            assigner.images.add(imgParser.compile());
-            imgParser.reset();
-          } else {
-            imgParser.markInitalized();
-          }
+            imgParser.url = Uri.tryParse(value);
+            break;
+          case "twitter:image:alt":
+            imgParser.alt = value;
+            break;
+          case "twitter:player":
+            if (vidParser.isInitalized) {
+              assigner.videos.add(vidParser.compile());
+              vidParser.reset();
+            } else {
+              vidParser.markInitalized();
+            }
 
-          imgParser.url = Uri.tryParse(value);
-          break;
-        case "twitter:image:alt":
-          imgParser.alt = value;
-          break;
-        case "twitter:player":
-          if (vidParser.isInitalized) {
-            assigner.videos.add(vidParser.compile());
-            vidParser.reset();
-          } else {
-            vidParser.markInitalized();
-          }
-
-          vidParser.url = Uri.tryParse(value);
-          break;
-        case "twitter:player:width":
-          vidParser.width = double.tryParse(value);
-          break;
-        case "twitter:player:height":
-          vidParser.height = double.tryParse(value);
-          break;
-        case "twitter:player:stream":
-          Uri? resolvedStream = Uri.tryParse(value);
-          if (resolvedStream != null && vidParser.url != null) {
-            // Uses raw file if provided instead of relying iframe.
-            vidParser.url = resolvedStream;
-          }
-          break;
+            vidParser.url = Uri.tryParse(value);
+            break;
+          case "twitter:player:width":
+            vidParser.width = double.tryParse(value);
+            break;
+          case "twitter:player:height":
+            vidParser.height = double.tryParse(value);
+            break;
+          case "twitter:player:stream":
+            Uri? resolvedStream = Uri.tryParse(value);
+            if (resolvedStream != null && vidParser.url != null) {
+              // Uses raw file if provided instead of relying iframe.
+              vidParser.url = resolvedStream;
+            }
+            break;
+        }
       }
-    }
+    } finally {
+      if (imgParser.url != null) {
+        assigner.images.add(imgParser.compile());
+      }
 
-    if (imgParser.url != null) {
-      assigner.images.add(imgParser.compile());
-    }
-
-    if (vidParser.url != null) {
-      assigner.videos.add(vidParser.compile());
+      if (vidParser.url != null) {
+        assigner.videos.add(vidParser.compile());
+      }
     }
   }
 }
