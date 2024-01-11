@@ -179,6 +179,9 @@ abstract final class MetaFetch {
   /// Determine the [identifier] is registered or not.
   ///
   /// The [identifier] can be a [String] of prefix or [MetaPropertyParser].
+  /// However, parsing empty [String] directly or assigned into
+  /// [MetaPropertyParser.propertyNamePrefix] will throws
+  /// [ArgumentError].
   ///
   /// Return `true` if existed.
   bool hasBeenRegistered(Object identifier) {

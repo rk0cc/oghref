@@ -13,14 +13,14 @@ import 'property_parser.dart';
 /// the major rich information metadata protocol for various
 /// social platform.
 final class OpenGraphPropertyParser extends MetaPropertyParser {
+  @override
+  final String propertyNamePrefix = "og";
+
   /// Create parser for Open Graph Protocol.
   ///
   /// Usually it should be attached into [MetaFetch.register]
   /// directly.
   const OpenGraphPropertyParser();
-
-  @override
-  String get propertyNamePrefix => "og";
 
   @override
   void resolveMetaTags(

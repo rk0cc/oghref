@@ -26,12 +26,12 @@ final class TwitterCardPropertyParser extends MetaPropertyParser {
   /// By default, it is enabled.
   final bool legacyDomain;
 
+  @override
+  final String propertyNamePrefix = "twitter";
+
   /// Construct a parser of Twitter Card with decision of
   /// using [legacyDomain].
   const TwitterCardPropertyParser({this.legacyDomain = true});
-
-  @override
-  String get propertyNamePrefix => "twitter";
 
   @override
   void resolveMetaTags(

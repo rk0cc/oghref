@@ -4,8 +4,9 @@ import 'dart:convert';
 import 'package:html/dom.dart';
 import 'package:meta/meta.dart';
 
-import '../model/metainfo.dart';
 import '../buffer/metainfo.dart';
+import '../fetch/fetch.dart' show MetaFetch;
+import '../model/metainfo.dart';
 
 /// A [String] pair [Record] represents `property` and `content` attribute
 /// in `<meta>` tag.
@@ -27,6 +28,10 @@ abstract base mixin class MetaPropertyParser {
   /// |:-----------------:|:---------------------:|:------------:|
   /// |Open Graph Protocol|         `og`          |  `og:title`  |
   /// |   Twitter Card    |      `twitter`        |`twitter:card`|
+  /// 
+  /// This property must return non-empty [String] to recognise corresponded
+  /// parser in [MetaFetch]. If offered it empty, majority operations
+  /// done in [MetaFetch] will throw [ArgumentError].
   String get propertyNamePrefix;
 
   /// Actual implementation of assigning [MetaInfo] given all `<meta>`
