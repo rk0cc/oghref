@@ -2,7 +2,7 @@ part of '../fetch/fetch.dart';
 
 /// Combined notations of [StateError] and [ArgumentError] that
 /// [MetaPropertyParser.propertyNamePrefix] is an empty [String].
-/// 
+///
 /// This exception will be happened in [MetaFetch] only when
 /// related [MetaPropertyParser] is attempted to interact with
 /// [MetaFetch].
@@ -15,13 +15,14 @@ final class UnnamedMetaPropertyPrefixError extends StateError
   final String? name;
 
   UnnamedMetaPropertyPrefixError._(this._parser,
-      {this.name, String message =
+      {this.name,
+      String message =
           "This parser contains unnamed property prefix which should not be accepted."})
       : super(message);
 
   /// An invalid value that causes [UnnamedMetaPropertyPrefixError]
   /// thrown.
-  /// 
+  ///
   /// It typically is [MetaPropertyParser.propertyNamePrefix]
   /// which occured if contains nothing.
   @override

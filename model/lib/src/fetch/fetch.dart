@@ -59,7 +59,7 @@ abstract final class MetaFetch {
   /// Specify which prefix should be resolve at first.
   ///
   /// If it applied as [Null], this feature will be disabled.
-  /// 
+  ///
   /// It should not be assigned as empty [String]. Otherwise,
   /// [ArgumentError] will be thrown.
   set primaryPrefix(String? prefix) {
@@ -209,7 +209,7 @@ abstract final class MetaFetch {
   /// Register [parser] into [MetaFetch].
   ///
   /// It returns `true` if registered sucessfully.
-  /// 
+  ///
   /// Attaching [parser] with empty [MetaPropertyParser.propertyNamePrefix]
   /// is forbidden and [UnnamedMetaPropertyPrefixError] will be thrown
   /// if attempted.
@@ -227,7 +227,7 @@ abstract final class MetaFetch {
   ///
   /// In additions, if [prefix] is the same value of [primaryPrefix],
   /// it will reset to [Null].
-  /// 
+  ///
   /// Since empty [MetaPropertyParser.propertyNamePrefix] is forbidden
   /// in [register], it also throws [ArgumentError] is [prefix]
   /// is an empty [String].
