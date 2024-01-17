@@ -104,6 +104,10 @@ final Uri _sampleMockHost = Uri.https("127.0.0.2");
 /// Simulated environment based on [MockClient] that
 /// all generated content are specified by
 /// tester already.
+///
+/// Setting applied from [MetaFetch.changeTimeout], [MetaFetch.changeUserAgent]
+/// and [MetaFetch.disguiseUserAgent] will also affected in
+/// [MockOgHrefClient], but mostly do not alter [Response.body].
 final class MockOgHrefClient extends BaseClient
     implements MockClient, OgHrefClient {
   @override
@@ -112,6 +116,18 @@ final class MockOgHrefClient extends BaseClient
   /// Redirect features is always disabled for [MockOgHrefClient].
   @override
   bool get redirect => false;
+
+  static Duration _generateResponseDelay() {
+    late Random rand;
+
+    try {
+      rand = Random.secure();
+    } on UnsupportedError {
+      rand = Random();
+    }
+
+    return Duration(milliseconds: rand.nextInt(750) + 250);
+  }
 
   /// Define new replicated [Client] for executing under
   /// test environment.
@@ -155,17 +171,25 @@ final class MockOgHrefClient extends BaseClient
             "The request should be HTTP(S), eventhough is mock client.");
       }
 
-      return Future.delayed(Duration(milliseconds: Random().nextInt(750) + 250),
-          () {
+      return Future.delayed(_generateResponseDelay(), () {
+        final Map<String, String> headers = Map.unmodifiable({
+          "content-type": contentType,
+          "user-agent": OgHrefClient.userAgent
+        });
+
+        if (!{"GET", "HEAD"}
+            .any((element) => element == request.method.toUpperCase())) {
+          return Response("", 400, request: request, headers: headers);
+        }
+
         String? bodyCtx = ctxLinker[incomingUrl];
 
         if (bodyCtx == null) {
-          return Response("", 404,
-              headers: {"content-type": contentType}, request: request);
+          return Response("", 404, headers: headers, request: request);
         }
 
-        return Response(bodyCtx, 200,
-            headers: {"content-type": contentType}, request: request);
+        return Response(request.method == "GET" ? bodyCtx : "", 200,
+            headers: headers, request: request);
       });
     });
   }

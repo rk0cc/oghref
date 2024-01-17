@@ -1,3 +1,11 @@
+## 3.3.4
+
+* Restrict `MockOgHrefClient` accepted requesting `GET` and `HEAD` method.
+    * Requesting other methods will get HTTP code 400 otherwise.
+* Using cryptographically random generator if available instead of default one.
+* Some client setting made from `MetaFetch` will be applied into `MockOgHrefClient`.
+    * However, some setting may not affect response content.
+
 ## 3.3.3
 
 * Add validation to `MetaFetch` that property name prefix must not be an empty string and throws `ArgumentError` otherwise.
