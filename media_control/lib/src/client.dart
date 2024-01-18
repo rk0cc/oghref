@@ -11,7 +11,8 @@ final class OgHrefMediaClient extends BaseClient {
   @override
   Future<StreamedResponse> send(BaseRequest request) {
     request
-      ..headers["user-agent"] = requestUserAgent ?? "Mozilla/5.0 oghref/2 (Media classification)"
+      ..headers["user-agent"] =
+          requestUserAgent ?? "Mozilla/5.0 oghref/2 (Media classification)"
       ..followRedirects = true;
 
     return request.send();
