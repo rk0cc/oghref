@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:oghref_model/buffer_parser.dart';
 import 'package:oghref_model/src/fetch/fetch.dart';
 import 'package:oghref_model/src/parser/open_graph.dart';
@@ -10,10 +11,12 @@ Never noResolveInTest() {
   throw UnsupportedError("No resolve process for dummy parser");
 }
 
-abstract final class DummyPropertyParser extends MetaPropertyParser {
+@immutable
+abstract base class DummyPropertyParser extends MetaPropertyParser {
   const DummyPropertyParser();
 
   @override
+  @nonVirtual
   void resolveMetaTags(
       MetaInfoAssigner assigner, Iterable<PropertyPair> propertyPair) {
     noResolveInTest();

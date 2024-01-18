@@ -103,35 +103,56 @@ const String _PLAIN_TEXT_MIME = "text/plain";
 
 final Uri _sampleMockHost = Uri.https("127.0.0.2");
 
+/// An entity for linking incoming [Uri] will response
+/// ideal content in [MockOgHrefClient].
 @immutable
 final class MockOgHrefClientContent {
+  /// Response content when making response in [MockOgHrefClient].
   final String content;
+
+  /// Specify incoming [content] data type.
+  ///
+  /// Default [contentType] uses `text/plain` as returned value
+  /// when making [Response]. However, there are only three
+  /// eligable values can be used without throwing [ContentTypeMismatchedException]
+  /// in [MetaFetch.fetchFromHttp] or [MetaFetch.fetchAllFromHttp] that
+  /// they are the most suitable type for using in webpage:
+  ///
+  /// * `text/plain`
+  /// * `text/html`
+  /// * `application/xhtml+xml`
   final String contentType;
 
+  /// Define simulated response from linked [Uri].
   const MockOgHrefClientContent(
       {required this.content, this.contentType = "text/plain"});
 
   @override
-  int get hashCode =>
-      31 * (content.hashCode ^ (contentType.hashCode >>> 5) - 1);
+  int get hashCode => 31 * content.hashCode + 17 * contentType.hashCode;
 
   @override
   bool operator ==(Object other) {
     if (other is MockOgHrefClientContent) {
-      return hashCode == other.hashCode;
+      return content == other.content && contentType == other.contentType;
     }
 
     return false;
   }
 }
 
-
-final class AdvanceMockOgHrefClient extends BaseClient
+/// Simulated environment based on [MockClient] that
+/// all generated content are specified by
+/// tester already.
+///
+/// Setting applied from [MetaFetch.changeTimeout], [MetaFetch.changeUserAgent]
+/// and [MetaFetch.disguiseUserAgent] will also affected in
+/// [MockOgHrefClient], but mostly do not alter [Response.body].
+final class MockOgHrefClient extends BaseClient
     implements MockClient, OgHrefClient {
   @override
   late final Client _c;
 
-  /// Redirect features is always disabled for [AdvanceMockOgHrefClient].
+  /// Redirect features is always disabled for [MockOgHrefClient].
   @override
   bool get redirect => false;
 
@@ -147,7 +168,29 @@ final class AdvanceMockOgHrefClient extends BaseClient
     return Duration(milliseconds: rand.nextInt(750) + 250);
   }
 
-  AdvanceMockOgHrefClient(Map<Uri, MockOgHrefClientContent> contentLinker,
+  /// Define new replicated [Client] for executing under
+  /// test environment.
+  ///
+  /// All expected content in specific links should be stored
+  /// into [contentLinker] which is a [Map] with [Uri] key and
+  /// [MockOgHrefClientContent] as a value which denotes
+  /// expected content and content type when "surfing" URL.
+  /// If the incoming [Request.url] can be found in [contentLinker],
+  /// the returned [Response] will provided content of the [Uri] in
+  /// status code `200` and `404` when no [Uri] mapped.
+  /// However, it returns HTTP status `400` if the incoming
+  /// [Request.method] is neither `GET` nor `HEAD`.
+  ///
+  /// Moreover, every [Uri] mapped in [contentLinker] **MUST BE** used
+  /// `HTTP(S)` protocol. If at least one [Uri.scheme] return other than
+  /// `HTTP(S)`, it throws [ArgumentError].
+  ///
+  /// #### See also
+  ///
+  /// * [MockOgHrefClient.quick] : Quick builder version of [MockOgHrefClient]
+  ///   that [Uri]s are mapping with [String] content with unified
+  ///   content type.
+  MockOgHrefClient(Map<Uri, MockOgHrefClientContent> contentLinker,
       {String errorContentType = _PLAIN_TEXT_MIME}) {
     if (contentLinker.keys.any((element) => !_isHttpScheme(element))) {
       throw ArgumentError(
@@ -187,6 +230,23 @@ final class AdvanceMockOgHrefClient extends BaseClient
     });
   }
 
+  /// Simplified parameters for constructing [MockOgHrefClient] that
+  /// it only maps [Uri]s with content [String] under the same
+  /// [contentType] which uses `text/plain` as default.
+  ///
+  /// For setting [contentLinker] without identical [contentType],
+  /// please uses [MockOgHrefClient.new] instead.
+  factory MockOgHrefClient.quick(Map<Uri, String> contentLinker,
+      {String contentType}) = _QuickMockOgHrefClient;
+
+  /// Uses [sample files](https://github.com/rk0cc/oghref/tree/main/model/sample) to defined
+  /// content of the simulated HTML files with hosted IP address as `127.0.0.2` with `HTTPS`
+  /// protocol.
+  factory MockOgHrefClient.usesSample() => _QuickMockOgHrefClient(<Uri, String>{
+        for (int idx = 0; idx < _sampleContents.length; idx++)
+          _sampleMockHost.resolve("${idx + 1}.html"): _sampleContents[idx]
+      });
+
   static bool _isHttpScheme(Uri url) {
     return RegExp(r"^https?$", caseSensitive: false).hasMatch(url.scheme);
   }
@@ -205,56 +265,12 @@ final class AdvanceMockOgHrefClient extends BaseClient
   }
 }
 
-/// Simulated environment based on [MockClient] that
-/// all generated content are specified by
-/// tester already.
-///
-/// Setting applied from [MetaFetch.changeTimeout], [MetaFetch.changeUserAgent]
-/// and [MetaFetch.disguiseUserAgent] will also affected in
-/// [MockOgHrefClient], but mostly do not alter [Response.body].
-final class MockOgHrefClient extends AdvanceMockOgHrefClient {
-  /// Define new replicated [Client] for executing under
-  /// test environment.
-  ///
-  /// All expected content in specific links should be stored
-  /// into [contentLinker] which is a [Map] with [Uri] key and
-  /// [String] value to denotes expected content in [contentType]
-  /// when "surfing" URL. If the incoming [Request.url]
-  /// can be found in [contentLinker], the returned [Response]
-  /// will provided content of the [Uri] in status code `200`.
-  /// Otherwise, it returns empty [String] with status code
-  /// `404`.
-  ///
-  /// Default [contentType] uses `text/plain` as returned value
-  /// when making [Response]. However, there are only three
-  /// eligable values can be used without throwing [ContentTypeMismatchedException]
-  /// in [MetaFetch.fetchFromHttp] or [MetaFetch.fetchAllFromHttp] that
-  /// they are the most suitable type for using in webpage:
-  ///
-  /// * `text/plain`
-  /// * `text/html`
-  /// * `application/xhtml+xml`
-  /// 
-  /// At the same time, [contentType] is applied to all content from
-  /// [contentLinker] that consider using [AdvanceMockOgHrefClient.new]
-  /// if difference response content type is needed.
-  ///
-  /// Moreover, every [Uri] mapped in [contentLinker] **MUST BE** used
-  /// `HTTP(S)` protocol. If at least one [Uri.scheme] return other than
-  /// `HTTP(S)`, it throws [ArgumentError].
-  MockOgHrefClient(Map<Uri, String> contentLinker,
+final class _QuickMockOgHrefClient extends MockOgHrefClient {
+  _QuickMockOgHrefClient(Map<Uri, String> contentLinker,
       {String contentType = "text/plain"})
       : super({
           for (var MapEntry(key: url, value: body) in contentLinker.entries)
             url:
                 MockOgHrefClientContent(content: body, contentType: contentType)
         });
-
-  /// Uses [sample files](https://github.com/rk0cc/oghref/tree/main/model/sample) to defined
-  /// content of the simulated HTML files with hosted IP address as `127.0.0.2` with `HTTPS`
-  /// protocol.
-  factory MockOgHrefClient.usesSample() => MockOgHrefClient(<Uri, String>{
-        for (int idx = 0; idx < _sampleContents.length; idx++)
-          _sampleMockHost.resolve("${idx + 1}.html"): _sampleContents[idx]
-      });
 }
