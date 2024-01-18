@@ -2,9 +2,10 @@ import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:http/http.dart' as http show head;
-import 'package:http/http.dart' show Response;
+import 'package:http/http.dart' show Response, Client;
 
+import 'client.dart';
+import 'testing_mode.dart' if (dart.library.io) 'testing_mode_io.dart';
 import 'ua.dart' if (dart.library.html) 'ua_web.dart';
 
 /// A [Widget] for handle audio and video playback if offered.
@@ -33,6 +34,11 @@ final class MediaPlayback extends StatefulWidget {
   final WidgetBuilder onLoadFailed;
 
   /// Construct [MediaPlayback] with predefined preferences.
+  ///
+  /// It should not be built during widget test due to
+  /// behavourial of [Dart's built in client](https://api.dart.dev/stable/dart-io/HttpClient-class.html).
+  /// Therefore, [UnsupportedError] will be thrown if attempted to
+  /// build it.
   MediaPlayback(Iterable<Uri> resources,
       {required this.onLoadFailed,
       this.onLoading,
@@ -40,7 +46,12 @@ final class MediaPlayback extends StatefulWidget {
           muted: true, protocolWhitelist: _protocolWhitelist),
       this.videoCtrlConfiguration,
       super.key})
-      : resources = List.unmodifiable(resources);
+      : resources = List.unmodifiable(resources) {
+    if (isTesting) {
+      throw UnsupportedError(
+          "No real network interaction allowed during test, and it should never be built.");
+    }
+  }
 
   @override
   State<StatefulWidget> createState() => _MediaPlaybackState();
@@ -64,8 +75,10 @@ final class _MediaPlaybackState extends State<MediaPlayback> {
   }
 
   Future<bool> _playableCond() async {
+    final Client c = OgHrefMediaClient();
+
     Stream<Response> resps =
-        Stream.fromFutures(widget.resources.map((e) => http.head(e)));
+        Stream.fromFutures(widget.resources.map((e) => c.head(e)));
 
     return resps.every((r) {
       String? mime = r.headers["content-type"]?.split(';').first;
@@ -79,6 +92,9 @@ final class _MediaPlaybackState extends State<MediaPlayback> {
       }
 
       return false;
+    }).then((value) {
+      c.close();
+      return value;
     });
   }
 

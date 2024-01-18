@@ -1,3 +1,8 @@
+## 3.0.7
+
+* Declare unsupported under widget testing environment.
+* New client model adapted to avoid repeated construction.
+
 ## 3.0.6
 
 * Fix retain previous widget problem when loading new context.

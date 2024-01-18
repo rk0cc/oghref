@@ -1,6 +1,6 @@
 name: oghref_media_control
 description: Additional package for providing mixin to build widget for playing multimedia resources
-version: 3.0.6
+version: 3.0.7
 repository: https://github.com/rk0cc/oghref/tree/main/media_control
 issue_tracker: https://github.com/rk0cc/oghref/issues
 environment:
