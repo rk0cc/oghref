@@ -1,3 +1,7 @@
+## 3.4.0
+
+* Add `MockOgHrefClient.advance` for building responding content with different content type applied.
+
 ## 3.3.4
 
 * Restrict `MockOgHrefClient` accepted requesting `GET` and `HEAD` method.

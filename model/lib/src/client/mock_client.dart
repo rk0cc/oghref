@@ -190,7 +190,7 @@ final class MockOgHrefClient extends BaseClient
   /// * [MockOgHrefClient.quick] : Quick builder version of [MockOgHrefClient]
   ///   that [Uri]s are mapping with [String] content with unified
   ///   content type.
-  MockOgHrefClient(Map<Uri, MockOgHrefClientContent> contentLinker,
+  MockOgHrefClient.advance(Map<Uri, MockOgHrefClientContent> contentLinker,
       {String errorContentType = _PLAIN_TEXT_MIME}) {
     if (contentLinker.keys.any((element) => !_isHttpScheme(element))) {
       throw ArgumentError(
@@ -235,14 +235,19 @@ final class MockOgHrefClient extends BaseClient
   /// [contentType] which uses `text/plain` as default.
   ///
   /// For setting [contentLinker] without identical [contentType],
-  /// please uses [MockOgHrefClient.new] instead.
-  factory MockOgHrefClient.quick(Map<Uri, String> contentLinker,
-      {String contentType}) = _QuickMockOgHrefClient;
+  /// please uses [MockOgHrefClient.advance] instead.
+  factory MockOgHrefClient(Map<Uri, String> contentLinker,
+      {String contentType = _PLAIN_TEXT_MIME}) {
+    return MockOgHrefClient.advance({
+      for (var MapEntry(key: url, value: body) in contentLinker.entries)
+        url: MockOgHrefClientContent(content: body, contentType: contentType)
+    });
+  }
 
   /// Uses [sample files](https://github.com/rk0cc/oghref/tree/main/model/sample) to defined
   /// content of the simulated HTML files with hosted IP address as `127.0.0.2` with `HTTPS`
   /// protocol.
-  factory MockOgHrefClient.usesSample() => _QuickMockOgHrefClient(<Uri, String>{
+  factory MockOgHrefClient.usesSample() => MockOgHrefClient(<Uri, String>{
         for (int idx = 0; idx < _sampleContents.length; idx++)
           _sampleMockHost.resolve("${idx + 1}.html"): _sampleContents[idx]
       });
@@ -263,14 +268,4 @@ final class MockOgHrefClient extends BaseClient
       ..followRedirects = redirect;
     return _c.send(request).timeout(Duration(seconds: OgHrefClient.timeoutAt));
   }
-}
-
-final class _QuickMockOgHrefClient extends MockOgHrefClient {
-  _QuickMockOgHrefClient(Map<Uri, String> contentLinker,
-      {String contentType = "text/plain"})
-      : super({
-          for (var MapEntry(key: url, value: body) in contentLinker.entries)
-            url:
-                MockOgHrefClientContent(content: body, contentType: contentType)
-        });
 }
