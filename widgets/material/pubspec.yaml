@@ -4,8 +4,10 @@ version: 2.0.1
 repository: https://github.com/rk0cc/oghref/tree/main/widgets/material
 issue_tracker: https://github.com/rk0cc/oghref/issues
 screenshots:
-  - description: Screenshot of OgHref Material example
+  - description: Screenshot of OgHref Material 3 example
     path: screenshots/oghref_material.png
+  - description: Screenshot of OgHref Material 2 example
+    path: screenshots/oghref_material_m2.png
 funding:
   - https://github.com/sponsors/rk0cc
 topics:
