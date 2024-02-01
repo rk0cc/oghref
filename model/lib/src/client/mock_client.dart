@@ -154,7 +154,7 @@ final class MockOgHrefClient extends BaseClient
 
   /// Redirect features is always disabled for [MockOgHrefClient].
   @override
-  bool get redirect => false;
+  final bool redirect = false;
 
   static Duration _generateResponseDelay() {
     late Random rand;
@@ -237,12 +237,11 @@ final class MockOgHrefClient extends BaseClient
   /// For setting [contentLinker] without identical [contentType],
   /// please uses [MockOgHrefClient.advance] instead.
   factory MockOgHrefClient(Map<Uri, String> contentLinker,
-      {String contentType = _PLAIN_TEXT_MIME}) {
-    return MockOgHrefClient.advance({
-      for (var MapEntry(key: url, value: body) in contentLinker.entries)
-        url: MockOgHrefClientContent(content: body, contentType: contentType)
-    });
-  }
+          {String contentType = _PLAIN_TEXT_MIME}) =>
+      MockOgHrefClient.advance({
+        for (var MapEntry(key: url, value: body) in contentLinker.entries)
+          url: MockOgHrefClientContent(content: body, contentType: contentType)
+      });
 
   /// Uses [sample files](https://github.com/rk0cc/oghref/tree/main/model/sample) to defined
   /// content of the simulated HTML files with hosted IP address as `127.0.0.2` with `HTTPS`

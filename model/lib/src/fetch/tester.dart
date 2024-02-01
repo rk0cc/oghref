@@ -22,5 +22,6 @@ final class MetaFetchTester extends MetaFetch {
             additionalSupportedExtensions: const {"txt"});
 
   @override
-  OgHrefClient _createClient() => _clientConstructor();
+  // ignore: unused_element
+  OgHrefClient _createClient(bool? redirectOverride) => _clientConstructor();
 }

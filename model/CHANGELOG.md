@@ -1,6 +1,9 @@
 ## 3.4.0
 
 * Add `MockOgHrefClient.advance` for building responding content with different content type applied.
+* Fix client does not closes after stream closed when calling `determineContentTypes()` in `IteratedUrlInfoContentTypeResolver`.
+* Uses final variable assignment rather than a getter for `MockOgHrefClient.redirect`.
+* `IteratedUrlInfoContentTypeResolver` uses current instance of `MetaFetch`'s client to proceed data.
 
 ## 3.3.4
 

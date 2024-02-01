@@ -4,5 +4,5 @@ final class _MetaFetchProducer extends MetaFetch {
   _MetaFetchProducer() : super._();
 
   @override
-  OgHrefClient _createClient() => OgHrefClient(allowRedirect);
+  OgHrefClient _createClient(bool? redirectOverride) => OgHrefClient(redirectOverride ?? allowRedirect);
 }

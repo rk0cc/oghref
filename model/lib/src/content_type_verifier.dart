@@ -6,8 +6,9 @@ import 'package:meta/meta.dart';
 import 'package:mime_dart/mime_dart.dart';
 import 'package:path/path.dart' as p;
 
-import 'client/client.dart';
+import 'fetch/fetch.dart';
 import 'model/url.dart';
+
 
 /// Determine the content type category from MIME.
 enum ContentTypeCategory {
@@ -148,34 +149,41 @@ extension IteratedUrlInfoContentTypeResolver on Iterable<UrlInfo> {
   /// The condition of returned [ContentTypeCategory] will be depended on
   /// given extendion from [Uri.path] first. If not offered, it will
   /// try to find `Content-Type` in HTTP response header by making HTTP HEAD request.
+  /// 
+  /// This features will not be availabled during test and [UnsupportedError]
+  /// will be thrown if attempted.
   Stream<UrlInfoContentTypeResult> determineContentTypes() async* {
-    Client c = OgHrefClient(false);
+    Client c = MetaFetch.instance.createClient(false);
 
-    for (var ui in this) {
-      ContentTypeCategory httpCT;
-      Set<ContentTypeCategory> httpExtCt = ui.url!.extensionContentType;
+    try {
+      for (var ui in this) {
+        ContentTypeCategory httpCT;
+        Set<ContentTypeCategory> httpExtCt = ui.url!.extensionContentType;
 
-      if (httpExtCt.isNotEmpty) {
-        httpCT = httpExtCt.first;
-      } else {
-        httpCT =
-            await c.head(ui.url!).then((value) => value.contentTypeCategory);
-      }
-
-      ContentTypeCategory? httpsCT;
-      if (ui.secureUrl != null) {
-        Set<ContentTypeCategory> httpsExtCt =
-            ui.secureUrl!.extensionContentType;
-        if (httpsExtCt.isNotEmpty) {
-          httpsCT = httpsExtCt.first;
+        if (httpExtCt.isNotEmpty) {
+          httpCT = httpExtCt.first;
         } else {
-          httpsCT = await c
-              .head(ui.secureUrl!)
-              .then((value) => value.contentTypeCategory);
+          httpCT =
+              await c.head(ui.url!).then((value) => value.contentTypeCategory);
         }
-      }
 
-      yield UrlInfoContentTypeResult._(ui, httpCT, httpsCT);
+        ContentTypeCategory? httpsCT;
+        if (ui.secureUrl != null) {
+          Set<ContentTypeCategory> httpsExtCt =
+              ui.secureUrl!.extensionContentType;
+          if (httpsExtCt.isNotEmpty) {
+            httpsCT = httpsExtCt.first;
+          } else {
+            httpsCT = await c
+                .head(ui.secureUrl!)
+                .then((value) => value.contentTypeCategory);
+          }
+        }
+
+        yield UrlInfoContentTypeResult._(ui, httpCT, httpsCT);
+      }
+    } finally {
+      c.close();
     }
   }
 }

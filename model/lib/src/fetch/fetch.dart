@@ -166,7 +166,8 @@ abstract final class MetaFetch {
   }
 
   @factory
-  OgHrefClient _createClient();
+  // ignore: unused_element
+  OgHrefClient _createClient(bool? redirectOverride);
 
   /// Get the corresponded parser from [prefix].
   ///
@@ -323,7 +324,7 @@ abstract final class MetaFetch {
       throw NonHttpUrlException(url);
     }
 
-    Client client = _createClient();
+    Client client = _createClient(null);
 
     late Response resp;
 
@@ -384,4 +385,13 @@ abstract final class MetaFetch {
   Future<Map<String, MetaInfo>> fetchAllFromHttp(Uri url) {
     return _fetchHtmlDocument(url).then(_buildAllMetaInfo);
   }
+}
+
+/// Handle getting [Client] from [MetaFetch] to other components
+/// internally.
+@internal
+extension MetaFetchClientFactoryExtension on MetaFetch {
+  /// An internal [Client] factory retrived from [MetaFetch].
+  Client createClient([bool? redirectOverride]) =>
+      _createClient(redirectOverride);
 }
