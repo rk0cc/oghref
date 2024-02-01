@@ -9,7 +9,6 @@ import 'package:path/path.dart' as p;
 import 'fetch/fetch.dart';
 import 'model/url.dart';
 
-
 /// Determine the content type category from MIME.
 enum ContentTypeCategory {
   /// Audio files
@@ -149,7 +148,7 @@ extension IteratedUrlInfoContentTypeResolver on Iterable<UrlInfo> {
   /// The condition of returned [ContentTypeCategory] will be depended on
   /// given extendion from [Uri.path] first. If not offered, it will
   /// try to find `Content-Type` in HTTP response header by making HTTP HEAD request.
-  /// 
+  ///
   /// This features will not be availabled during test and [UnsupportedError]
   /// will be thrown if attempted.
   Stream<UrlInfoContentTypeResult> determineContentTypes() async* {
