@@ -15,11 +15,20 @@ jobs:
     env:
       working-directory: './model'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        dartsdk:
+          - '3'
+          - '3.0'
+          - stable
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup dart
         uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.dartsdk }}
       - name: Get dependencies
         working-directory: ${{ env.working-directory }}
         run: dart pub get

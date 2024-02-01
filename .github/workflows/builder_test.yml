@@ -21,6 +21,7 @@ jobs:
         sdkver:
           - '3.x'
           - '3.10.x' # This is corresponded Flutter version which adopted Dart 3
+          - any
     steps:
       - name: Checkout
         uses: actions/checkout@v4
