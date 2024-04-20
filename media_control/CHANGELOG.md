@@ -1,4 +1,8 @@
-## 4.0.0
+## 4.0.1
+
+* Change SDK constraint
+
+## ~~4.0.0~~ (Retracted)
 
 * Migration from `dart:html` to `package:web`
 * Integrated selected parameters from `PlayerConfiguration` and `VideoControllerConfiguration` into `MediaPlaybackPreference`

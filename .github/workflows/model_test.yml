@@ -20,7 +20,7 @@ jobs:
       matrix:
         dartsdk:
           - '3'
-          - '3.0'
+          - '3.3'
           - stable
     steps:
       - name: Checkout

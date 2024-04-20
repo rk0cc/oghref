@@ -1,4 +1,8 @@
-## 3.5.0
+## 3.5.1
+
+* Change Dart SDK constraint
+
+## ~~3.5.0~~ (Retracted)
 
 * Migrate all imported from `dart:html` to `package:web`
 

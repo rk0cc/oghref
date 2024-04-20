@@ -1,4 +1,8 @@
-## 4.1.1
+## 4.1.2
+
+* Update SDK constraint
+
+## ~~4.1.1~~ (Retracted)
 
 * Change version constraint of `model` package.
 
