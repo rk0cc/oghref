@@ -170,7 +170,8 @@ base class OgHrefFluentCard extends StatelessWidget
     return Container(
         color: FluentTheme.of(context).inactiveColor.withAlpha(16),
         child: Center(
-            child: Icon(FluentIcons.image_off_48_regular, size: disableIconSize)));
+            child:
+                Icon(FluentIcons.image_off_48_regular, size: disableIconSize)));
   }
 
   Widget _onNonPlayback(BuildContext context, List<oghref.ImageInfo> images) =>
@@ -195,8 +196,7 @@ base class OgHrefFluentCard extends StatelessWidget
     if (multimedia && multimediaResources.isNotEmpty) {
       // Get media playback if enabled multimedia features with provided resources.
       return MediaPlayback(multimediaResources,
-          onLoading: (context) =>
-              const Center(child: ProgressRing()),
+          onLoading: (context) => const Center(child: ProgressRing()),
           onLoadFailed: (context) => _onNonPlayback(context, images),
           preference:
               mediaPlaybackPreference ?? const MediaPlaybackPreference());

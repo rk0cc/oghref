@@ -160,7 +160,8 @@ base class OgHrefCupertinoCard extends StatelessWidget
     return Container(
         color: CupertinoColors.quaternarySystemFill.withAlpha(16),
         child: Center(
-            child: Icon(CupertinoIcons.xmark_rectangle, size: disableIconSize)));
+            child:
+                Icon(CupertinoIcons.xmark_rectangle, size: disableIconSize)));
   }
 
   Widget _onNonPlayback(BuildContext context, List<oghref.ImageInfo> images) =>

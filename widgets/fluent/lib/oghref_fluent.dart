@@ -5,7 +5,8 @@ import 'package:oghref_builder/oghref_builder.dart';
 import 'package:media_kit/media_kit.dart';
 
 export 'package:oghref_builder/oghref_builder.dart';
-export 'package:oghref_media_control/oghref_media_control.dart' show MediaPlaybackPreference;
+export 'package:oghref_media_control/oghref_media_control.dart'
+    show MediaPlaybackPreference;
 export 'src/components/carousel.dart';
 export 'src/typedefs.dart';
 export 'src/widgets/card.dart';
