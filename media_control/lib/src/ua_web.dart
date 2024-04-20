@@ -1,7 +1,5 @@
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html';
-
 import 'package:meta/meta.dart';
+import 'package:web/web.dart';
 
 @internal
-String? get requestUserAgent => window.navigator.userAgent;
+String get requestUserAgent => window.navigator.userAgent;

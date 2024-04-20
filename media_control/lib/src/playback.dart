@@ -6,12 +6,36 @@ import 'package:http/http.dart' show Response, Client;
 
 import 'client.dart';
 import 'testing_mode.dart' if (dart.library.io) 'testing_mode_io.dart';
-import 'ua.dart' if (dart.library.html) 'ua_web.dart';
+import 'ua.dart' if (dart.library.js_interop) 'ua_web.dart';
+
+/// Define sizes of video frame in [MediaPlayback].
+typedef VideoSize = ({int? width, int? height});
+
+/// Cofigure preference for [MediaPlayback].
+@immutable
+final class MediaPlaybackPreference {
+  /// Determine media playback is muted initially.
+  final bool muted;
+
+  /// Allow [MediaPlayback] play media once all context has been loaded already.
+  final bool autoplay;
+
+  /// Determine fixed sizes of video playback.
+  final VideoSize videoSize;
+
+  /// Scale of video frame.
+  final double videoScale;
+
+  /// Create preference
+  const MediaPlaybackPreference(
+      {this.muted = true,
+      this.autoplay = true,
+      this.videoSize = (width: null, height: null),
+      this.videoScale = 1.0});
+}
 
 /// A [Widget] for handle audio and video playback if offered.
 final class MediaPlayback extends StatefulWidget {
-  static const List<String> _protocolWhitelist = <String>["http", "https"];
-
   /// Video, audio or both resources in URL.
   ///
   /// If the given resources is audio type, it retains
@@ -19,11 +43,8 @@ final class MediaPlayback extends StatefulWidget {
   /// this area for changing media position.
   final List<Uri> resources;
 
-  /// Define behaviour of player.
-  final PlayerConfiguration configuration;
-
-  /// Define behaviour of video controller.
-  final VideoControllerConfiguration? videoCtrlConfiguration;
+  /// Preference of [MediaPlayback] behaviours.
+  final MediaPlaybackPreference preference;
 
   /// Display context when content is loading.
   final WidgetBuilder? onLoading;
@@ -42,9 +63,7 @@ final class MediaPlayback extends StatefulWidget {
   MediaPlayback(Iterable<Uri> resources,
       {required this.onLoadFailed,
       this.onLoading,
-      this.configuration = const PlayerConfiguration(
-          muted: true, protocolWhitelist: _protocolWhitelist),
-      this.videoCtrlConfiguration,
+      this.preference = const MediaPlaybackPreference(),
       super.key})
       : resources = List.unmodifiable(resources) {
     if (isTesting) {
@@ -111,47 +130,53 @@ final class _MediaPlaybackState extends State<MediaPlayback> {
           }
 
           return snapshot.data!
-              ? _MediaPlaybackRender(widget.resources)
+              ? _MediaPlaybackRender()
               : widget.onLoadFailed(context);
         });
   }
 }
 
 final class _MediaPlaybackRender extends StatefulWidget {
-  final List<Uri> resources;
-
   // ignore: unused_element
-  _MediaPlaybackRender(this.resources, {super.key});
+  _MediaPlaybackRender({super.key});
 
   @override
   _MediaPlaybackRenderState createState() => _MediaPlaybackRenderState();
 }
 
 final class _MediaPlaybackRenderState extends State<_MediaPlaybackRender> {
+  static const List<String> _protocolWhitelist = ["http", "https"];
+
   late final Player player;
   late final VideoController vidCtrl;
 
   @override
   void initState() {
     super.initState();
+
+    final MediaPlayback playbackWidget =
+        context.findAncestorStateOfType<_MediaPlaybackState>()!.widget;
+
+    final MediaPlaybackPreference preference = playbackWidget.preference;
+
     player = Player(
         configuration: PlayerConfiguration(
-            muted: true,
-            ready: () async {
-              await player.pause();
-            }));
-    vidCtrl = VideoController(player);
+            protocolWhitelist: _protocolWhitelist,
+            muted: preference.muted,
+            title: "OgHref media playback component"));
 
-    Map<String, String> header = {};
-    String? ua = requestUserAgent;
+    vidCtrl = VideoController(player,
+        configuration: VideoControllerConfiguration(
+            width: preference.videoSize.width,
+            height: preference.videoSize.height,
+            scale: preference.videoScale));
 
-    if (ua != null) {
-      header["user-agent"] = ua;
-    }
-
-    player.open(Playlist(widget.resources
-        .map((e) => Media(e.toString(), httpHeaders: header))
-        .toList()));
+    player.open(
+        Playlist(playbackWidget.resources
+            .map((e) => Media(e.toString(),
+                httpHeaders: {"user-agent": requestUserAgent}))
+            .toList()),
+        play: preference.autoplay);
   }
 
   @override

@@ -1,3 +1,10 @@
+## 4.0.0
+
+* Migration from `dart:html` to `package:web`
+* Integrated selected parameters from `PlayerConfiguration` and `VideoControllerConfiguration` into `MediaPlaybackPreference`
+* Disable follow redirection when evaluating media type
+* New user agent string for determine media content type: `oghref_content_type_guard`
+
 ## 3.0.7
 
 * Declare unsupported under widget testing environment.
