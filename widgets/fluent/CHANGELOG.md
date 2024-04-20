@@ -1,3 +1,11 @@
+## 2.1.0
+
+* Provides video playback preference API
+* Fix `MetaFetch` does not initalize with current instance issue
+* Adapt `package:web` migration
+* Mimimum SDK version becomes Dart 3.3 and Flutter 3.19
+* Improve flow when rendering card context
+
 ## 2.0.1
 
 * Running widget test becomes possible now.

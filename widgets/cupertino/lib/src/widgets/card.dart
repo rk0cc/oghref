@@ -113,6 +113,11 @@ base class OgHrefCupertinoCard extends StatelessWidget
   /// Specify styles for this widget.
   final OgHrefCupertinoCardStyle? style;
 
+  /// Configure preferences when handling media playback.
+  ///
+  /// This preference will be applied if [multimedia] is enabled.
+  final MediaPlaybackPreference? mediaPlaybackPreference;
+
   /// Create rich information link card by given [url].
   ///
   /// If either [mediaWidth] or [mediaHeight] omitted, it will
@@ -130,7 +135,38 @@ base class OgHrefCupertinoCard extends StatelessWidget
       required this.confirmation,
       this.multiMetaInfoHandler,
       this.style,
+      this.mediaPlaybackPreference,
       super.key});
+
+  ImageCarousel _buildCarousel(
+      BuildContext context, List<oghref.ImageInfo> images) {
+    assert(images.isNotEmpty);
+    return ImageCarousel(
+        List.unmodifiable(images.where((element) => element.url != null)),
+        preferHTTPS: preferHTTPS,
+        preferences: style?.imageCarouselPreferences ??
+            const ImageCarouselPreferences());
+  }
+
+  Widget _buildFallback(BuildContext context) {
+    // Get Icon for placeholder
+    double disableIconSize =
+        (mediaWidth ?? calculateResponsiveWidth(context)) / 10;
+    if (disableIconSize < 18) {
+      disableIconSize = 18;
+    }
+
+    // Last resort widget. Display broken image icon.
+    return Container(
+        color: CupertinoColors.quaternarySystemFill.withAlpha(16),
+        child: Center(
+            child: Icon(CupertinoIcons.xmark_rectangle, size: disableIconSize)));
+  }
+
+  Widget _onNonPlayback(BuildContext context, List<oghref.ImageInfo> images) =>
+      images.isEmpty
+          ? _buildFallback(context)
+          : _buildCarousel(context, images);
 
   Widget _buildMediaFrame(BuildContext context, List<oghref.ImageInfo> images,
       List<oghref.VideoInfo> videos, List<oghref.AudioInfo> audios) {
@@ -146,35 +182,17 @@ base class OgHrefCupertinoCard extends StatelessWidget
       return e.url!;
     }));
 
-    if (images.isNotEmpty) {
-      final ImageCarousel carousel = ImageCarousel(
-          List.unmodifiable(images.where((element) => element.url != null)),
-          preferHTTPS: preferHTTPS);
-
-      if (multimedia && multimediaResources.isNotEmpty) {
-        // Get media playback if enabled multimedia features with provided resources.
-        return MediaPlayback(multimediaResources,
-            onLoading: (context) =>
-                const Center(child: CupertinoActivityIndicator()),
-            onLoadFailed: (context) => carousel);
-      } else {
-        return carousel;
-      }
+    if (multimedia && multimediaResources.isNotEmpty) {
+      // Get media playback if enabled multimedia features with provided resources.
+      return MediaPlayback(multimediaResources,
+          onLoading: (context) =>
+              const Center(child: CupertinoActivityIndicator()),
+          onLoadFailed: (context) => _onNonPlayback(context, images),
+          preference:
+              mediaPlaybackPreference ?? const MediaPlaybackPreference());
     }
 
-    // Get Icon for placeholder
-    double disableIconSize =
-        (mediaWidth ?? calculateResponsiveWidth(context)) / 10;
-    if (disableIconSize < 18) {
-      disableIconSize = 18;
-    }
-
-    // Last resort widget. Display broken image icon.
-    return Container(
-        color: CupertinoColors.quaternarySystemFill.withAlpha(16),
-        child: Center(
-            child:
-                Icon(CupertinoIcons.xmark_rectangle, size: disableIconSize)));
+    return _onNonPlayback(context, images);
   }
 
   CupertinoListTile _buildTile(BuildContext context, String title,

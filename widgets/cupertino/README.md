@@ -18,6 +18,8 @@ Providing rich information links in Cupertino (iOS) themed widgets.
         oghref_model: ^2.0.1
     ```
 
+1. Configurate [platforms manifest files](https://github.com/rk0cc/oghref/wiki/Import-existed-theme#platform-configurations)
+
 1. Perform initalizations before `runApp`
     ```dart
     void main() {
@@ -40,4 +42,4 @@ Providing rich information links in Cupertino (iOS) themed widgets.
 
 ## Usages
 
-Please refer to [wiki page](https://github.com/rk0cc/oghref/wiki) (the article will be publish as soon as possible).
+Please refer to [wiki page](https://github.com/rk0cc/oghref/wiki/Widgets).

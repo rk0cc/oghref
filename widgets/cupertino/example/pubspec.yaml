@@ -1,9 +1,9 @@
 name: oghref_cupertino_example
 description: Example project of Cupertino themed OgHref widgets
 publish_to: 'none'
-version: 1.0.0
+version: 1.1.0
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '>=3.3.0 <4.0.0'
 dependencies:
   flutter:
     sdk: flutter

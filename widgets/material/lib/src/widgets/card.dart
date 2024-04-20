@@ -3,6 +3,7 @@ import 'package:oghref_builder/oghref_builder.dart'
     hide ImageInfo, VideoInfo, AudioInfo;
 import 'package:oghref_builder/oghref_builder.dart' as oghref
     show ImageInfo, VideoInfo, AudioInfo;
+import 'package:oghref_material/oghref_material.dart';
 import 'package:oghref_media_control/oghref_media_control.dart';
 import 'package:oghref_model/buffer_parser.dart';
 
@@ -131,6 +132,11 @@ base class OgHrefMaterialCard extends StatelessWidget
   /// Define margin of [Card].
   final EdgeInsetsGeometry? margin;
 
+  /// Configure preferences when handling media playback.
+  ///
+  /// This preference will be applied if [multimedia] is enabled.
+  final MediaPlaybackPreference? mediaPlaybackPreference;
+
   /// Create rich information link [Card] by given [url].
   ///
   /// If either [mediaWidth] or [mediaHeight] omitted, it will
@@ -149,7 +155,38 @@ base class OgHrefMaterialCard extends StatelessWidget
       this.style,
       this.clipBehaviour,
       this.margin,
+      this.mediaPlaybackPreference,
       super.key});
+
+  ImageCarousel _buildCarousel(
+      BuildContext context, List<oghref.ImageInfo> images) {
+    assert(images.isNotEmpty);
+    return ImageCarousel(
+        List.unmodifiable(images.where((element) => element.url != null)),
+        preferHTTPS: preferHTTPS,
+        preferences: style?.imageCarouselPreferences ??
+            const ImageCarouselPreferences());
+  }
+
+  Widget _buildFallback(BuildContext context) {
+    // Get Icon for placeholder
+    double disableIconSize =
+        (mediaWidth ?? calculateResponsiveWidth(context)) / 10;
+    if (disableIconSize < 18) {
+      disableIconSize = 18;
+    }
+
+    // Last resort widget. Display broken image icon.
+    return Container(
+        color: Theme.of(context).disabledColor.withAlpha(16),
+        child: Center(
+            child: Icon(Icons.broken_image_outlined, size: disableIconSize)));
+  }
+
+  Widget _onNonPlayback(BuildContext context, List<oghref.ImageInfo> images) =>
+      images.isEmpty
+          ? _buildFallback(context)
+          : _buildCarousel(context, images);
 
   Widget _buildMediaFrame(BuildContext context, List<oghref.ImageInfo> images,
       List<oghref.VideoInfo> videos, List<oghref.AudioInfo> audios) {
@@ -165,36 +202,17 @@ base class OgHrefMaterialCard extends StatelessWidget
       return e.url!;
     }));
 
-    if (images.isNotEmpty) {
-      final ImageCarousel carousel = ImageCarousel(
-          List.unmodifiable(images.where((element) => element.url != null)),
-          preferHTTPS: preferHTTPS,
-          preferences: style?.imageCarouselPreferences ??
-              const ImageCarouselPreferences());
-
-      if (multimedia && multimediaResources.isNotEmpty) {
-        // Get media playback if enabled multimedia features with provided resources.
-        return MediaPlayback(multimediaResources,
-            onLoading: (context) =>
-                const Center(child: CircularProgressIndicator()),
-            onLoadFailed: (context) => carousel);
-      } else {
-        return carousel;
-      }
+    if (multimedia && multimediaResources.isNotEmpty) {
+      // Get media playback if enabled multimedia features with provided resources.
+      return MediaPlayback(multimediaResources,
+          onLoading: (context) =>
+              const Center(child: CircularProgressIndicator()),
+          onLoadFailed: (context) => _onNonPlayback(context, images),
+          preference:
+              mediaPlaybackPreference ?? const MediaPlaybackPreference());
     }
 
-    // Get Icon for placeholder
-    double disableIconSize =
-        (mediaWidth ?? calculateResponsiveWidth(context)) / 10;
-    if (disableIconSize < 18) {
-      disableIconSize = 18;
-    }
-
-    // Last resort widget. Display broken image icon.
-    return Container(
-        color: Theme.of(context).disabledColor.withAlpha(16),
-        child: Center(
-            child: Icon(Icons.broken_image_outlined, size: disableIconSize)));
+    return _onNonPlayback(context, images);
   }
 
   ListTile _buildTile(BuildContext context, String title,
