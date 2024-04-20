@@ -1,6 +1,6 @@
 name: oghref_builder
 description: A Flutter widget for displaying rich information link with callback action provided.
-version: 4.1.0
+version: 4.1.1
 repository: https://github.com/rk0cc/oghref/tree/main/builder
 issue_tracker: https://github.com/rk0cc/oghref/issues
 funding:
@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   url_launcher: ^6.1.14
-  oghref_model: ^3.3.1
+  oghref_model: ^3.5.0
   meta: ^1.9.1
   url_launcher_platform_interface: ^2.2.1
   http: ^1.1.0

@@ -1,3 +1,7 @@
+## 4.1.1
+
+* Change version constraint of `model` package.
+
 ## 4.1.0
 
 * Test implementation completed and features `testing` library.
