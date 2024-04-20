@@ -1,3 +1,7 @@
+## 3.5.0
+
+* Migrate all imported from `dart:html` to `package:web`
+
 ## 3.4.0
 
 * Add `MockOgHrefClient.advance` for building responding content with different content type applied.
