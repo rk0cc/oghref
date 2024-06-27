@@ -1,3 +1,8 @@
+## 2.1.1
+
+* Fix duplicate import issue in card component.
+* Update dependencies.
+
 ## 2.1.0
 
 * Provides video playback preference API
