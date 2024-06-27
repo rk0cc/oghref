@@ -23,7 +23,8 @@ final class TwitterCardPropertyParser extends MetaPropertyParser {
   /// Uses `twitter.com` instead of `x.com` when constructing
   /// link to X's profile.
   ///
-  /// By default, it is enabled.
+  /// By default, it is disabled.
+  @Deprecated("twitter.com is used for redirect to x.com now.")
   final bool legacyDomain;
 
   @override
@@ -31,11 +32,14 @@ final class TwitterCardPropertyParser extends MetaPropertyParser {
 
   /// Construct a parser of Twitter Card with decision of
   /// using [legacyDomain].
-  const TwitterCardPropertyParser({this.legacyDomain = true});
+  const TwitterCardPropertyParser(
+      {@Deprecated("twitter.com is used for redirect to x.com now.")
+      this.legacyDomain = false});
 
   @override
   void resolveMetaTags(
       MetaInfoAssigner assigner, Iterable<PropertyPair> propertyPair) {
+    // ignore: deprecated_member_use_from_same_package
     final Uri twitterSite = Uri.https("${legacyDomain ? 'twitter' : 'x'}.com");
     final ImageInfoParser imgParser = ImageInfoParser();
     final VideoInfoParser vidParser = VideoInfoParser();

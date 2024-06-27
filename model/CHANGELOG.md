@@ -1,3 +1,8 @@
+## 3.5.2
+
+* `TwitterCardPropertyParser.legacyDomain`'s default value becomes `false` and marked as deprecated.
+* Depencendy constraint changes.
+
 ## 3.5.1
 
 * Change Dart SDK constraint
