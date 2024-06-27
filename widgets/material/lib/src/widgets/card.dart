@@ -3,7 +3,6 @@ import 'package:oghref_builder/oghref_builder.dart'
     hide ImageInfo, VideoInfo, AudioInfo;
 import 'package:oghref_builder/oghref_builder.dart' as oghref
     show ImageInfo, VideoInfo, AudioInfo;
-import 'package:oghref_material/oghref_material.dart';
 import 'package:oghref_media_control/oghref_media_control.dart';
 import 'package:oghref_model/buffer_parser.dart';
 

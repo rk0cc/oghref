@@ -1,3 +1,7 @@
+## 4.1.3
+
+* Update constraint of dependencies.
+
 ## 4.1.2
 
 * Update SDK constraint
