@@ -1,3 +1,7 @@
+## 2.1.1
+
+* Update dependency constraint.
+
 ## 2.1.0
 
 * Provides video playback preference API
