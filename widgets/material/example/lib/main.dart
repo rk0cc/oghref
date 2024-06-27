@@ -8,6 +8,7 @@ import 'theme_preference.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   OgHrefMaterialBinding.ensureInitialized();
+
   runApp(const OgHrefMaterialExampleApp());
 }
 

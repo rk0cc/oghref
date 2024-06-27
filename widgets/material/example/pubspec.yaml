@@ -1,7 +1,7 @@
 name: oghref_material_example
 description: Example project of material themed OgHref widgets
 publish_to: 'none' 
-version: 1.1.0
+version: 1.1.1
 environment:
   sdk: '>=3.3.0 <4.0.0'
 dependencies:
@@ -9,10 +9,10 @@ dependencies:
     sdk: flutter
   oghref_material:
     path: ../
-  provider: ^6.1.1
+  provider: ^6.1.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.1
+  flutter_lints: ^4.0.0
 flutter:
   uses-material-design: true
