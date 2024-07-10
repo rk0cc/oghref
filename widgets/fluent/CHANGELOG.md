@@ -1,3 +1,7 @@
+## 2.1.2
+
+* Migrate `SingleButtonState` extended from `WidgetStateProperty`
+
 ## 2.1.1
 
 * Update dependency constraint.
