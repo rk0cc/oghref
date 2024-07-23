@@ -10,7 +10,7 @@ import '../exception/content_type_mismatched.dart';
 import '../fetch/fetch.dart' show MetaFetch;
 
 import 'client_provider_normal.dart'
-  if (dart.library.js_interop) 'client_provider_web.dart';
+    if (dart.library.js_interop) 'client_provider_web.dart';
 
 part 'mock_client.dart';
 
