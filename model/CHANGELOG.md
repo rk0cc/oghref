@@ -1,3 +1,7 @@
+## 3.6.0
+
+* Uses `fetch` based JS API to handle HTTP request in Flutter Web instead of default implementation from `http` packages.
+
 ## 3.5.2
 
 * `TwitterCardPropertyParser.legacyDomain`'s default value becomes `false` and marked as deprecated.

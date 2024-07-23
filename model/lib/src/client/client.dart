@@ -9,6 +9,9 @@ import '../disguise_ua/disguise_ua.dart';
 import '../exception/content_type_mismatched.dart';
 import '../fetch/fetch.dart' show MetaFetch;
 
+import 'client_provider_normal.dart'
+  if (dart.library.js_interop) 'client_provider_web.dart';
+
 part 'mock_client.dart';
 
 /// [Client] implementation for OgHref packages.
@@ -23,7 +26,7 @@ final class OgHrefClient extends BaseClient {
   /// Allow redirection if necessary.
   final bool redirect;
 
-  final Client _c = Client();
+  final Client _c = initializeClient();
 
   /// Current user agent preference of following requests.
   static String _userAgent = DEFAULT_USER_AGENT_STRING;
