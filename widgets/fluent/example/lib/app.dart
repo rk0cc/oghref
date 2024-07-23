@@ -193,16 +193,16 @@ class _OgHrefFluentExampleHomeState extends State<OgHrefFluentExampleHome> {
   }
 }
 
-final class _GoButtonState implements ButtonState<Color?> {
+final class _GoButtonState implements WidgetStateProperty<Color?> {
   const _GoButtonState();
 
   @override
-  Color? resolve(Set<ButtonStates> states) {
-    if (states.contains(ButtonStates.disabled)) {
+  Color? resolve(Set<WidgetState> states) {
+    if (states.contains(WidgetState.disabled)) {
       return null;
-    } else if (states.contains(ButtonStates.pressing)) {
+    } else if (states.contains(WidgetState.pressed)) {
       return Colors.green.darker;
-    } else if ([ButtonStates.focused, ButtonStates.hovering]
+    } else if ([WidgetState.focused, WidgetState.hovered]
         .any(states.contains)) {
       return Colors.successPrimaryColor;
     }
