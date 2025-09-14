@@ -3,6 +3,7 @@ import 'package:oghref_builder/oghref_builder.dart'
     hide ImageInfo, VideoInfo, AudioInfo;
 import 'package:oghref_builder/oghref_builder.dart' as oghref
     show ImageInfo, VideoInfo, AudioInfo;
+import 'package:oghref_builder/widgets.dart';
 import 'package:oghref_media_control/oghref_media_control.dart';
 import 'package:oghref_model/buffer_parser.dart';
 
@@ -141,7 +142,7 @@ base class OgHrefCupertinoCard extends StatelessWidget
   ImageCarousel _buildCarousel(
       BuildContext context, List<oghref.ImageInfo> images) {
     assert(images.isNotEmpty);
-    return ImageCarousel(
+    return CupertinoImageCarousel(
         List.unmodifiable(images.where((element) => element.url != null)),
         preferHTTPS: preferHTTPS,
         preferences: style?.imageCarouselPreferences ??

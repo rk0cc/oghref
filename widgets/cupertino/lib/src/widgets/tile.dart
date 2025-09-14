@@ -21,8 +21,10 @@ final class OgHrefCupertinoTileStyle {
   final TextStyle? tileDescriptionTextStyle;
 
   /// Construct style prefence for rendering [OgHrefCupertinoTile].
-  const OgHrefCupertinoTileStyle(
-      {this.tileTitleTextStyle, this.tileDescriptionTextStyle});
+  const OgHrefCupertinoTileStyle({
+    this.tileTitleTextStyle,
+    this.tileDescriptionTextStyle,
+  });
 }
 
 /// Create [CupertinoListTile] based widget for displaying rich information link.
@@ -31,19 +33,12 @@ final class OgHrefCupertinoTileStyle {
 /// offered multimedia resources. At the same times, the image preview
 /// widget only offered as square frame only.
 base class OgHrefCupertinoTile extends StatelessWidget
-    with LaunchFailedDialogHandler, WidthSizeMeasurement {
+    with
+        LaunchFailedDialogHandler,
+        WidthSizeMeasurement,
+        CupertinoImageLoadingEvent {
   /// URL of the link.
   final Uri url;
-
-  /// [TextStyle] for displaying link title.
-  @Deprecated(
-      "This feature is integrated into OgHrefCupertinoTileStyle, and will be removed at 3.0.0 and beyond.")
-  final TextStyle? tileTitleTextStyle;
-
-  /// [TextStyle] for displaying description.
-  @Deprecated(
-      "This feature is integrated into OgHrefCupertinoTileStyle, and will be removed at 3.0.0 and beyond.")
-  final TextStyle? tileDescriptionTextStyle;
 
   /// Uses `HTTPS` [Uri] resources instead of the default value
   /// (if applied).
@@ -86,21 +81,23 @@ base class OgHrefCupertinoTile extends StatelessWidget
   ///
   /// If [imagePreviewDimension] is omitted, it will uses calculated
   /// dimension based on calculated value in responsive view.
-  const OgHrefCupertinoTile(this.url,
-      {this.preferHTTPS = true,
-      this.tileTitleTextStyle,
-      this.tileDescriptionTextStyle,
-      this.onLoading,
-      this.launchFailedMessage = "Unable to open URL.",
-      this.okText = "OK",
-      this.imagePreviewDimension,
-      required this.confirmation,
-      this.multiMetaInfoHandler,
-      this.style,
-      super.key});
+  const OgHrefCupertinoTile(
+    this.url, {
+    this.preferHTTPS = true,
+    this.onLoading,
+    this.launchFailedMessage = "Unable to open URL.",
+    this.okText = "OK",
+    this.imagePreviewDimension,
+    required this.confirmation,
+    this.multiMetaInfoHandler,
+    this.style,
+    super.key,
+  });
 
   Widget _buildImagePreview(
-      BuildContext context, List<oghref.ImageInfo> images) {
+    BuildContext context,
+    List<oghref.ImageInfo> images,
+  ) {
     double dimension =
         imagePreviewDimension ?? calculateResponsiveWidth(context) / 12;
 
@@ -123,24 +120,28 @@ base class OgHrefCupertinoTile extends StatelessWidget
       }
 
       return Container(
-          width: dimension,
-          height: dimension,
-          decoration: const BoxDecoration(color: CupertinoColors.white),
-          child: Image.network("$imgUri",
-              fit: BoxFit.cover,
-              headers: {"user-agent": MetaFetch.userAgentString},
-              errorBuilder: errorImageCupertino,
-              loadingBuilder: loadingImageCupertino,
-              semanticLabel: appliedImage.alt));
+        width: dimension,
+        height: dimension,
+        decoration: const BoxDecoration(color: CupertinoColors.white),
+        child: Image.network(
+          "$imgUri",
+          fit: BoxFit.cover,
+          headers: {"user-agent": MetaFetch.userAgentString},
+          errorBuilder: onErrorImageLoading,
+          loadingBuilder: onLoadingImage,
+          semanticLabel: appliedImage.alt,
+        ),
+      );
     }
 
     return Container(
-        width: dimension,
-        height: dimension,
-        color: CupertinoColors.inactiveGray.withAlpha(16),
-        child: Center(
-          child: Icon(CupertinoIcons.xmark_rectangle, size: iconSize),
-        ));
+      width: dimension,
+      height: dimension,
+      color: CupertinoColors.inactiveGray.withAlpha(16),
+      child: Center(
+        child: Icon(CupertinoIcons.xmark_rectangle, size: iconSize),
+      ),
+    );
   }
 
   void _openLinkConfirm(BuildContext context, VoidCallback openLink) async {
@@ -157,43 +158,53 @@ base class OgHrefCupertinoTile extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    return OgHrefBuilder.updatable(url,
-        multiInfoHandler: multiMetaInfoHandler,
-        onRetrived: (context, metaInfo, openLink) {
-          return MouseRegion(
-              cursor: SystemMouseCursors.click,
-              child: CupertinoListTile(
-                  leading: _buildImagePreview(context, metaInfo.images),
-                  title: Text(
-                      metaInfo.title ??
-                          metaInfo.siteName ??
-                          metaInfo.url?.toString() ??
-                          "$url",
-                      // ignore: deprecated_member_use_from_same_package
-                      style: style?.tileTitleTextStyle ?? tileTitleTextStyle,
-                      overflow: TextOverflow.ellipsis),
-                  subtitle: metaInfo.description == null
-                      ? null
-                      : Text(metaInfo.description!,
-                          style: style?.tileDescriptionTextStyle ??
-                              // ignore: deprecated_member_use_from_same_package
-                              tileDescriptionTextStyle,
-                          overflow: TextOverflow.ellipsis),
-                  onTap: () => _openLinkConfirm(context, openLink)));
-        },
-        onFetchFailed: (context, exception, openLink) => MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: CupertinoListTile(
-                leading: const Icon(CupertinoIcons.globe),
-                title: Text("$url",
-                    // ignore: deprecated_member_use_from_same_package
-                    style: style?.tileTitleTextStyle ?? tileTitleTextStyle,
-                    overflow: TextOverflow.ellipsis),
-                onTap: () => _openLinkConfirm(context, openLink))),
-        onLoading: onLoading == null
-            ? null
-            : (context) => Padding(
-                padding: const EdgeInsets.all(12), child: onLoading!(context)),
-        onOpenLinkFailed: () => showLaunchFailedDialog(context));
+    return OgHrefBuilder.updatable(
+      url,
+      multiInfoHandler: multiMetaInfoHandler,
+      onRetrived: (context, metaInfo, openLink) {
+        return MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: CupertinoListTile(
+            leading: _buildImagePreview(context, metaInfo.images),
+            title: Text(
+              metaInfo.title ??
+                  metaInfo.siteName ??
+                  metaInfo.url?.toString() ??
+                  "$url",
+              style: style?.tileTitleTextStyle,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: metaInfo.description == null
+                ? null
+                : Text(
+                    metaInfo.description!,
+                    style:
+                        style?.tileDescriptionTextStyle ,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+            onTap: () => _openLinkConfirm(context, openLink),
+          ),
+        );
+      },
+      onFetchFailed: (context, exception, openLink) => MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: CupertinoListTile(
+          leading: const Icon(CupertinoIcons.globe),
+          title: Text(
+            "$url",
+            style: style?.tileTitleTextStyle,
+            overflow: TextOverflow.ellipsis,
+          ),
+          onTap: () => _openLinkConfirm(context, openLink),
+        ),
+      ),
+      onLoading: onLoading == null
+          ? null
+          : (context) => Padding(
+              padding: const EdgeInsets.all(12),
+              child: onLoading!(context),
+            ),
+      onOpenLinkFailed: () => showLaunchFailedDialog(context),
+    );
   }
 }
