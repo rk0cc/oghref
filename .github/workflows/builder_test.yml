@@ -15,21 +15,13 @@ jobs:
     env:
       working-directory: './builder'
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        sdkver:
-          - '3.x'
-          - '3.19.x' # This is corresponded Flutter version which adopted Dart 3
-          - any
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version: ${{ matrix.sdkver }}
       - name: Get dependencies
         working-directory: ${{ env.working-directory }}
         run: flutter pub get
