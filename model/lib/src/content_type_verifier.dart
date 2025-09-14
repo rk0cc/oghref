@@ -28,7 +28,6 @@ enum ContentTypeCategory {
 }
 
 /// Perform verification from retriving `Content-Type` in [Response.headers].
-@internal
 extension ContentTypeVerifier on Response {
   /// Get the `Content-Type` value directly from [headers].
   String? get contentType => headers["content-type"];

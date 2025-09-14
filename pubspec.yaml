@@ -1,0 +1,11 @@
+name: _
+publish_to: none
+environment:
+  sdk: ^3.8.0
+workspace:
+  - builder
+  - media_control
+  - model
+  - widgets/cupertino
+  - widgets/fluent
+  - widgets/material

@@ -1,6 +1,6 @@
 name: oghref_material
 description: Material themed widget for generating rich information link from URL.
-version: 2.1.1
+version: 5.0.0
 repository: https://github.com/rk0cc/oghref/tree/main/widgets/material
 issue_tracker: https://github.com/rk0cc/oghref/issues
 screenshots:
@@ -17,17 +17,17 @@ topics:
   - http
   - material
 environment:
-  sdk: '>=3.3.0 <4.0.0'
-  flutter: '>=3.19.0'
+  sdk: ^3.8.0
+  flutter: '>=3.32.0'
+resolution: workspace
 dependencies: 
   flutter:
     sdk: flutter
-  oghref_builder: ^4.1.3
-  oghref_media_control: ^4.0.1
-  oghref_model: ^3.5.2
-  meta: ^1.12.0
-  page_view_dot_indicator: ^2.3.0
-  media_kit: ^1.1.10+1
+  oghref_builder: ^5.0.0
+  oghref_media_control: ^5.0.0
+  oghref_model: ^5.0.0
+  meta: ^1.15.0
+  smooth_page_indicator: ^1.2.1
+  media_kit: ^1.2.0
 dev_dependencies: 
-  flutter_lints: ^4.0.0
-flutter: 
+  flutter_lints: ^5.0.0
